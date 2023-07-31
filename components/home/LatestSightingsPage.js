@@ -6,20 +6,20 @@ function LatestSightingsPage(props) {
     const isFocused = useIsFocused();
     
     const data = [
-        {name: 'Passero', id: 1, icon: require('../../assets/images/birds/passero.jpg'), author: 'Luca'},
-        {name: 'Usignolo', id: 2, icon: require('../../assets/images/birds/defaultBird.jpg'), author: 'Saul'},
-        {name: 'Piccione', id: 3, icon: require('../../assets/images/birds/piccione.jpg'), author: 'Riccardo'},
-        {name: 'Passero', id: 4, icon: require('../../assets/images/birds/passero.jpg'), author: 'Sara'},
-        {name: 'Tortora', id: 5, icon: require('../../assets/images/birds/tortora.jpg'), author: 'Karen'},
-        {name: 'Pettirosso', id: 6, icon: require('../../assets/images/birds/pettirosso.jpg'), author: 'Brian'},
-        {name: 'Cornacchia', id: 7, icon: require('../../assets/images/birds/cornacchia.jpg'), author: 'Sonia'},
-        {name: 'Passero', id: 8, icon: require('../../assets/images/birds/passero.jpg'), author: 'Brian'},
-        {name: 'Usignolo', id: 9, icon: require('../../assets/images/birds/defaultBird.jpg'), author: 'Marina'},
-        {name: 'Piccione', id: 10, icon: require('../../assets/images/birds/piccione.jpg'), author: 'Luca'},
-        {name: 'Passero', id: 11, icon: require('../../assets/images/birds/passero.jpg'), author: 'Lucia'},
-        {name: 'Tortora', id: 12, icon: require('../../assets/images/birds/tortora.jpg'), author: 'Paolo'},
-        {name: 'Pettirosso', id: 13, icon: require('../../assets/images/birds/pettirosso.jpg'), author: 'Gianni'},
-        {name: 'Cornacchia', id: 14, icon: require('../../assets/images/birds/cornacchia.jpg'), author: 'Sonia'},
+        {name: 'Passero', id: 1, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Luca'},
+        {name: 'Usignolo', id: 2, icon: require('../../assets/images/defaultBirds/defaultBird.jpg'), author: 'Saul'},
+        {name: 'Piccione', id: 3, icon: require('../../assets/images/defaultBirds/piccione.jpg'), author: 'Riccardo'},
+        {name: 'Passero', id: 4, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Sara'},
+        {name: 'Tortora', id: 5, icon: require('../../assets/images/defaultBirds/tortora.jpg'), author: 'Karen'},
+        {name: 'Pettirosso', id: 6, icon: require('../../assets/images/defaultBirds/pettirosso.jpg'), author: 'Brian'},
+        {name: 'Cornacchia', id: 7, icon: require('../../assets/images/defaultBirds/cornacchia.jpg'), author: 'Sonia'},
+        {name: 'Passero', id: 8, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Brian'},
+        {name: 'Usignolo', id: 9, icon: require('../../assets/images/defaultBirds/defaultBird.jpg'), author: 'Marina'},
+        {name: 'Piccione', id: 10, icon: require('../../assets/images/defaultBirds/piccione.jpg'), author: 'Luca'},
+        {name: 'Passero', id: 11, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Lucia'},
+        {name: 'Tortora', id: 12, icon: require('../../assets/images/defaultBirds/tortora.jpg'), author: 'Paolo'},
+        {name: 'Pettirosso', id: 13, icon: require('../../assets/images/defaultBirds/pettirosso.jpg'), author: 'Gianni'},
+        {name: 'Cornacchia', id: 14, icon: require('../../assets/images/defaultBirds/cornacchia.jpg'), author: 'Sonia'},
     ];
 
     return (

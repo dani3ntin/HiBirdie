@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar } from 'react-native'
-import HeaderBar from './components/headerBar/HeaderBar';
+import HomeHeaderBar from './components/headerBars/HomeHeaderBar';
 import Home from './components/home/Home';
 
 export default function App() {
@@ -12,7 +12,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.SafeArea}>
       <View style={styles.headerContainer}>
-        <HeaderBar userName={user.name} userAvatar={user.avatar}/>
+        <HomeHeaderBar userName={user.name} userAvatar={user.avatar}/>
       </View>
       <Home/>
       <StatusBar style="auto"/>

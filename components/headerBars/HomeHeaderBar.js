@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-const HeaderBar = (props) => {
+const HomeHeaderBar = (props) => {
     return (
         <View style={styles.container}>
           <Image
@@ -13,7 +13,7 @@ const HeaderBar = (props) => {
     );
   };
   
-export default HeaderBar
+export default HomeHeaderBar
 
 const styles = StyleSheet.create({
     container: {
