@@ -1,9 +1,14 @@
 import { View, Text, StyleSheet, Pressable, Image} from "react-native"
+import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
 
-function BirdItem(props) {
+function FriendItem(props) {
+
+    const today = new Date()
+
     return (
-        <View style={styles.goalItem}>
-            <Pressable 
+        <View style={styles.friendItem}>
+            <Pressable
+                onPress={() => console.log(today)}
                 style={({pressed}) => pressed && styles.pressedItem}
             >
                 <View style={styles.itemContent}>
@@ -12,8 +17,8 @@ function BirdItem(props) {
                         style={styles.avatar}
                     />
                     <View>
-                        <Text style={styles.birdName}>{props.text}</Text>
-                        <Text style={styles.birdPhotoDate}>{"Photographed on: " + props.date}</Text>
+                        <Text style={styles.friendName}>{props.name}</Text>
+                        <Text style={styles.friendState}>{"Last sighting: " + approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.dateLastSighting))}</Text>
                     </View>
                 </View>
             </Pressable>
@@ -21,26 +26,23 @@ function BirdItem(props) {
     )
 }
 
-export default BirdItem
+export default FriendItem
 
 const styles = StyleSheet.create({
-    goalItem: {
+    friendItem: {
         margin: 5,
         borderRadius: 6,
         backgroundColor: 'white',
         height: 60,
     },
-    BirdInfo: {
-        flexDirection: 'column'
-    },
-    birdName: {
+    friendName: {
         color: 'black',
         paddingTop: 8,
         paddingLeft: 8,
-        fontSize: 20,
+        fontSize: 19,
         fontWeight: 'bold',
     },
-    birdPhotoDate: {
+    friendState: {
         color: 'black',
         paddingLeft: 8,
         fontSize: 15,

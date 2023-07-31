@@ -6,7 +6,7 @@ export default function App() {
 
   const user = {
     name: 'Cato esperto', // Inserisci il nome dell'utente qui
-    avatar: require('./assets/images/cat.jpg'), // Inserisci il percorso dell'immagine dell'utente qui
+    avatar: require('./assets/images/personPic/cat.jpg'), // Inserisci il percorso dell'immagine dell'utente qui
   };
 
   return (
@@ -14,8 +14,8 @@ export default function App() {
       <View style={styles.headerContainer}>
         <HeaderBar userName={user.name} userAvatar={user.avatar}/>
       </View>
-      <Home />
-      <StatusBar style="auto" />
+      <Home/>
+      <StatusBar style="auto"/>
     </SafeAreaView>
   )
 }
