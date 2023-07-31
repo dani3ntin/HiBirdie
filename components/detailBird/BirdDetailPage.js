@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
         height: '8%'
     },
     textContainer: {
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 20,
+        marginRight: 20,
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
@@ -93,10 +93,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     birdImage: {
-        width: windowWidth - 20, // Utilizziamo la larghezza dello schermo meno il margine sinistro e destro (totale 40)
+        width: windowWidth - 40, // Utilizziamo la larghezza dello schermo meno il margine sinistro e destro (totale 40)
         height: windowWidth - 100, // L'altezza sarà il 50% della larghezza per mantenere l'aspect ratio
         borderRadius: 10,
-        margin: 10,
+        margin: 20,
     },
     personalNotes: {
         marginTop:10,
