@@ -65,5 +65,10 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
+        elevation: 5, //android shadow
+        shadowColor: 'black',//apple shadow
+        shadowOffset: { width: 0, height: 2 },//apple shadow
+        shadowOpacity: 0.5,//apple shadow
+        shadowRadius: 4,//apple shadow
     },
 })

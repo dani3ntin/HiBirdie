@@ -81,6 +81,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 13,
         padding: 20,
+        elevation: 5, //android shadow
+        shadowColor: 'black',//apple shadow
+        shadowOffset: { width: 0, height: 2 },//apple shadow
+        shadowOpacity: 0.5,//apple shadow
+        shadowRadius: 4,//apple shadow
     },
     textOnOneRow: {
         flexDirection: 'row',

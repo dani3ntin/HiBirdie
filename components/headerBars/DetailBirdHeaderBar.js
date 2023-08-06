@@ -18,7 +18,7 @@ const DetailBirdHeaderBar = (props) => {
         <View style={styles.backButton}>
           <Pressable style={({pressed}) => pressed && styles.pressedBackButton} onPress={backButtonPressedHandler}>
             <View style={styles.backIcon}>
-              <CustomIcon name="arrowleft" size={45} color="black" />
+              <CustomIcon name="left" size={35} color="black" />
             </View>
           </Pressable>
         </View>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     birdName: {
       marginLeft: 10,
-      fontSize: 25,
+      fontSize: 22,
       fontWeight: 'bold',
     },
     backButton: {
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
-      padding: 12,
+      padding: 17,
     },
     pressedBackButton: {
       opacity: 0.3,
