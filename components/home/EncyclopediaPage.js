@@ -54,6 +54,19 @@ function EncyclopediaPage(props) {
 
 export default EncyclopediaPage
 
+const shadowStyle = Platform.select({
+    ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+    },
+    android: {
+        elevation: 8,
+    },
+    default: {},
+})
+
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#e9e7e7',
@@ -65,10 +78,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
-        elevation: 5, //android shadow
-        shadowColor: 'black',//apple shadow
-        shadowOffset: { width: 0, height: 2 },//apple shadow
-        shadowOpacity: 0.5,//apple shadow
-        shadowRadius: 4,//apple shadow
+        ...shadowStyle
     },
 })
