@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, StatusBar } from 'react-native'
-import HomeHeaderBar from './components/headerBars/HomeHeaderBar';
-import Home from './components/home/Home';
+import { StyleSheet, AsyncStorage, View, SafeAreaView, StatusBar } from 'react-native'
+import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
+import Home from './components/home/Home'
 
 export default function App() {
 

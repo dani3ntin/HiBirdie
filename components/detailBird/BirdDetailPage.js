@@ -1,86 +1,112 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions  } from "react-native"
+import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
-import { useEffect } from "react"
-import MapView, { Marker } from 'react-native-maps';
+import { useEffect, useState } from "react"
+import MapView, { Marker } from 'react-native-maps'
+import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+
+const windowWidth = Dimensions.get('window').width
 
 function BirdDetailPage(props){
+    const [birdData, setBirdData] = useState([])
+    const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
+    const [birdImageWidth, setBirdImageWidth] = useState(0)
+    const [birdImageHeight, setBirdImageHeight] = useState(0)
 
-    const data = [
-        {name: 'Passero', id: 1, image: require('../../assets/images/birds/passero.jpg'), date: '10/20/2020'},
-        {name: 'Usignolo', id: 2, image: require('../../assets/images/birds/usignolo.jpg'), date: '10/20/2020'},
-        {name: 'Piccione', id: 3, image: require('../../assets/images/birds/piccione.jpg'), date: '10/20/2020'},
-        {name: 'Passero', id: 4, image: require('../../assets/images/defaultBirds/passero.jpg'), date: '10/20/2020'},
-        {name: 'Tortora', id: 5, image: require('../../assets/images/defaultBirds/tortora.jpg'), date: '10/20/2020'},
-        {name: 'Pettirosso', id: 6, image: require('../../assets/images/defaultBirds/pettirosso.jpg'), date: '10/20/2020'},
-        {name: 'Cornacchia', id: 7, image: require('../../assets/images/defaultBirds/cornacchia.jpg'), date: '10/20/2020'},
-        {name: 'Passero', id: 8, image: require('../../assets/images/defaultBirds/passero.jpg'), date: '10/20/2020'},
-        {name: 'Usignolo', id: 9, image: require('../../assets/images/defaultBirds/defaultBird.jpg'), date: '10/20/2020'},
-        {name: 'Piccione', id: 10, image: require('../../assets/images/birds/piccione.jpg'), date: '10/20/2020'},
-        {name: 'Passero', id: 11, image: require('../../assets/images/defaultBirds/passero.jpg'), date: '10/20/2020'},
-        {name: 'Tortora', id: 12, image: require('../../assets/images/defaultBirds/tortora.jpg'), date: '10/20/2020'},
-        {name: 'Pettirosso', id: 13, image: require('../../assets/images/defaultBirds/pettirosso.jpg'), date: '10/20/2020'},
-        {name: 'Cornacchia', id: 14, image: require('../../assets/images/defaultBirds/cornacchia.jpg'), date: '10/20/2020'},
-    ];
+    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id;
+
+    useEffect(() => {
+        if(props.visible){
+            calculateOptimizedImageSize(imageUrl, setBirdImageWidth, setBirdImageHeight)
+            fetchData()
+        } 
+    }, [props.visible])
+
+    const fetchData = async () => {
+        try {
+          const response = await fetch(imageUrl)
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          const imageMetadata = JSON.parse(response.headers.get('imageInfos'))
+      
+          setBirdData(imageMetadata)
+          setIsLoadingBirdData(false)
+        } catch (error) {
+          console.error('Error on getting the datas:', error)
+          setIsLoadingBirdData(false)
+        }
+    }
+    
+    const imageSizeStyle = {
+        width: birdImageWidth || 200,
+        height: birdImageHeight || 200,
+    }
 
     function closeModal(){
+        setBirdData([])
+        setIsLoadingBirdData(true)
         props.closeModal()
     }
 
-    function extractBirdFromId(){
-        const bird = data.filter((bird) => bird.id === props.id)[0]
-        if(bird === undefined) return {name: '', id: -1, image: '', date: ''}
-        return bird
+    function getBirdDetails(){
+        return(
+            <View style={styles.modalContainer}>
+                <View style={styles.headerContainer}>
+                <DetailBirdHeaderBar birdName={birdData.name} onBackButtonPress={closeModal} />
+                </View>
+                <ScrollView>
+                    {birdData.id === -1 ? null : (
+                        <View style={styles.imageContainer}>
+                            <Image source={{ uri: imageUrl }} style={[styles.birdImage, imageSizeStyle]} />
+                        </View>
+                    )}
+                    <View style={styles.textContainer}>
+                        <View style={styles.textOnOneRow}>
+                            <Text style={styles.boldText}>Sighted on the: </Text>
+                            <Text style={styles.text}>{birdData.sightingDate}</Text>
+                        </View>
+                        <View style={styles.personalNotes}>
+                            <Text style={styles.boldText}>Personal Notes: </Text>
+                            <Text style={styles.text}>{birdData.personalNotes}</Text>
+                        </View>
+                </View>
+                <View style={styles.mapContainer}>
+                    <MapView
+                        style={styles.map}
+                        initialRegion={{        
+                            latitude: birdData.xPosition,
+                            longitude: birdData.yPosition,
+                            latitudeDelta: 1,
+                            longitudeDelta: 1,}}
+                    >
+                        <Marker
+                        coordinate={{
+                            latitude: birdData.xPosition,
+                            longitude: birdData.yPosition,
+                        }}
+                        />
+                    </MapView>
+                </View>
+                </ScrollView>
+            </View>
+        )
     }
 
     return (
         <Modal visible={props.visible} animationType='slide' onRequestClose={closeModal}>
-          <View style={styles.modalContainer}>
-            <View style={styles.headerContainer}>
-              <DetailBirdHeaderBar birdName={extractBirdFromId().name} onBackButtonPress={closeModal} />
+          {
+            isLoadingBirdData ?
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
-            <ScrollView>
-                {extractBirdFromId().id === -1 ? null : (
-                    <View style={styles.imageContainer}>
-                        <Image source={extractBirdFromId().image} style={styles.birdImage} />
-                    </View>
-                )}
-                <View style={styles.textContainer}>
-                    <View style={styles.textOnOneRow}>
-                        <Text style={styles.boldText}>Sighted on the: </Text>
-                        <Text style={styles.text}>{extractBirdFromId().date}</Text>
-                    </View>
-                    <View style={styles.personalNotes}>
-                        <Text style={styles.boldText}>Personal Notes: </Text>
-                        <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mattis felis ac tellus vehicula, ut porta dolor porta. Aliquam sit amet pharetra orci. Nam malesuada nisl eget ex convallis sagittis. Cras mollis gravida iaculis. Fusce sit amet tortor turpis. Vestibulum mollis quam nec lectus rhoncus, id lobortis purus aliquam. Etiam non lacus sed felis rhoncus placerat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam vel odio dolor. Curabitur congue vulputate vulputate. Fusce at dui sem. Cras lobortis vehicula lectus, a ultricies mi varius sit amet. Vivamus ac tempor est. Duis ante orci, elementum vel cursus nec, tempus et felis. Fusce purus lectus, blandit ac volutpat ac, tempor eu risus. Suspendisse eleifend, mauris non auctor consectetur, sem lorem egestas metus, non porta odio massa ut urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Praesent mattis nulla nec purus commodo, ut molestie tortor placerat. Suspendisse a diam justo. Curabitur sed suscipit ligula, a consequat libero. Nulla nec velit commodo, scelerisque turpis non, efficitur libero. Sed blandit massa eu leo sodales tempor.</Text>
-                    </View>
-              </View>
-              <View style={styles.mapContainer}>
-                <MapView
-                    style={styles.map}
-                    initialRegion={{
-                    latitude: 55,
-                    longitude: 110,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                    }}
-                >
-                    <Marker
-                    coordinate={{
-                        latitude: 55,
-                        longitude: 110,
-                    }}
-                    />
-                </MapView>
-              </View>
-            </ScrollView>
-          </View>
+            :
+            getBirdDetails()
+          }
         </Modal>
       )
 }
 
 export default BirdDetailPage
-
-const windowWidth = Dimensions.get('window').width
 
 const shadowStyle = Platform.select({
     ios: {
@@ -123,7 +149,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     birdImage: {
-        width: windowWidth - 50, // Utilizziamo la larghezza dello schermo meno il margine sinistro e destro (totale 40)
+        borderRadius: 10,
+        width: windowWidth - 50, 
         height: windowWidth - 110, // L'altezza sarà il 50% della larghezza per mantenere l'aspect ratio
         borderRadius: 10,
     },
@@ -147,5 +174,10 @@ const styles = StyleSheet.create({
       },
     map: {
     ...StyleSheet.absoluteFillObject,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })

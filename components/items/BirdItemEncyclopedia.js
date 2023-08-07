@@ -12,12 +12,12 @@ function BirdItemEncyclopedia(props) {
             >
                 <View style={styles.itemContent}>
                     <Image
-                        source={props.icon}
+                        source={props.image}
                         style={styles.avatar}
                     />
                     <View>
                         <Text style={styles.birdName}>{props.name}</Text>
-                        <Text style={styles.birdPhotoDate}>{"Sighted on the: " + props.date}</Text>
+                        <Text style={styles.birdPhotoDate}>{"Sighted on the: " + props.sightingDate}</Text>
                     </View>
                 </View>
             </Pressable>
