@@ -44,6 +44,18 @@ function EncyclopediaPage(props) {
         setDetailBirdModalIsVisible(true)
     }
 
+    function changeDateFormatToDDMMYYYY(data){
+        const parts = data.split('-')
+        if (parts.length === 3) {
+            const year = parts[0]
+            const month = parts[1]
+            const day = parts[2]
+            return `${day}-${month}-${year}`
+          } else {
+            return '01-01-2000'
+          }
+    }
+
     return (
         <>
         {
@@ -53,12 +65,12 @@ function EncyclopediaPage(props) {
             </View>
             :
             <>
-                <BirdDetailPage visible={detailBirdmodalIsVisible} id={birdIdForDetailBirdModal} closeModal={closeDetailBirdModal} />
+                <BirdDetailPage visible={detailBirdmodalIsVisible} id={birdIdForDetailBirdModal} originPage={"EncyclopediaPage"} closeModal={closeDetailBirdModal} />
                 <ScrollView style={styles.container}>
                     <View style={styles.ItemsContainer}>
                         {birdsData.map((item) => (
                         <View key={item.id}>
-                            <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id }} sightingDate={item.sightingDate} onBirdPressed={openDetailBirdModal}/>
+                            <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
                         </View>
                         ))}
                     </View>

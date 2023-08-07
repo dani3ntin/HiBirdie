@@ -1,9 +1,12 @@
+
 export function calculateDifferenceBetweenTwoDates(date1, date2){
+
     if(date1 === undefined || date2 === undefined)
         return -1
     const millisecondsInADay = 24 * 60 * 60 * 1000 
     const firstDate = new Date(date1)
     const secondDate = new Date(date2)
+    console.log(date1)
 
     const differenceInMilliseconds = Math.abs(secondDate - firstDate)
     const differenceInDays = Math.round(differenceInMilliseconds / millisecondsInADay)

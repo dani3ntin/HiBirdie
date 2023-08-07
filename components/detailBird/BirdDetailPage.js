@@ -1,18 +1,22 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator } from "react-native"
+import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
-import MapView, { Marker } from 'react-native-maps'
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import AuthorPressable from "./AuthorPressable"
+import TextInDetailBird from "./TextInDetailBird"
+import MapViewInDetailBird from "./MapViewInDetailBird"
 
 const windowWidth = Dimensions.get('window').width
 
 function BirdDetailPage(props){
     const [birdData, setBirdData] = useState([])
+    const [authorData, setAuthorData] = useState([])
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
 
-    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id;
+    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id
+    const authorAPIRequest = 'http://192.168.1.249:8000/api/getuserbyusername/a'
 
     useEffect(() => {
         if(props.visible){
@@ -28,8 +32,15 @@ function BirdDetailPage(props){
             throw new Error('Network response was not ok')
           }
           const imageMetadata = JSON.parse(response.headers.get('imageInfos'))
-      
           setBirdData(imageMetadata)
+
+           const responseAuthor = await fetch(authorAPIRequest)
+          if (!responseAuthor.ok) {
+            throw new Error('Network response was not ok')
+          }
+          const imageMetadataAuthor = JSON.parse(responseAuthor.headers.get('imageInfos'))
+      
+          setAuthorData(imageMetadataAuthor)
           setIsLoadingBirdData(false)
         } catch (error) {
           console.error('Error on getting the datas:', error)
@@ -55,38 +66,26 @@ function BirdDetailPage(props){
                 <DetailBirdHeaderBar birdName={birdData.name} onBackButtonPress={closeModal} />
                 </View>
                 <ScrollView>
-                    {birdData.id === -1 ? null : (
-                        <View style={styles.imageContainer}>
-                            <Image source={{ uri: imageUrl }} style={[styles.birdImage, imageSizeStyle]} />
+                    {
+                        birdData.id === -1 ? null : (
+                            <View style={styles.imageContainer}>
+                                <Image source={{ uri: imageUrl }} style={[styles.birdImage, imageSizeStyle]} />
+                            </View>
+                        )
+                    }
+                    {
+                        props.originPage === "LatestSightings"
+                        ?
+                        <View style={styles.pressableAuthorContainer}>
+                            <Text style={[styles.boldText, {paddingBottom: 10}]}>Sighted by:</Text>
+                            <Pressable>
+                                <AuthorPressable id={authorData.username} name={authorData.name} icon={{ uri: authorAPIRequest }} dateLastSighting={authorData.latestSight}/>
+                            </Pressable>
                         </View>
-                    )}
-                    <View style={styles.textContainer}>
-                        <View style={styles.textOnOneRow}>
-                            <Text style={styles.boldText}>Sighted on the: </Text>
-                            <Text style={styles.text}>{birdData.sightingDate}</Text>
-                        </View>
-                        <View style={styles.personalNotes}>
-                            <Text style={styles.boldText}>Personal Notes: </Text>
-                            <Text style={styles.text}>{birdData.personalNotes}</Text>
-                        </View>
-                </View>
-                <View style={styles.mapContainer}>
-                    <MapView
-                        style={styles.map}
-                        initialRegion={{        
-                            latitude: birdData.xPosition,
-                            longitude: birdData.yPosition,
-                            latitudeDelta: 1,
-                            longitudeDelta: 1,}}
-                    >
-                        <Marker
-                        coordinate={{
-                            latitude: birdData.xPosition,
-                            longitude: birdData.yPosition,
-                        }}
-                        />
-                    </MapView>
-                </View>
+                        : null
+                    }
+                    <TextInDetailBird sightingDate={birdData.sightingDate} personalNotes={birdData.personalNotes}/>
+                    <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
                 </ScrollView>
             </View>
         )
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         height: '8%'
     },
-    textContainer: {
+    pressableAuthorContainer: {
         marginLeft: 25,
         marginRight: 25,
         marginBottom: 20,
@@ -137,12 +136,6 @@ const styles = StyleSheet.create({
         borderRadius: 13,
         padding: 20,
         ...shadowStyle
-    },
-    textOnOneRow: {
-        flexDirection: 'row',
-    },
-    text: {
-        fontSize: 18,
     },
     boldText: {
         fontWeight: 'bold',
@@ -159,21 +152,6 @@ const styles = StyleSheet.create({
         backgroundColor:'black',
         borderRadius: 10,
         margin: 25,
-    },
-    personalNotes: {
-        marginTop:10,
-    },
-    mapContainer: {
-        height: 350, // Imposta un'altezza appropriata per il componente MapView
-        marginLeft: 25,
-        marginRight: 25,
-        marginBottom: 20,
-        borderRadius: 13,
-        padding: 20,
-        ...shadowStyle
-      },
-    map: {
-    ...StyleSheet.absoluteFillObject,
     },
     loadingContainer: {
         flex: 1,
