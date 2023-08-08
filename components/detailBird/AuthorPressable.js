@@ -1,23 +1,54 @@
-import { View, Text, StyleSheet, Image} from "react-native"
-import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "../items/itemsUtils/FriendItemUtils"
+import { View, Text, StyleSheet, Image, ActivityIndicator} from "react-native"
+import { useState, useEffect } from "react"
+
 
 function AuthorPressable(props) {
+    const APIPrefix = 'http://192.168.1.249:8000/api/'
+    const authorAPIRequest = 'http://192.168.1.249:8000/api/getuserbyusername/' + props.username
 
-    const today = new Date()
+    const [nFollowersAuthor, setNFollowersAuthor] = useState(0)
+    const [authorData, setAuthorData] = useState([])
+    const [isLoadingItems, setIsLoadingItems] = useState(true)
+
+    useEffect(() => {
+        fetchAuthorData()
+    }, [])
+
+    async function fetchAuthorData(){
+        const responseAuthor = await fetch(authorAPIRequest)
+        if (!responseAuthor.ok) {
+            throw new Error('Network response was not ok')
+        }
+        const imageMetadataAuthor = JSON.parse(responseAuthor.headers.get('imageInfos'))
+        setAuthorData(imageMetadataAuthor)
+        const responseAuthorFollowers = await fetch(APIPrefix + 'getfollowersbyusername/' + props.username)
+        const responseDataAuthorFollowers = await responseAuthorFollowers.json()
+        setNFollowersAuthor(responseDataAuthorFollowers.length)
+        setIsLoadingItems(false)
+    }
 
     return (
-        <View style={styles.friendItem}>
-                <View style={styles.itemContent}>
-                    <Image
-                        source={props.icon}
-                        style={styles.avatar}
-                    />
-                    <View>
-                        <Text style={styles.friendName}>{props.name}</Text>
-                        <Text style={styles.friendState}>{"Last sighting: " + approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.dateLastSighting))}</Text>
+        <>
+        {
+            isLoadingItems ?
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large"  color="#ff0000"/>
+            </View>
+            :
+            <View style={styles.friendItem}>
+                    <View style={styles.itemContent}>
+                        <Image
+                            source={{ uri: authorAPIRequest }}
+                            style={styles.avatar}
+                        />
+                        <View>
+                            <Text style={styles.friendName}>{authorData.name}</Text>
+                            <Text style={styles.friendState}>{"Followers: "+ nFollowersAuthor}</Text>
+                        </View>
                     </View>
-                </View>
-        </View>
+            </View>
+        }
+        </>
     )
 }
 

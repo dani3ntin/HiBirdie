@@ -13,7 +13,7 @@ export default function Home() {
     <NavigationContainer>
         <Tab.Navigator>
             <Tab.Screen name="My Encyclopedia" component={EncyclopediaPage}/>
-            <Tab.Screen name="Friends" component={FriendsPage}/>
+            <Tab.Screen name="Followed" component={FriendsPage}/>
             <Tab.Screen name="Latest Sightings" component={LatestSightingsPage}/>
         </Tab.Navigator>
     </NavigationContainer>

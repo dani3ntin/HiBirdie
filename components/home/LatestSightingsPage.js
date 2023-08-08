@@ -1,37 +1,73 @@
-import { View, Text, StyleSheet, ScrollView} from "react-native"
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
 import { useIsFocused } from '@react-navigation/native'
 import BirdItemLatestSightings from "../items/BirdItemLatestSightings"
+import { useEffect, useState } from "react"
+import BirdDetailPage from "../detailBird/BirdDetailPage"
 
 function LatestSightingsPage(props) {
-    const isFocused = useIsFocused();
+    const isFocused = useIsFocused()
+    const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
+    const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
+    const [authorUsernameForDetailBirdModal, setAuthorUsernameForDetailBirdModal] = useState('')
+    const [birdsData, setBirdsData] = useState([])
+    const [isLoadingItems, setIsLoadingItems] = useState(true)
+
+    useEffect(() => {
+        if(isFocused){
+            fetchData()
+        } 
+    }, [isFocused])
+
     
-    const data = [
-        {name: 'Passero', id: 1, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Luca'},
-        {name: 'Usignolo', id: 2, icon: require('../../assets/images/defaultBirds/defaultBird.jpg'), author: 'Saul'},
-        {name: 'Piccione', id: 3, icon: require('../../assets/images/defaultBirds/piccione.jpg'), author: 'Riccardo'},
-        {name: 'Passero', id: 4, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Sara'},
-        {name: 'Tortora', id: 5, icon: require('../../assets/images/defaultBirds/tortora.jpg'), author: 'Karen'},
-        {name: 'Pettirosso', id: 6, icon: require('../../assets/images/defaultBirds/pettirosso.jpg'), author: 'Brian'},
-        {name: 'Cornacchia', id: 7, icon: require('../../assets/images/defaultBirds/cornacchia.jpg'), author: 'Sonia'},
-        {name: 'Passero', id: 8, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Brian'},
-        {name: 'Usignolo', id: 9, icon: require('../../assets/images/defaultBirds/defaultBird.jpg'), author: 'Marina'},
-        {name: 'Piccione', id: 10, icon: require('../../assets/images/defaultBirds/piccione.jpg'), author: 'Luca'},
-        {name: 'Passero', id: 11, icon: require('../../assets/images/defaultBirds/passero.jpg'), author: 'Lucia'},
-        {name: 'Tortora', id: 12, icon: require('../../assets/images/defaultBirds/tortora.jpg'), author: 'Paolo'},
-        {name: 'Pettirosso', id: 13, icon: require('../../assets/images/defaultBirds/pettirosso.jpg'), author: 'Gianni'},
-        {name: 'Cornacchia', id: 14, icon: require('../../assets/images/defaultBirds/cornacchia.jpg'), author: 'Sonia'},
-    ];
+    const fetchData = async () => {
+        try {
+          const response = await fetch('http://192.168.1.249:8000/api/getallbirds')
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          const jsonData = await response.json()
+      
+          setBirdsData(jsonData)
+          setIsLoadingItems(false)
+          
+        } catch (error) {
+          console.error('Error on getting the datas:', error)
+          setIsLoadingItems(false)
+        }
+    }
+    
+    function closeDetailBirdModal(){
+        setDetailBirdModalIsVisible(false)
+    }
+
+    function openDetailBirdModal(id, username){
+        setAuthorUsernameForDetailBirdModal(username)
+        setBirdIdForDetailBirdModal(id)
+        setDetailBirdModalIsVisible(true)
+    }
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.ItemsContainer}>
-                {data.map((item) => (
-                <View key={item.id}>
-                    <BirdItemLatestSightings id={item.id} name={item.name} icon={item.icon} author={item.author}/>
-                </View>
-                ))}
+        <>
+        {
+            isLoadingItems ?
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
-      </ScrollView>
+            :
+            <>
+                <BirdDetailPage visible={detailBirdmodalIsVisible} id={birdIdForDetailBirdModal} originPage={"LatestSightings"} closeModal={closeDetailBirdModal} username={authorUsernameForDetailBirdModal} />
+                <ScrollView style={styles.container}>
+                    <View style={styles.ItemsContainer}>
+                        {birdsData.map((item) => (
+                        <View key={item.id}>
+                            <BirdItemLatestSightings id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id }} author={item.user} likes={item.likes} onBirdPressed={() => openDetailBirdModal(item.id, item.user)}/>
+                        </View>
+                        ))}
+                    </View>
+                </ScrollView>
+            </>
+        }
+        </>
     )
 }
 
@@ -62,5 +98,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 13,
         ...shadowStyle
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })

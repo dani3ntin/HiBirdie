@@ -65,7 +65,7 @@ function EncyclopediaPage(props) {
             </View>
             :
             <>
-                <BirdDetailPage visible={detailBirdmodalIsVisible} id={birdIdForDetailBirdModal} originPage={"EncyclopediaPage"} closeModal={closeDetailBirdModal} />
+                <BirdDetailPage visible={detailBirdmodalIsVisible} id={birdIdForDetailBirdModal} originPage={"Encyclopedia"} closeModal={closeDetailBirdModal} />
                 <ScrollView style={styles.container}>
                     <View style={styles.ItemsContainer}>
                         {birdsData.map((item) => (

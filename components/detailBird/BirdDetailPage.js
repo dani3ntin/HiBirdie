@@ -10,13 +10,11 @@ const windowWidth = Dimensions.get('window').width
 
 function BirdDetailPage(props){
     const [birdData, setBirdData] = useState([])
-    const [authorData, setAuthorData] = useState([])
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
 
     const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id
-    const authorAPIRequest = 'http://192.168.1.249:8000/api/getuserbyusername/a'
 
     useEffect(() => {
         if(props.visible){
@@ -27,27 +25,21 @@ function BirdDetailPage(props){
 
     const fetchData = async () => {
         try {
-          const response = await fetch(imageUrl)
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          const imageMetadata = JSON.parse(response.headers.get('imageInfos'))
-          setBirdData(imageMetadata)
+            const response = await fetch(imageUrl)
+            if (!response.ok) {
+                throw new Error('Network response was not ok')
+            }
+            const imageMetadata = JSON.parse(response.headers.get('imageInfos'))
+            setBirdData(imageMetadata)
+            //console.log(imageMetadata)
 
-           const responseAuthor = await fetch(authorAPIRequest)
-          if (!responseAuthor.ok) {
-            throw new Error('Network response was not ok')
-          }
-          const imageMetadataAuthor = JSON.parse(responseAuthor.headers.get('imageInfos'))
-      
-          setAuthorData(imageMetadataAuthor)
-          setIsLoadingBirdData(false)
+            setIsLoadingBirdData(false)
         } catch (error) {
           console.error('Error on getting the datas:', error)
           setIsLoadingBirdData(false)
         }
     }
-    
+
     const imageSizeStyle = {
         width: birdImageWidth || 200,
         height: birdImageHeight || 200,
@@ -58,12 +50,12 @@ function BirdDetailPage(props){
         setIsLoadingBirdData(true)
         props.closeModal()
     }
-
+      
     function getBirdDetails(){
         return(
             <View style={styles.modalContainer}>
                 <View style={styles.headerContainer}>
-                <DetailBirdHeaderBar birdName={birdData.name} onBackButtonPress={closeModal} />
+                <DetailBirdHeaderBar birdName={birdData.name} onBackButtonPress={closeModal} likes={birdData.likes} />
                 </View>
                 <ScrollView>
                     {
@@ -79,12 +71,14 @@ function BirdDetailPage(props){
                         <View style={styles.pressableAuthorContainer}>
                             <Text style={[styles.boldText, {paddingBottom: 10}]}>Sighted by:</Text>
                             <Pressable>
-                                <AuthorPressable id={authorData.username} name={authorData.name} icon={{ uri: authorAPIRequest }} dateLastSighting={authorData.latestSight}/>
+                                <AuthorPressable username={props.username}/>
                             </Pressable>
                         </View>
                         : null
                     }
-                    <TextInDetailBird sightingDate={birdData.sightingDate} personalNotes={birdData.personalNotes}/>
+                    <View style={styles.textContainer}>
+                        <TextInDetailBird sightingDate={birdData.sightingDate} personalNotes={birdData.personalNotes}/>
+                    </View>
                     <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
                 </ScrollView>
             </View>
@@ -157,5 +151,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    textContainer: {
+        marginLeft: 25,
+        marginRight: 25,
+        marginBottom: 20,
+        backgroundColor: 'white',
+        borderRadius: 13,
+        padding: 20,
+        ...shadowStyle
     },
 })

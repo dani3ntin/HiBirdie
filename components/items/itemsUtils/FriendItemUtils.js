@@ -6,7 +6,6 @@ export function calculateDifferenceBetweenTwoDates(date1, date2){
     const millisecondsInADay = 24 * 60 * 60 * 1000 
     const firstDate = new Date(date1)
     const secondDate = new Date(date2)
-    console.log(date1)
 
     const differenceInMilliseconds = Math.abs(secondDate - firstDate)
     const differenceInDays = Math.round(differenceInMilliseconds / millisecondsInADay)

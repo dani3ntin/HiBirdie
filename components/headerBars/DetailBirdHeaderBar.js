@@ -23,6 +23,10 @@ const DetailBirdHeaderBar = (props) => {
           </Pressable>
         </View>
         <Text style={styles.birdName}>{props.birdName}</Text>
+        <View style={styles.likesContainer}>
+            <Text style={styles.likesText}>{props.likes}</Text>
+            <CustomIcon name="heart" size={25} color="red" />
+        </View>
       </View>
   );
 };
@@ -33,7 +37,6 @@ const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'flex-start',
       backgroundColor: '#f2f2f2',
       width: '100%',
       height: '100%',
@@ -42,6 +45,7 @@ const styles = StyleSheet.create({
       marginLeft: 10,
       fontSize: 22,
       fontWeight: 'bold',
+      flex: 1,
     },
     backButton: {
       width: 70,
@@ -55,6 +59,14 @@ const styles = StyleSheet.create({
     },
     pressedBackButton: {
       opacity: 0.3,
-  }
+    },
+    likesContainer: {
+      flexDirection: 'row',
+      paddingRight: 25,
+    },
+    likesText: {
+      paddingRight: 5, 
+      fontSize: 18
+    }
 });
   
