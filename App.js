@@ -2,7 +2,7 @@ import { StyleSheet, View, SafeAreaView, StatusBar, Button } from 'react-native'
 import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
 import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function App() {
 

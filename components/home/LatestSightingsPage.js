@@ -5,23 +5,40 @@ import { useEffect, useState } from "react"
 import BirdDetailPage from "../detailBird/BirdDetailPage"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatestSightingsPage"
+import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
 
 function LatestSightingsPage(props) {
     const isFocused = useIsFocused()
     const [username, setUsername] = useState(null)
     const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
-    const [detailFiltermodalIsVisible, setDetailFilterModalIsVisible] = useState(false)
+    const [filtermodalIsVisible, setfilterModalIsVisible] = useState(false)
     const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
     const [authorUsernameForDetailBirdModal, setAuthorUsernameForDetailBirdModal] = useState('')
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
+    const [filterMaximumDays, setFilterMaximumDays] = useState('')
+    const [filterMaximumDistance, setFilterMaximumDistance] = useState('')
+    const [latUser, setLatUser] = useState(0)
+    const [lonUser, setLonUser] = useState(0)
+    const [dataOfLastFilterUpdate, setDataOfLastFilterUpdate] = useState([])
 
     useEffect(() => {
         if(isFocused){
-            fetchData()
+            settingUserCoordinates()
+            settingFilter()
             settingUsername()
+            fetchData()
         } 
-    }, [isFocused ,username])
+    }, [isFocused ,username, filterMaximumDays, filterMaximumDistance])
+
+    async function settingUserCoordinates(){
+        const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
+        if (storedCoordinatesUserData) {
+          const parsedUserData = JSON.parse(storedCoordinatesUserData)
+          setLatUser(parsedUserData.latitude)
+          setLonUser(parsedUserData.longitude)
+        }
+    }
 
     async function settingUsername(){
         const storedUserData = await AsyncStorage.getItem('userData')
@@ -31,22 +48,41 @@ function LatestSightingsPage(props) {
         }
     }
 
+    async function settingFilter(){
+        const storedFilterData = await AsyncStorage.getItem('filterData')
+        if (storedFilterData) {
+          const parsedFilterData = JSON.parse(storedFilterData)
+          setFilterMaximumDays(parsedFilterData.filterMaximumDays)
+          setFilterMaximumDistance(parsedFilterData.filterMaximumDistance)
+        }
+    }
+
     
     const fetchData = async () => {
-        try {
-          const response = await fetch('http://192.168.1.249:8000/api/getallbirds/' + username)
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          const jsonData = await response.json()
-      
-          setBirdsData(jsonData)
-          setIsLoadingItems(false)
-          
-        } catch (error) {
-          console.error('Error on getting the datas:', error)
-          setIsLoadingItems(false)
-        }
+        const data = { requestingUser: username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+            setIsLoadingItems(true)
+            try {
+                const response = await fetch('http://192.168.1.249:8000/api/getbirdswithfilter', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data), // Dati da inviare nel corpo della richiesta
+              })
+              console.log(data)
+              setDataOfLastFilterUpdate(data)
+                if (!response.ok) {
+                  throw new Error('Network response was not ok')
+                }
+                const jsonData = await response.json()
+            
+                setBirdsData(jsonData)
+                setIsLoadingItems(false)
+                
+              } catch (error) {
+                console.error('Error on getting the datas:', error)
+                setIsLoadingItems(false)
+            }
     }
     
     function closeDetailBirdModal(){
@@ -61,12 +97,20 @@ function LatestSightingsPage(props) {
     }
 
     function openFilterModal(){
-        setDetailFilterModalIsVisible(true)
+        setfilterModalIsVisible(true)
     }
 
     function closeFilterModal(){
+        settingFilter()
         fetchData()
-        setDetailFilterModalIsVisible(false)
+        setfilterModalIsVisible(false)
+    }
+
+    async function updateFilterData(maximumDays, maximunDistance){
+        
+        setFilterMaximumDays(maximumDays)
+        setFilterMaximumDistance(maximunDistance)
+        await AsyncStorage.setItem('filterData', JSON.stringify({filterMaximumDays: maximumDays, filterMaximumDistance: maximunDistance}))
     }
 
     return (
@@ -87,8 +131,11 @@ function LatestSightingsPage(props) {
                     loggedUsername={username}
                 />
                 <FilterLatestSightingsPage 
-                    visible={detailFiltermodalIsVisible}
+                    visible={filtermodalIsVisible}
                     closeModal={closeFilterModal}
+                    updateFilterData={updateFilterData}
+                    maximumDaysDefault={filterMaximumDays}
+                    maximumDistanceDefault={filterMaximumDistance}
                 />
                 <View style={styles.container}>
                     <ScrollView style={styles.scrollViewcontainer}>
@@ -101,6 +148,7 @@ function LatestSightingsPage(props) {
                                     image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username}} 
                                     sightingDate={item.sightingDate} 
                                     likes={item.likes} 
+                                    distance={Math.round(item.distance)}
                                     userPutLike={item.userPutLike} 
                                     loggedUsername={username}
                                     onBirdPressed={() => openDetailBirdModal(item.id, item.user)}

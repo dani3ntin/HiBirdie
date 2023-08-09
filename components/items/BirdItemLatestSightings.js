@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Button} from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils";
+import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
+import { changeDateFormatYYYYDDMM } from "../utils/utils";
 
 function BirdItemLatestSightings(props) {
     const today = new Date()
@@ -55,7 +56,8 @@ function BirdItemLatestSightings(props) {
                     />
                     <View style={styles.nameAndAuthor}>
                         <Text style={styles.birdName}>{props.name}</Text>
-                        <Text style={styles.author}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.sightingDate))}</Text>
+                        <Text style={styles.text}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, changeDateFormatYYYYDDMM(props.sightingDate)))}</Text>
+                        <Text style={styles.text}>{props.distance} km away from you</Text>
                     </View>
                     <View style={styles.heartContainer}>
                         <Text style={styles.likesNumber}>{likeNumber}</Text>
@@ -79,9 +81,10 @@ const styles = StyleSheet.create({
     birdItem: {
         flex: 1,
         margin: 5,
+        marginBottom: 10,
         borderRadius: 6,
         backgroundColor: 'white',
-        height: 60,
+        height: 70,
     },
     birdName: {
         color: 'black',
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
         fontSize: 19,
         fontWeight: 'bold',
     },
-    author: {
+    text: {
         color: 'black',
         paddingLeft: 8,
         fontSize: 15,
@@ -115,6 +118,7 @@ const styles = StyleSheet.create({
        flex: 1
     }, 
     heartContainer : {
+        paddingTop: 10,
         flexDirection: 'row',
     },
     likesNumber: {
