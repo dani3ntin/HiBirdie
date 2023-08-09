@@ -5,6 +5,7 @@ import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOp
 import AuthorPressable from "./AuthorPressable"
 import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
+import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -14,7 +15,7 @@ function BirdDetailPage(props){
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
 
-    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id
+    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id + '/' + props.loggedUsername
 
     useEffect(() => {
         if(props.visible){
@@ -55,7 +56,7 @@ function BirdDetailPage(props){
         return(
             <View style={styles.modalContainer}>
                 <View style={styles.headerContainer}>
-                <DetailBirdHeaderBar birdName={birdData.name} onBackButtonPress={closeModal} likes={birdData.likes} />
+                <DetailBirdHeaderBar id={birdData.id} birdName={birdData.name} loggedUsername={props.loggedUsername} onBackButtonPress={closeModal} likes={birdData.likes} userPutLike={birdData.userPutLike} />
                 </View>
                 <ScrollView>
                     {
@@ -71,13 +72,13 @@ function BirdDetailPage(props){
                         <View style={styles.pressableAuthorContainer}>
                             <Text style={[styles.boldText, {paddingBottom: 10}]}>Sighted by:</Text>
                             <Pressable>
-                                <AuthorPressable username={props.username}/>
+                                <AuthorPressable username={props.authorUsername}/>
                             </Pressable>
                         </View>
                         : null
                     }
                     <View style={styles.textContainer}>
-                        <TextInDetailBird sightingDate={birdData.sightingDate} personalNotes={birdData.personalNotes}/>
+                        <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
                     </View>
                     <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
                 </ScrollView>

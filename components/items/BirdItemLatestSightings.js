@@ -1,23 +1,40 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, Image} from "react-native"
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Pressable, Image, Button} from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils";
 
 function BirdItemLatestSightings(props) {
-    const [liked, setLiked] = useState(false)
+    const today = new Date()
+    const [liked, setLiked] = useState(props.userPutLike)
     const [likeNumber, setLikeNumber] = useState(props.likes)
     const APIPrefix = 'http://192.168.1.249:8000/api/'
+
+    useEffect(() => {
+        setLiked(props.userPutLike)
+        setLikeNumber(props.likes)
+    }, [props.userPutLike, props.likes])
 
     async function onPressLikeHandler(){
         const newValue = !liked
         setLiked(newValue)
         if(newValue === true){
             setLikeNumber(likeNumber + 1)
-            await fetch(APIPrefix + 'addlikebyid/' + props.id)
-            console.log('like aggiunto')
+            await fetch(APIPrefix + 'addlike', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
+            });
         }else{
             setLikeNumber(likeNumber - 1)
-            await fetch(APIPrefix + 'deletelikebyid/' + props.id)
-            console.log('like tolto')
+            await fetch(APIPrefix + 'removelike', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
+            });
         }
     }
 
@@ -38,7 +55,7 @@ function BirdItemLatestSightings(props) {
                     />
                     <View style={styles.nameAndAuthor}>
                         <Text style={styles.birdName}>{props.name}</Text>
-                        <Text style={styles.author}>{"Photographed by: " + props.author}</Text>
+                        <Text style={styles.author}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.sightingDate))}</Text>
                     </View>
                     <View style={styles.heartContainer}>
                         <Text style={styles.likesNumber}>{likeNumber}</Text>

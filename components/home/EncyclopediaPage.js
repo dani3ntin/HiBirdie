@@ -1,12 +1,15 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
+import { View, Button, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
 import { useIsFocused } from '@react-navigation/native';
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
 import BirdDetailPage from "../detailBird/BirdDetailPage";
 import { useState } from "react"
 import { useEffect } from "react"
+import { changeDateFormatToDDMMYYYY } from "../utils/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function EncyclopediaPage(props) {
+function EncyclopediaPage() {
     const isFocused = useIsFocused()
+    const [username, setUsername] = useState(null)
     const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
     const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
     const [birdsData, setBirdsData] = useState([])
@@ -14,13 +17,22 @@ function EncyclopediaPage(props) {
 
     useEffect(() => {
         if(isFocused){
+            settingUsername()
             fetchData()
         } 
-    }, [isFocused])
+    }, [isFocused, username])
+
+    async function settingUsername(){
+        const storedUserData = await AsyncStorage.getItem('userData')
+        if (storedUserData) {
+          const parsedUserData = JSON.parse(storedUserData)
+          setUsername(parsedUserData.username)
+        }
+    }
 
     const fetchData = async () => {
         try {
-          const response = await fetch('http://192.168.1.249:8000/api/getbirdsbyuser/a')
+          const response = await fetch('http://192.168.1.249:8000/api/getbirdsbyuser/' + username + '/' + username)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -44,18 +56,6 @@ function EncyclopediaPage(props) {
         setDetailBirdModalIsVisible(true)
     }
 
-    function changeDateFormatToDDMMYYYY(data){
-        const parts = data.split('-')
-        if (parts.length === 3) {
-            const year = parts[0]
-            const month = parts[1]
-            const day = parts[2]
-            return `${day}-${month}-${year}`
-          } else {
-            return '01-01-2000'
-          }
-    }
-
     return (
         <>
         {
@@ -70,7 +70,7 @@ function EncyclopediaPage(props) {
                     <View style={styles.ItemsContainer}>
                         {birdsData.map((item) => (
                         <View key={item.id}>
-                            <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
+                            <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
                         </View>
                         ))}
                     </View>

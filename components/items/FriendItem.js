@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, Pressable, Image} from "react-native"
 import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
 
 function FriendItem(props) {
-
     const today = new Date()
 
     return (

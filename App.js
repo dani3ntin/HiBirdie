@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView, StatusBar } from 'react-native'
+import { StyleSheet, View, SafeAreaView, StatusBar, Button } from 'react-native'
 import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
 import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
@@ -27,7 +27,7 @@ export default function App() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ input: 'a', password: 'password' }), // Dati da inviare nel corpo della richiesta
-        });
+        })
   
         const responseData = await response.json()
         await AsyncStorage.setItem('userData', JSON.stringify(responseData))
@@ -42,7 +42,7 @@ export default function App() {
       <View style={styles.headerContainer}>
         <HomeHeaderBar userName={userData ? userData.name : ''} userAvatar={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + (userData ? userData.username : '') }} />
       </View>
-      <Home />
+      <Home/>
       <StatusBar style="auto" />
     </SafeAreaView>
   );

@@ -1,8 +1,19 @@
-import React from 'react';
-import { View, Text, Pressable, StyleSheet, BackHandler  } from 'react-native'
+import React from 'react'
+import { useState, useEffect } from 'react'
+import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 const DetailBirdHeaderBar = (props) => {
+  const APIPrefix = 'http://192.168.1.249:8000/api/'
+  const [liked, setLiked] = useState(props.userPutLike)
+  const [likeNumber, setLikeNumber] = useState(props.likes)
+
+  useEffect(() => {
+    console.log(props.userPutLike)
+    setLiked(props.userPutLike)
+    setLikeNumber(props.likes)
+  }, [props.userPutLike, props.likes])
 
   const CustomIcon = ({ name, size, color }) => {
     const IconComponent = Icon;
@@ -12,6 +23,30 @@ const DetailBirdHeaderBar = (props) => {
   function backButtonPressedHandler(){
     props.onBackButtonPress()
   }
+
+  async function onPressLikeHandler(){
+    const newValue = !liked
+    setLiked(newValue)
+    if(newValue === true){
+        setLikeNumber(likeNumber + 1)
+        await fetch(APIPrefix + 'addlike', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
+        });
+    }else{
+        setLikeNumber(likeNumber - 1)
+        await fetch(APIPrefix + 'removelike', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
+        });
+    }
+}
 
   return (
       <View style={styles.container}>
@@ -24,8 +59,14 @@ const DetailBirdHeaderBar = (props) => {
         </View>
         <Text style={styles.birdName}>{props.birdName}</Text>
         <View style={styles.likesContainer}>
-            <Text style={styles.likesText}>{props.likes}</Text>
-            <CustomIcon name="heart" size={25} color="red" />
+            <Text style={styles.likesText}>{likeNumber}</Text>
+            <Pressable onPress={() => onPressLikeHandler()}>
+                <MaterialCommunityIcons
+                    name={liked ? "heart" : "heart-outline"}
+                    size={32}
+                    color={liked ? "red" : "black"}
+                />
+            </Pressable>
         </View>
       </View>
   );
@@ -65,7 +106,8 @@ const styles = StyleSheet.create({
       paddingRight: 25,
     },
     likesText: {
-      paddingRight: 5, 
+      paddingRight: 5,
+      paddingTop: 3,
       fontSize: 18
     }
 });
