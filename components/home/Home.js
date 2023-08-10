@@ -3,7 +3,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import EncyclopediaPage from './EncyclopediaPage';
-import FriendsPage from './FriendsPage';
+import FollowedPage from './FollowedPage';
 import LatestSightingsPage from './LatestSightingsPage'
 import { useEffect } from 'react'
 import * as Location from 'expo-location'
@@ -39,7 +39,7 @@ export default function Home() {
           <Tab.Navigator>
               <Tab.Screen name="My Encyclopedia" component={EncyclopediaPage}/>
               <Tab.Screen name="Latest Sightings" component={LatestSightingsPage}/>
-              <Tab.Screen name="Followed" component={FriendsPage}/>
+              <Tab.Screen name="Followed" component={FollowedPage}/>
           </Tab.Navigator>
       </NavigationContainer>
     </>

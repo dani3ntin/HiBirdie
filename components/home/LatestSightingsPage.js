@@ -16,11 +16,10 @@ function LatestSightingsPage(props) {
     const [authorUsernameForDetailBirdModal, setAuthorUsernameForDetailBirdModal] = useState('')
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
-    const [filterMaximumDays, setFilterMaximumDays] = useState('')
-    const [filterMaximumDistance, setFilterMaximumDistance] = useState('')
+    const [filterMaximumDays, setFilterMaximumDays] = useState(0)
+    const [filterMaximumDistance, setFilterMaximumDistance] = useState(0)
     const [latUser, setLatUser] = useState(0)
     const [lonUser, setLonUser] = useState(0)
-    const [dataOfLastFilterUpdate, setDataOfLastFilterUpdate] = useState([])
 
     useEffect(() => {
         if(isFocused){
@@ -60,7 +59,6 @@ function LatestSightingsPage(props) {
     
     const fetchData = async () => {
         const data = { requestingUser: username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
-            setIsLoadingItems(true)
             try {
                 const response = await fetch('http://192.168.1.249:8000/api/getbirdswithfilter', {
                 method: 'POST',
@@ -69,8 +67,6 @@ function LatestSightingsPage(props) {
                 },
                 body: JSON.stringify(data), // Dati da inviare nel corpo della richiesta
               })
-              console.log(data)
-              setDataOfLastFilterUpdate(data)
                 if (!response.ok) {
                   throw new Error('Network response was not ok')
                 }
@@ -101,6 +97,7 @@ function LatestSightingsPage(props) {
     }
 
     function closeFilterModal(){
+        setIsLoadingItems(true)
         settingFilter()
         fetchData()
         setfilterModalIsVisible(false)
@@ -139,23 +136,31 @@ function LatestSightingsPage(props) {
                 />
                 <View style={styles.container}>
                     <ScrollView style={styles.scrollViewcontainer}>
-                        <View style={styles.ItemsContainer}>
-                            {birdsData.map((item) => (
-                            <View key={item.id}>
-                                <BirdItemLatestSightings 
-                                    id={item.id} 
-                                    name={item.name} 
-                                    image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username}} 
-                                    sightingDate={item.sightingDate} 
-                                    likes={item.likes} 
-                                    distance={Math.round(item.distance)}
-                                    userPutLike={item.userPutLike} 
-                                    loggedUsername={username}
-                                    onBirdPressed={() => openDetailBirdModal(item.id, item.user)}
-                                />
+                        {
+                            birdsData.length === 0 ?
+                            <View style={styles.textContainer}>
+                                <Text style={styles.text}>No birds found!</Text>
+                                <Text style={styles.text}>Try changing the filter settings</Text>
                             </View>
-                            ))}
-                        </View>
+                            :
+                            <View style={styles.ItemsContainer}>
+                                {birdsData.map((item) => (
+                                <View key={item.id}>
+                                    <BirdItemLatestSightings 
+                                        id={item.id} 
+                                        name={item.name} 
+                                        image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username}} 
+                                        sightingDate={item.sightingDate} 
+                                        likes={item.likes} 
+                                        distance={Math.round(item.distance)}
+                                        userPutLike={item.userPutLike} 
+                                        loggedUsername={username}
+                                        onBirdPressed={() => openDetailBirdModal(item.id, item.user)}
+                                    />
+                                </View>
+                                ))}
+                            </View>
+                        }
                         <View style={styles.bottomFiller}></View>
                     </ScrollView>
                     <Pressable style={styles.floatingButton} onPress={openFilterModal}>
@@ -230,5 +235,14 @@ const styles = StyleSheet.create({
     },
     bottomFiller: {
         height: 120
+    },
+    textContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 100,
+    },
+    text: {
+        fontSize: 18
     }
 })

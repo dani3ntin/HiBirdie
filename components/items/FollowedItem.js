@@ -1,23 +1,27 @@
 import { View, Text, StyleSheet, Pressable, Image} from "react-native"
 import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
 
-function FriendItem(props) {
+function FollowedItem(props) {
     const today = new Date()
+
+    function onFollowerPressedHandler(){
+        props.onFollowerPressed(props.id)
+    }
 
     return (
         <View style={styles.friendItem}>
             <Pressable
-                onPress={() => console.log(today)}
+                onPress={onFollowerPressedHandler}
                 style={({pressed}) => pressed && styles.pressedItem}
             >
                 <View style={styles.itemContent}>
                     <Image
-                        source={props.icon}
+                        source={props.profilePic}
                         style={styles.avatar}
                     />
                     <View>
                         <Text style={styles.friendName}>{props.name}</Text>
-                        <Text style={styles.friendState}>{"Last sighting: " + approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.dateLastSighting))}</Text>
+                        <Text style={styles.friendState}>{props.state}</Text>
                     </View>
                 </View>
             </Pressable>
@@ -25,7 +29,7 @@ function FriendItem(props) {
     )
 }
 
-export default FriendItem
+export default FollowedItem
 
 const styles = StyleSheet.create({
     friendItem: {

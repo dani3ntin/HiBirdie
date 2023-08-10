@@ -1,4 +1,4 @@
-import { View, Button, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
 import { useIsFocused } from '@react-navigation/native';
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
 import BirdDetailPage from "../detailBird/BirdDetailPage";
@@ -65,16 +65,30 @@ function EncyclopediaPage() {
             </View>
             :
             <>
-                <BirdDetailPage visible={detailBirdmodalIsVisible} id={birdIdForDetailBirdModal} originPage={"Encyclopedia"} closeModal={closeDetailBirdModal} />
+                <BirdDetailPage 
+                    visible={detailBirdmodalIsVisible} 
+                    id={birdIdForDetailBirdModal} 
+                    originPage={"Encyclopedia"} 
+                    closeModal={closeDetailBirdModal} 
+                    loggedUsername={username}
+                />
                 <ScrollView style={styles.container}>
-                    <View style={styles.ItemsContainer}>
-                        {birdsData.map((item) => (
-                        <View key={item.id}>
-                            <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
+                    {
+                        birdsData.length === 0 ?
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>No birds here!</Text>
+                            <Text style={styles.text}>Try adding one with the "new bird" button below, it's easy!</Text>
                         </View>
+                        :
+                        <View style={styles.ItemsContainer}>
+                        {birdsData.map((item) => (
+                            <View key={item.id}>
+                                <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
+                            </View>
                         ))}
-                    </View>
-                </ScrollView>
+                        </View>
+                    }
+            </ScrollView>
             </>
         }
         </>
@@ -114,4 +128,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    textContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 100,
+        paddingLeft: 30,
+        paddingRight: 30,
+    },
+    text: {
+        fontSize: 18,
+    }
 })

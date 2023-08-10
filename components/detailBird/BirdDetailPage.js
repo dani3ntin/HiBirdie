@@ -32,7 +32,6 @@ function BirdDetailPage(props){
             }
             const imageMetadata = JSON.parse(response.headers.get('imageInfos'))
             setBirdData(imageMetadata)
-            //console.log(imageMetadata)
 
             setIsLoadingBirdData(false)
         } catch (error) {
