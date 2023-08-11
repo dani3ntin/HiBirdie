@@ -2,36 +2,28 @@ import { View, Text, StyleSheet, ScrollView} from "react-native"
 import { useIsFocused } from '@react-navigation/native'
 import FollowedItem from "../items/FollowedItem"
 import { useState, useEffect } from "react"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { ActivityIndicator } from "react-native"
 import UserDetailPage from "../userDetail/UserDetailPage"
 
 function FollowedPage(props) {
     const isFocused = useIsFocused()
-    const [username, setUsername] = useState(null)
     const [followersData, setFollowersData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
     const [detailFollowerModalIsVisible, setDetailFollowerModalIsVisible] = useState(false)
-    const [followerIdForDetailBirdModal, setFollowerIdForDetailBirdModal] = useState(-1)
+    const [followerUsernameForDetailUserModal, setFollowerUsernameForDetailUserModal] = useState('')
+    const [followerNameForDetailUserModal, setFollowerNameForDetailUserModal] = useState('')
+    const [followerStateForDetailUserModal, setFollowerStateForDetailUserModal] = useState('')
 
     useEffect(() => {
         if(isFocused){
-            settingUsername()
             fetchData()
         } 
-    }, [isFocused, username])
+    }, [isFocused, props.username])
 
-    async function settingUsername(){
-        const storedUserData = await AsyncStorage.getItem('userData')
-        if (storedUserData) {
-          const parsedUserData = JSON.parse(storedUserData)
-          setUsername(parsedUserData.username)
-        }
-    }
 
     const fetchData = async () => {
         try {
-          const response = await fetch('http://192.168.1.249:8000/api/getfollowedbyusername/' + username)
+          const response = await fetch('http://192.168.1.249:8000/api/getfollowedbyusername/' + props.username)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -45,8 +37,10 @@ function FollowedPage(props) {
         }
     }
 
-    function onFollowerPressedHandler(usernameFollowed){
-        setFollowerIdForDetailBirdModal(usernameFollowed)
+    function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed){
+        setFollowerUsernameForDetailUserModal(usernameFollowed)
+        setFollowerNameForDetailUserModal(nameFollowed)
+        setFollowerStateForDetailUserModal(stateFollowed)
         setDetailFollowerModalIsVisible(true)
     }
 
@@ -67,15 +61,23 @@ function FollowedPage(props) {
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
-        :
+        :  
         <>
             <UserDetailPage 
                 visible={detailFollowerModalIsVisible} 
-                closeModal={closeUserDetailModal}
-                username={followerIdForDetailBirdModal}
+                closeUserDetailModal={closeUserDetailModal}
+                usernameFollowed={followerUsernameForDetailUserModal}
+                name={followerNameForDetailUserModal}
+                state={followerStateForDetailUserModal}
+                username={props.username}
             />
             <ScrollView style={styles.container}>
                 {
+                    followersData.length === 0 ?
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>You don't follow anyone!</Text>
+                        </View>
+                    :
                     <View style={styles.ItemsContainer}>
                         {followersData.map((item) => (
                         <View key={item.id}>
@@ -84,7 +86,7 @@ function FollowedPage(props) {
                                 name={item.name} 
                                 profilePic={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + item.usernameFollowed }} 
                                 state={editState(item.state)}
-                                onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed)}
+                                onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state)}
                             />
                         </View>
                         ))}
@@ -129,4 +131,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    textContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 100,
+        paddingLeft: 30,
+        paddingRight: 30,
+    },
+    text: {
+        fontSize: 18,
+    }
 })

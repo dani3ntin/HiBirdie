@@ -1,4 +1,5 @@
 export function changeDateFormatToDDMMYYYY(data){
+  if(data === undefined) return null
     const parts = data.split('-')
     if (parts.length === 3) {
         const year = parts[0]
@@ -11,6 +12,7 @@ export function changeDateFormatToDDMMYYYY(data){
 }
 
 export function changeDateFormatYYYYDDMM(data){
+  if(data === undefined) return null
   const parts = data.split('-')
   if (parts.length === 3) {
       const year = parts[0]

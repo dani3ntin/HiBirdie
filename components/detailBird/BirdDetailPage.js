@@ -1,4 +1,4 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable } from "react-native"
+import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
@@ -6,6 +6,7 @@ import AuthorPressable from "./AuthorPressable"
 import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
+import DeleteBirdButton from "./DeleteBirdButton"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -16,8 +17,10 @@ function BirdDetailPage(props){
     const [birdImageHeight, setBirdImageHeight] = useState(0)
 
     const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id + '/' + props.loggedUsername
+    const deleteBirdAPI = 'http://192.168.1.249:8000/api/deletebird/' + birdData.id
 
     useEffect(() => {
+        setIsLoadingBirdData(true)
         if(props.visible){
             calculateOptimizedImageSize(imageUrl, setBirdImageWidth, setBirdImageHeight)
             fetchData()
@@ -47,8 +50,23 @@ function BirdDetailPage(props){
 
     function closeModal(){
         setBirdData([])
-        setIsLoadingBirdData(true)
         props.closeModal()
+    }
+
+    async function deleteBird(){
+        await fetch(deleteBirdAPI)
+        closeModal()
+    }
+
+    function handleDeletePress(){
+        Alert.alert(
+            'Delete Bird',
+            'Are you sure you want to delete this bird?',
+            [
+              { text: 'Cancel'},
+              { text: 'OK', onPress: () => deleteBird() },
+            ]
+          );
     }
       
     function getBirdDetails(){
@@ -80,6 +98,12 @@ function BirdDetailPage(props){
                         <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
                     </View>
                     <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
+                    {
+                        props.originPage === "Encyclopedia"
+                        ?
+                        <DeleteBirdButton handleDeletePress={handleDeletePress} />
+                        : null
+                    }
                 </ScrollView>
             </View>
         )

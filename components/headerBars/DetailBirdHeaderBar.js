@@ -10,7 +10,6 @@ const DetailBirdHeaderBar = (props) => {
   const [likeNumber, setLikeNumber] = useState(props.likes)
 
   useEffect(() => {
-    console.log(props.userPutLike)
     setLiked(props.userPutLike)
     setLikeNumber(props.likes)
   }, [props.userPutLike, props.likes])

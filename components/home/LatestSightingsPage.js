@@ -9,7 +9,6 @@ import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } fr
 
 function LatestSightingsPage(props) {
     const isFocused = useIsFocused()
-    const [username, setUsername] = useState(null)
     const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
     const [filtermodalIsVisible, setfilterModalIsVisible] = useState(false)
     const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
@@ -25,10 +24,9 @@ function LatestSightingsPage(props) {
         if(isFocused){
             settingUserCoordinates()
             settingFilter()
-            settingUsername()
             fetchData()
         } 
-    }, [isFocused ,username, filterMaximumDays, filterMaximumDistance])
+    }, [isFocused , props.username, filterMaximumDays, filterMaximumDistance])
 
     async function settingUserCoordinates(){
         const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
@@ -36,14 +34,6 @@ function LatestSightingsPage(props) {
           const parsedUserData = JSON.parse(storedCoordinatesUserData)
           setLatUser(parsedUserData.latitude)
           setLonUser(parsedUserData.longitude)
-        }
-    }
-
-    async function settingUsername(){
-        const storedUserData = await AsyncStorage.getItem('userData')
-        if (storedUserData) {
-          const parsedUserData = JSON.parse(storedUserData)
-          setUsername(parsedUserData.username)
         }
     }
 
@@ -58,14 +48,14 @@ function LatestSightingsPage(props) {
 
     
     const fetchData = async () => {
-        const data = { requestingUser: username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+        const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
             try {
                 const response = await fetch('http://192.168.1.249:8000/api/getbirdswithfilter', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data), // Dati da inviare nel corpo della richiesta
+                body: JSON.stringify(data),
               })
                 if (!response.ok) {
                   throw new Error('Network response was not ok')
@@ -125,7 +115,7 @@ function LatestSightingsPage(props) {
                     originPage={"LatestSightings"} 
                     closeModal={closeDetailBirdModal} 
                     authorUsername={authorUsernameForDetailBirdModal}
-                    loggedUsername={username}
+                    loggedUsername={props.username}
                 />
                 <FilterLatestSightingsPage 
                     visible={filtermodalIsVisible}
@@ -149,12 +139,12 @@ function LatestSightingsPage(props) {
                                     <BirdItemLatestSightings 
                                         id={item.id} 
                                         name={item.name} 
-                                        image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + username}} 
+                                        image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username}} 
                                         sightingDate={item.sightingDate} 
                                         likes={item.likes} 
                                         distance={Math.round(item.distance)}
                                         userPutLike={item.userPutLike} 
-                                        loggedUsername={username}
+                                        loggedUsername={props.username}
                                         onBirdPressed={() => openDetailBirdModal(item.id, item.user)}
                                     />
                                 </View>
@@ -163,7 +153,7 @@ function LatestSightingsPage(props) {
                         }
                         <View style={styles.bottomFiller}></View>
                     </ScrollView>
-                    <Pressable style={styles.floatingButton} onPress={openFilterModal}>
+                    <Pressable style={styles.floatingButton} onPress={openFilterModal} >
                         <Text style={styles.buttonText}>Open Filters</Text>
                     </Pressable>
                 </View>
@@ -224,7 +214,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        elevation: 3, // Ombra su Android
+        elevation: 3,
     },
     buttonText: {
         color: 'black',

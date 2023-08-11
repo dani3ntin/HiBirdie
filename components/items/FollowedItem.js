@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, Pressable, Image} from "react-native"
-import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
 
 function FollowedItem(props) {
     const today = new Date()

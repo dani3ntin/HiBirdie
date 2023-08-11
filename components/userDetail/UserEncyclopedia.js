@@ -1,38 +1,60 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
 import { useIsFocused } from '@react-navigation/native';
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
+import BirdItemLatestSightings from "../items/BirdItemLatestSightings";
 import BirdDetailPage from "../detailBird/BirdDetailPage";
 import { useState } from "react"
 import { useEffect } from "react"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function EncyclopediaPage(props) {
+function UserEncyclopedia(props) {
     const isFocused = useIsFocused()
     const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
     const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
+    const [latUser, setLatUser] = useState(0)
+    const [lonUser, setLonUser] = useState(0)
 
     useEffect(() => {
         if(isFocused){
             fetchData()
+            settingUserCoordinates()
         } 
     }, [isFocused, props.username])
 
+    async function settingUserCoordinates(){
+        const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
+        if (storedCoordinatesUserData) {
+          const parsedUserData = JSON.parse(storedCoordinatesUserData)
+          setLatUser(parsedUserData.latitude)
+          setLonUser(parsedUserData.longitude)
+        }
+    }
+
     const fetchData = async () => {
+        const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
         try {
-          const response = await fetch('http://192.168.1.249:8000/api/getbirdsbyuser/' + props.username + '/' + props.username)
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          const jsonData = await response.json()
+            console.log(data)
+            const response = await fetch('http://192.168.1.249:8000/api/getbirdsbyusernamewithdistance', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            if (!response.ok) {
+                throw new Error('Network response was not ok')
+            }
+            const jsonData = await response.json()
       
-          setBirdsData(jsonData)
-          setIsLoadingItems(false)
+            setBirdsData(jsonData)
+            setIsLoadingItems(false)
           
         } catch (error) {
-          console.error('Error on getting the datas:', error)
-          setIsLoadingItems(false)
+            console.error('Error on getting the datas:', error)
+            setIsLoadingItems(false)
         }
     }
 
@@ -59,22 +81,36 @@ function EncyclopediaPage(props) {
                 <BirdDetailPage 
                     visible={detailBirdmodalIsVisible} 
                     id={birdIdForDetailBirdModal} 
-                    originPage={"Encyclopedia"} 
+                    originPage={"UserDetail"} 
                     closeModal={closeDetailBirdModal} 
                     loggedUsername={props.username}
                 />
                 <ScrollView style={styles.container}>
+                <View style={styles.stateContainer}>
+                    <Text style={styles.text}>{props.state}</Text>
+                </View>
+                <Text style={styles.title}>{props.name}'s Encyclopedia:</Text>
                     {
                         birdsData.length === 0 ?
                         <View style={styles.textContainer}>
                             <Text style={styles.text}>No birds here!</Text>
-                            <Text style={styles.text}>Try adding one with the "new bird" button below, it's easy!</Text>
+                            <Text style={styles.text}>{props.name} hasn't added any birds yet</Text>
                         </View>
                         :
                         <View style={styles.ItemsContainer}>
                         {birdsData.map((item) => (
                             <View key={item.id}>
-                                <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
+                                <BirdItemLatestSightings 
+                                    id={item.id} 
+                                    name={item.name} 
+                                    image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username }} 
+                                    sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} 
+                                    likes={item.likes} 
+                                    distance={Math.round(item.distance)}
+                                    userPutLike={item.userPutLike} 
+                                    loggedUsername={props.username}
+                                    onBirdPressed={openDetailBirdModal}
+                                />
                             </View>
                         ))}
                         </View>
@@ -86,7 +122,7 @@ function EncyclopediaPage(props) {
     )
 }
 
-export default EncyclopediaPage
+export default UserEncyclopedia
 
 const shadowStyle = Platform.select({
     ios: {
@@ -129,5 +165,21 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-    }
+    },
+    stateContainer: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20,
+        backgroundColor: 'white',
+        borderRadius: 13,
+        padding: 20,
+        ...shadowStyle
+    },
+    title: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20,
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 })
