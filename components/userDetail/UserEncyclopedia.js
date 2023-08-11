@@ -104,7 +104,7 @@ function UserEncyclopedia(props) {
                                     id={item.id} 
                                     name={item.name} 
                                     image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username }} 
-                                    sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} 
+                                    sightingDate={item.sightingDate} 
                                     likes={item.likes} 
                                     distance={Math.round(item.distance)}
                                     userPutLike={item.userPutLike} 
