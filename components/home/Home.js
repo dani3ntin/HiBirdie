@@ -45,8 +45,8 @@ export default function Home() {
     <>
       <NavigationContainer>
           <Tab.Navigator>
-              <Tab.Screen name="My Encyclopedia">{() => <EncyclopediaPage username={username}/>}</Tab.Screen>
               <Tab.Screen name="Latest Sightings">{() => <LatestSightingsPage username={username}/>}</Tab.Screen>
+              <Tab.Screen name="My Encyclopedia">{() => <EncyclopediaPage username={username}/>}</Tab.Screen>
               <Tab.Screen name="Followed">{() => <FollowedPage username={username}/>}</Tab.Screen>
           </Tab.Navigator>
       </NavigationContainer>

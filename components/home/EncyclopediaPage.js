@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
 import { useIsFocused } from '@react-navigation/native';
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
-import BirdDetailPage from "../detailBird/BirdDetailPage";
+import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor";
 import { useState } from "react"
 import { useEffect } from "react"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils";
@@ -56,7 +56,7 @@ function EncyclopediaPage(props) {
             </View>
             :
             <>
-                <BirdDetailPage 
+                <BirdDetailPageWithoutAuthor 
                     visible={detailBirdmodalIsVisible} 
                     id={birdIdForDetailBirdModal} 
                     originPage={"Encyclopedia"} 

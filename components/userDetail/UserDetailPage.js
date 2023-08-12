@@ -1,35 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Modal, StyleSheet, ActivityIndicator } from 'react-native'
-import BirdDetailPage from '../detailBird/BirdDetailPage'
+import { View, Modal, StyleSheet, ScrollView } from 'react-native'
 import UserEncyclopedia from './UserEncyclopedia'
 import DetailUserHeaderBar from '../headerBars/DetailUserHeaderBar'
+import UserUpperInfos from './UserUpperInfos'
 
 function UserDetailPage(props){
-  const [isLoadingFollowerData, setIsLoadingFollowerData] = useState(true)
-  const [userInfo, setUserInfo] = useState([])
-
-  useEffect(() => {
-    fetchData()
-  }, [props.username])
-
-
-  const fetchData = async () => {
-    if(props.username !== ''){
-      try {
-        const response = await fetch('http://192.168.1.249:8000/api/getuserbyusername/' + props.username)
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        const imageMetadata = JSON.parse(response.headers.get('imageInfos'))
-        setUserInfo(imageMetadata)
-        setIsLoadingFollowerData(false)
-        
-      } catch (error) {
-        console.error('Error on getting the datas:', error)
-        setIsLoadingFollowerData(false)
-      }
-    }
-  }
 
   function closeModal(){
     props.closeUserDetailModal()
@@ -42,7 +17,10 @@ function UserDetailPage(props){
           <View style={styles.headerContainer}>
             <DetailUserHeaderBar userName={props.name} userAvatar={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + (props.usernameFollowed) }} onBackButtonPress={closeModal}/>
           </View>
-          <UserEncyclopedia username={props.username} usernameFollowed={props.usernameFollowed} name={props.name} state={props.state}/>
+          <ScrollView style={styles.scrollViewcontainer}>
+            <UserUpperInfos state={props.state} likes={props.likes} followers={props.followers}/>
+            <UserEncyclopedia username={props.loggedUsername} usernameFollowed={props.usernameFollowed} name={props.name}/>
+          </ScrollView>
         </View>
       </>
     )
@@ -51,11 +29,6 @@ function UserDetailPage(props){
   return(
       <Modal visible={props.visible} animationType='slide' onRequestClose={closeModal}>
       {
-        isLoadingFollowerData ?
-        <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large"  color="#0000ff"/>
-        </View>
-        :
         getUserDetails()
       }
     </Modal>
@@ -89,4 +62,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     height: '8%'
   },
+  scrollViewcontainer: {
+    backgroundColor: '#e9e7e7',
+},
 })

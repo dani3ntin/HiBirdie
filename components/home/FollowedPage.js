@@ -13,6 +13,8 @@ function FollowedPage(props) {
     const [followerUsernameForDetailUserModal, setFollowerUsernameForDetailUserModal] = useState('')
     const [followerNameForDetailUserModal, setFollowerNameForDetailUserModal] = useState('')
     const [followerStateForDetailUserModal, setFollowerStateForDetailUserModal] = useState('')
+    const [followerlikesForDetailUserModal, setFollowerLikesForDetailUserModal] = useState('')
+    const [followerNumOfFollowersForDetailUserModal, setFollowerNumOfFollowersForDetailUserModal] = useState('')
 
     useEffect(() => {
         if(isFocused){
@@ -37,10 +39,12 @@ function FollowedPage(props) {
         }
     }
 
-    function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed){
+    function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed){
         setFollowerUsernameForDetailUserModal(usernameFollowed)
         setFollowerNameForDetailUserModal(nameFollowed)
         setFollowerStateForDetailUserModal(stateFollowed)
+        setFollowerLikesForDetailUserModal(likesFollowed)
+        setFollowerNumOfFollowersForDetailUserModal(nOfFollowersFollowed)
         setDetailFollowerModalIsVisible(true)
     }
 
@@ -50,7 +54,7 @@ function FollowedPage(props) {
 
     function editState(state){
         if(state.length > 35){
-            const truncatedState = state.slice(0, 35)
+            const truncatedState = state.slice(0, 30)
             return truncatedState + "..."
         }
         return state
@@ -69,6 +73,8 @@ function FollowedPage(props) {
                 usernameFollowed={followerUsernameForDetailUserModal}
                 name={followerNameForDetailUserModal}
                 state={followerStateForDetailUserModal}
+                likes={followerlikesForDetailUserModal}
+                followers={followerNumOfFollowersForDetailUserModal}
                 username={props.username}
             />
             <ScrollView style={styles.container}>
@@ -86,7 +92,7 @@ function FollowedPage(props) {
                                 name={item.name} 
                                 profilePic={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + item.usernameFollowed }} 
                                 state={editState(item.state)}
-                                onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state)}
+                                onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state, item.likes, item.followers)}
                             />
                         </View>
                         ))}

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-nati
 import { useIsFocused } from '@react-navigation/native';
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
 import BirdItemLatestSightings from "../items/BirdItemLatestSightings";
-import BirdDetailPage from "../detailBird/BirdDetailPage";
+import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor";
 import { useState } from "react"
 import { useEffect } from "react"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils";
@@ -78,17 +78,13 @@ function UserEncyclopedia(props) {
             </View>
             :
             <>
-                <BirdDetailPage 
+                <BirdDetailPageWithoutAuthor 
                     visible={detailBirdmodalIsVisible} 
                     id={birdIdForDetailBirdModal} 
                     originPage={"UserDetail"} 
                     closeModal={closeDetailBirdModal} 
                     loggedUsername={props.username}
                 />
-                <ScrollView style={styles.container}>
-                <View style={styles.stateContainer}>
-                    <Text style={styles.text}>{props.state}</Text>
-                </View>
                 <Text style={styles.title}>{props.name}'s Encyclopedia:</Text>
                     {
                         birdsData.length === 0 ?
@@ -115,7 +111,6 @@ function UserEncyclopedia(props) {
                         ))}
                         </View>
                     }
-            </ScrollView>
             </>
         }
         </>
@@ -165,15 +160,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-    },
-    stateContainer: {
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 20,
-        backgroundColor: 'white',
-        borderRadius: 13,
-        padding: 20,
-        ...shadowStyle
     },
     title: {
         marginLeft: 10,

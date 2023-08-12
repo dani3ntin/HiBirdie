@@ -11,6 +11,8 @@ function MapViewInDetailBird(props) {
                     longitude: props.yPosition,
                     latitudeDelta: 1,
                     longitudeDelta: 1,}}
+                    zoomEnabled={true}
+                    scrollEnabled={true}
             >
                 <Marker
                 coordinate={{

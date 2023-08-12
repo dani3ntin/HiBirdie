@@ -2,7 +2,6 @@ import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityI
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
-import AuthorPressable from "./AuthorPressable"
 import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
@@ -10,7 +9,7 @@ import DeleteBirdButton from "./DeleteBirdButton"
 
 const windowWidth = Dimensions.get('window').width
 
-function BirdDetailPage(props){
+function BirdDetailPageWithoutAuthor(props){
     const [birdData, setBirdData] = useState([])
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
@@ -83,17 +82,7 @@ function BirdDetailPage(props){
                             </View>
                         )
                     }
-                    {
-                        props.originPage === "LatestSightings"
-                        ?
-                        <View style={styles.pressableAuthorContainer}>
-                            <Text style={[styles.boldText, {paddingBottom: 10}]}>Sighted by:</Text>
-                            <Pressable>
-                                <AuthorPressable username={props.authorUsername}/>
-                            </Pressable>
-                        </View>
-                        : null
-                    }
+
                     <View style={styles.textContainer}>
                         <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
                     </View>
@@ -123,7 +112,7 @@ function BirdDetailPage(props){
       )
 }
 
-export default BirdDetailPage
+export default BirdDetailPageWithoutAuthor
 
 const shadowStyle = Platform.select({
     ios: {
