@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { Feather } from '@expo/vector-icons'
 
 const DetailUserHeaderBar = (props) => {
     const CustomIcon = ({ name, size, color }) => {
@@ -14,15 +15,15 @@ const DetailUserHeaderBar = (props) => {
 
     return (
         <View style={styles.container}>
-            <Pressable style={({pressed}) => pressed && styles.pressedBackButton} onPress={backButtonPressedHandler}>
-                <View style={styles.backIcon}>
-                    <CustomIcon name="left" size={35} color="black" />
-                </View>
-            </Pressable>
-            <Image
-                source={props.userAvatar}
-                style={styles.avatar}
-            />
+          <Pressable style={({pressed}) => pressed && styles.pressedButton} onPress={backButtonPressedHandler}>
+              <View style={styles.backIcon}>
+                  <CustomIcon name="left" size={35} color="black" />
+              </View>
+          </Pressable>
+          <Image
+              source={props.userAvatar}
+              style={styles.avatar}
+          />
           <Text style={styles.userName}>{props.userName}</Text>
         </View>
     );
@@ -32,6 +33,7 @@ export default DetailUserHeaderBar
 
 const styles = StyleSheet.create({
     container: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
@@ -49,14 +51,15 @@ const styles = StyleSheet.create({
       marginLeft: 10,
       fontSize: 18,
       fontWeight: 'bold',
+      paddingRight: 100,
     },
     backIcon: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        padding: 17,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      padding: 17,
     },
-    pressedBackButton: {
+    pressedButton: {
         opacity: 0.3,
     },
 });

@@ -153,7 +153,13 @@ function LatestSightingsPage(props) {
                         }
                         <View style={styles.bottomFiller}></View>
                     </ScrollView>
-                    <Pressable style={styles.floatingButton} onPress={openFilterModal} >
+                    <Pressable 
+                        style={({ pressed }) => [
+                            styles.floatingButton,
+                            pressed && { opacity: 0.8 }
+                        ]} 
+                        onPress={openFilterModal} 
+                    >
                         <Text style={styles.buttonText}>Open Filters</Text>
                     </Pressable>
                 </View>

@@ -23,27 +23,39 @@ const DetailBirdHeaderBar = (props) => {
     props.onBackButtonPress()
   }
 
+  function addLikeHandler(){
+    if(props.addLike)//This function is used to add the like also in the detail user page. If the user is not coming from the detail user page, I do nothing
+      props.addLike()
+  }
+
+  function removeLikeHandler(){
+    if(props.removeLike)//This function is used to remove the like also in the detail user page. If the user is not coming from the detail user page, I do nothing
+      props.removeLike()
+  }
+
   async function onPressLikeHandler(){
     const newValue = !liked
     setLiked(newValue)
     if(newValue === true){
-        setLikeNumber(likeNumber + 1)
-        await fetch(APIPrefix + 'addlike', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
-        });
+      addLikeHandler()
+      setLikeNumber(likeNumber + 1)
+      await fetch(APIPrefix + 'addlike', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
+      });
     }else{
-        setLikeNumber(likeNumber - 1)
-        await fetch(APIPrefix + 'removelike', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
-        });
+      removeLikeHandler()
+      setLikeNumber(likeNumber - 1)
+      await fetch(APIPrefix + 'removelike', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user: props.loggedUsername, bird: props.id })
+      });
     }
 }
 

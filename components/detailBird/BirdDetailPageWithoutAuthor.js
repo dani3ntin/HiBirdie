@@ -67,12 +67,28 @@ function BirdDetailPageWithoutAuthor(props){
             ]
           );
     }
+
+    function addLike(){
+        props.addLike()
+    }
+
+    function removeLike(){
+        props.removeLike()
+    }
       
     function getBirdDetails(){
         return(
             <View style={styles.modalContainer}>
                 <View style={styles.headerContainer}>
-                <DetailBirdHeaderBar id={birdData.id} birdName={birdData.name} loggedUsername={props.loggedUsername} onBackButtonPress={closeModal} likes={birdData.likes} userPutLike={birdData.userPutLike} />
+                <DetailBirdHeaderBar 
+                    id={birdData.id} 
+                    birdName={birdData.name} 
+                    loggedUsername={props.loggedUsername} 
+                    onBackButtonPress={closeModal} likes={birdData.likes} 
+                    userPutLike={birdData.userPutLike}
+                    addLike={addLike}
+                    removeLike={removeLike}
+                />
                 </View>
                 <ScrollView>
                     {

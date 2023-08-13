@@ -50,6 +50,7 @@ function FollowedPage(props) {
 
     function closeUserDetailModal(){
         setDetailFollowerModalIsVisible(false)
+        fetchData()
     }
 
     function editState(state){
@@ -76,6 +77,8 @@ function FollowedPage(props) {
                 likes={followerlikesForDetailUserModal}
                 followers={followerNumOfFollowersForDetailUserModal}
                 username={props.username}
+                isLoggedUserFollowing={true}
+                loggedUsername={props.username}
             />
             <ScrollView style={styles.container}>
                 {

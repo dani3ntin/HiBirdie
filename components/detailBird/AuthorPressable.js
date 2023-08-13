@@ -5,7 +5,7 @@ import UserDetailPage from "../userDetail/UserDetailPage"
 
 function AuthorPressable(props) {
     const APIPrefix = 'http://192.168.1.249:8000/api/'
-    const authorAPIRequest = 'http://192.168.1.249:8000/api/getuserbyusername/' + props.authorUsername
+    const authorAPIRequest = 'http://192.168.1.249:8000/api/getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername
 
     const [nFollowersAuthor, setNFollowersAuthor] = useState(0)
     const [authorData, setAuthorData] = useState([])
@@ -16,6 +16,7 @@ function AuthorPressable(props) {
     const [followerStateForDetailUserModal, setFollowerStateForDetailUserModal] = useState('')
     const [followerlikesForDetailUserModal, setFollowerLikesForDetailUserModal] = useState('')
     const [followerNumOfFollowersForDetailUserModal, setFollowerNumOfFollowersForDetailUserModal] = useState('')
+    const [followerIsLoggedUserFollowingForDetailUserModal, setFollowerIsLoggedUserFollowingForDetailUserModal] = useState('')
     
 
     useEffect(() => {
@@ -39,12 +40,13 @@ function AuthorPressable(props) {
         setDetailFollowerModalIsVisible(false)
     }
 
-    function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed){
+    function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
         setFollowerUsernameForDetailUserModal(usernameFollowed)
         setFollowerNameForDetailUserModal(nameFollowed)
         setFollowerStateForDetailUserModal(stateFollowed)
         setFollowerLikesForDetailUserModal(likesFollowed)
         setFollowerNumOfFollowersForDetailUserModal(nOfFollowersFollowed)
+        setFollowerIsLoggedUserFollowingForDetailUserModal(isLoggedUserFollowing)
         setDetailFollowerModalIsVisible(true)
     }
 
@@ -58,6 +60,7 @@ function AuthorPressable(props) {
                 state={followerStateForDetailUserModal}
                 likes={followerlikesForDetailUserModal}
                 followers={followerNumOfFollowersForDetailUserModal}
+                isLoggedUserFollowing={followerIsLoggedUserFollowingForDetailUserModal}
                 loggedUsername={props.loggedUsername}
             />
             {
@@ -67,7 +70,7 @@ function AuthorPressable(props) {
                 </View>
                 :
                 <Pressable
-                    onPress={() => onFollowerPressedHandler(authorData.username, authorData.name, authorData.state, authorData.likes, authorData.followers)}
+                    onPress={() => onFollowerPressedHandler(authorData.username, authorData.name, authorData.state, authorData.likes, authorData.followers, authorData.isLoggedUserFollowing)}
                     style={({pressed}) => pressed && styles.pressedItem}
                 >
                 <View style={styles.friendItem}>

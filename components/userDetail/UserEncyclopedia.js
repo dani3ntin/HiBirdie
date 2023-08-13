@@ -1,12 +1,10 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
-import { useIsFocused } from '@react-navigation/native';
-import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
-import BirdItemLatestSightings from "../items/BirdItemLatestSightings";
-import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor";
+import { useIsFocused } from '@react-navigation/native'
+import BirdItemLatestSightings from "../items/BirdItemLatestSightings"
+import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor"
 import { useState } from "react"
 import { useEffect } from "react"
-import { changeDateFormatToDDMMYYYY } from "../utils/utils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 function UserEncyclopedia(props) {
     const isFocused = useIsFocused()
@@ -69,6 +67,14 @@ function UserEncyclopedia(props) {
         setDetailBirdModalIsVisible(true)
     }
 
+    function addLikeHandler(){
+        props.addLikeToCounter()
+    }
+
+    function removeLikeHandler(){
+        props.removeLikeToCounter()
+    }
+
     return (
         <>
         {
@@ -84,6 +90,8 @@ function UserEncyclopedia(props) {
                     originPage={"UserDetail"} 
                     closeModal={closeDetailBirdModal} 
                     loggedUsername={props.username}
+                    addLike={addLikeHandler}
+                    removeLike={removeLikeHandler}
                 />
                 <Text style={styles.title}>{props.name}'s Encyclopedia:</Text>
                     {
@@ -106,6 +114,8 @@ function UserEncyclopedia(props) {
                                     userPutLike={item.userPutLike} 
                                     loggedUsername={props.username}
                                     onBirdPressed={openDetailBirdModal}
+                                    addLike={addLikeHandler}
+                                    removeLike={removeLikeHandler}
                                 />
                             </View>
                         ))}
