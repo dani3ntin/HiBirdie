@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Button} from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
-import { changeDateFormatYYYYDDMM } from "../utils/utils";
+import { API_URL } from "../../env";
 
 function BirdItemLatestSightings(props) {
     const today = new Date()
     const [liked, setLiked] = useState(props.userPutLike)
     const [likeNumber, setLikeNumber] = useState(props.likes)
-    const APIPrefix = 'http://192.168.1.249:8000/api/'
 
     useEffect(() => {
         setLiked(props.userPutLike)
@@ -31,7 +30,7 @@ function BirdItemLatestSightings(props) {
         if(newValue === true){
             addLikeHandler()
             setLikeNumber(likeNumber + 1)
-            await fetch(APIPrefix + 'addlike', {
+            await fetch(API_URL + 'addlike', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -41,7 +40,7 @@ function BirdItemLatestSightings(props) {
         }else{
             removeLikeHandler()
             setLikeNumber(likeNumber - 1)
-            await fetch(APIPrefix + 'removelike', {
+            await fetch(API_URL + 'removelike', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -68,7 +67,7 @@ function BirdItemLatestSightings(props) {
                     />
                     <View style={styles.nameAndAuthor}>
                         <Text style={styles.birdName}>{props.name}</Text>
-                        <Text style={styles.text}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, changeDateFormatYYYYDDMM(props.sightingDate)))}</Text>
+                        <Text style={styles.text}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.sightingDate))}</Text>
                         <Text style={styles.text}>{props.distance} km away from you</Text>
                     </View>
                     <View style={styles.heartContainer}>

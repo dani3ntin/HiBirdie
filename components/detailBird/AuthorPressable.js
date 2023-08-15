@@ -1,12 +1,10 @@
 import { View, Text, StyleSheet, Image, ActivityIndicator, Pressable} from "react-native"
 import { useState, useEffect } from "react"
 import UserDetailPage from "../userDetail/UserDetailPage"
+import { API_URL } from "../../env"
 
 
 function AuthorPressable(props) {
-    const APIPrefix = 'http://192.168.1.249:8000/api/'
-    const authorAPIRequest = 'http://192.168.1.249:8000/api/getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername
-
     const [nFollowersAuthor, setNFollowersAuthor] = useState(0)
     const [authorData, setAuthorData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
@@ -24,13 +22,13 @@ function AuthorPressable(props) {
     }, [])
 
     async function fetchAuthorData(){
-        const responseAuthor = await fetch(authorAPIRequest)
+        const responseAuthor = await fetch(API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername)
         if (!responseAuthor.ok) {
             throw new Error('Network response was not ok')
         }
         const imageMetadataAuthor = JSON.parse(responseAuthor.headers.get('imageInfos'))
         setAuthorData(imageMetadataAuthor)
-        const responseAuthorFollowers = await fetch(APIPrefix + 'getfollowersbyusername/' + props.authorUsername)
+        const responseAuthorFollowers = await fetch(API_URL + 'getfollowersbyusername/' + props.authorUsername)
         const responseDataAuthorFollowers = await responseAuthorFollowers.json()
         setNFollowersAuthor(responseDataAuthorFollowers.length)
         setIsLoadingItems(false)
@@ -76,7 +74,7 @@ function AuthorPressable(props) {
                 <View style={styles.friendItem}>
                         <View style={styles.itemContent}>
                             <Image
-                                source={{ uri: authorAPIRequest }}
+                                source={{ uri: API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername }}
                                 style={styles.avatar}
                             />
                             <View>

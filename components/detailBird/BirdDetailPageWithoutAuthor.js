@@ -6,6 +6,10 @@ import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 import DeleteBirdButton from "./DeleteBirdButton"
+import EditBirdButton from "./EditBirdButton"
+import { API_URL } from "../../env"
+import EditBird from "../addNewBird-editBird/EditBird"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -14,21 +18,19 @@ function BirdDetailPageWithoutAuthor(props){
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
-
-    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id + '/' + props.loggedUsername
-    const deleteBirdAPI = 'http://192.168.1.249:8000/api/deletebird/' + birdData.id
+    const [editBirdmodalIsVisible, setEditBirdModalIsVisible] = useState(false)
 
     useEffect(() => {
         setIsLoadingBirdData(true)
         if(props.visible){
-            calculateOptimizedImageSize(imageUrl, setBirdImageWidth, setBirdImageHeight)
+            calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
             fetchData()
         } 
     }, [props.visible])
 
     const fetchData = async () => {
         try {
-            const response = await fetch(imageUrl)
+            const response = await fetch(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername  + '?' + Math.random(10))
             if (!response.ok) {
                 throw new Error('Network response was not ok')
             }
@@ -53,7 +55,7 @@ function BirdDetailPageWithoutAuthor(props){
     }
 
     async function deleteBird(){
-        await fetch(deleteBirdAPI)
+        await fetch(API_URL + 'deletebird/' + birdData.id)
         closeModal()
     }
 
@@ -75,55 +77,78 @@ function BirdDetailPageWithoutAuthor(props){
     function removeLike(){
         props.removeLike()
     }
+
+    function closeEditBirdBirdModal(){
+        setEditBirdModalIsVisible(false)
+        fetchData()
+        setIsLoadingBirdData(true)
+    }
+
+    function openEditBirdModal(){
+        setEditBirdModalIsVisible(true)
+    }
       
     function getBirdDetails(){
         return(
-            <View style={styles.modalContainer}>
-                <View style={styles.headerContainer}>
-                <DetailBirdHeaderBar 
-                    id={birdData.id} 
-                    birdName={birdData.name} 
-                    loggedUsername={props.loggedUsername} 
-                    onBackButtonPress={closeModal} likes={birdData.likes} 
-                    userPutLike={birdData.userPutLike}
-                    addLike={addLike}
-                    removeLike={removeLike}
-                />
-                </View>
-                <ScrollView>
-                    {
-                        birdData.id === -1 ? null : (
-                            <View style={styles.imageContainer}>
-                                <Image source={{ uri: imageUrl }} style={[styles.birdImage, imageSizeStyle]} />
-                            </View>
-                        )
-                    }
-
-                    <View style={styles.textContainer}>
-                        <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
+            <>
+                <EditBird 
+                        visible={editBirdmodalIsVisible}
+                        closeModal={closeEditBirdBirdModal} 
+                        loggedUsername={props.username}
+                        birdData={birdData}
+                    />
+                <View style={styles.modalContainer}>
+                    <View style={styles.headerContainer}>
+                    <DetailBirdHeaderBar 
+                        id={birdData.id} 
+                        birdName={birdData.name} 
+                        loggedUsername={props.loggedUsername} 
+                        onBackButtonPress={closeModal} likes={birdData.likes} 
+                        userPutLike={birdData.userPutLike}
+                        addLike={addLike}
+                        removeLike={removeLike}
+                    />
                     </View>
-                    <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
-                    {
-                        props.originPage === "Encyclopedia"
-                        ?
-                        <DeleteBirdButton handleDeletePress={handleDeletePress} />
-                        : null
-                    }
-                </ScrollView>
-            </View>
+                    <ScrollView>
+                        {
+                            birdData.id === -1 ? null : (
+                                <View style={styles.imageContainer}>
+                                    <Image source={{ uri: API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
+                                </View>
+                            )
+                        }
+
+                        <View style={styles.textContainer}>
+                            <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
+                        </View>
+                        <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
+                        {
+                            props.originPage === "Encyclopedia"
+                            ?
+                            <View style={styles.rowContainer}>
+                                <DeleteBirdButton handleDeletePress={handleDeletePress} />
+                                <EditBirdButton handleDeletePress={openEditBirdModal} />
+                            </View>
+                            : null
+                        }
+                    </ScrollView>
+                </View>
+            </>
         )
     }
 
     return (
         <Modal visible={props.visible} animationType='slide' onRequestClose={closeModal}>
-          {
-            isLoadingBirdData ?
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large"  color="#0000ff"/>
-            </View>
-            :
-            getBirdDetails()
-          }
+            <SafeAreaView style={styles.SafeArea}>
+            {
+                isLoadingBirdData ?
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large"  color="#0000ff"/>
+                </View>
+                :
+                getBirdDetails()
+            }
+            </SafeAreaView>
         </Modal>
       )
 }
@@ -144,6 +169,9 @@ const shadowStyle = Platform.select({
 })
 
 const styles = StyleSheet.create({
+    SafeArea: {
+        flex: 1,
+    },
     modalContainer: {
         flex: 1,
         backgroundColor: '#e9e7e7',
@@ -189,5 +217,8 @@ const styles = StyleSheet.create({
         borderRadius: 13,
         padding: 20,
         ...shadowStyle
+    },
+    rowContainer: {
+        flexDirection: 'row',
     },
 })

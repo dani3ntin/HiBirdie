@@ -6,6 +6,7 @@ import BirdDetailPageWithAuthor from "../detailBird/BirdDetailPageWithAuthor"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatestSightingsPage"
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
+import { API_URL } from "../../env"
 
 function LatestSightingsPage(props) {
     const isFocused = useIsFocused()
@@ -50,7 +51,7 @@ function LatestSightingsPage(props) {
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
             try {
-                const response = await fetch('http://192.168.1.249:8000/api/getbirdswithfilterexceptyours', {
+                const response = await fetch(API_URL + 'getbirdswithfilterexceptyours', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -139,7 +140,7 @@ function LatestSightingsPage(props) {
                                     <BirdItemLatestSightings 
                                         id={item.id} 
                                         name={item.name} 
-                                        image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username}} 
+                                        image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username}} 
                                         sightingDate={item.sightingDate} 
                                         likes={item.likes} 
                                         distance={Math.round(item.distance)}
@@ -156,7 +157,7 @@ function LatestSightingsPage(props) {
                     <Pressable 
                         style={({ pressed }) => [
                             styles.floatingButton,
-                            pressed && { opacity: 0.8 }
+                            pressed && { opacity: 0.8, backgroundColor: '#929292' }
                         ]} 
                         onPress={openFilterModal} 
                     >
@@ -220,11 +221,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        elevation: 3,
+        elevation: 5,
     },
     buttonText: {
         color: 'black',
-        fontSize: 16,
+        fontSize: 18,
     },
     scrollViewcontainer: {
         paddingBottom: 60

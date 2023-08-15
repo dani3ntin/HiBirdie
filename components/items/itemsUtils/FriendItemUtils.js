@@ -13,7 +13,7 @@ export function calculateDifferenceBetweenTwoDates(date1, date2){
 }
 
 export function approximateNumberOfDays(days){
-    if (days < 0)   return "None"
+    if (days < 0)   return "Unknown data"
     if(days === 0)  return "Today"
     if(days === 1)  return "Yesterday"
     if(days < 7)    return days + " days ago"

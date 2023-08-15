@@ -1,14 +1,17 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
-import { useIsFocused } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable} from "react-native"
+import { useIsFocused } from '@react-navigation/native'
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
-import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor";
+import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor"
+import AddNewBird from "../addNewBird-editBird/AddNewBird"
 import { useState } from "react"
 import { useEffect } from "react"
-import { changeDateFormatToDDMMYYYY } from "../utils/utils";
+import { changeDateFormatToDDMMYYYY } from "../utils/utils"
+import { API_URL } from "../../env"
 
 function EncyclopediaPage(props) {
     const isFocused = useIsFocused()
     const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
+    const [addNewBirdmodalIsVisible, setAddNewBirdModalIsVisible] = useState(false)
     const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
@@ -21,7 +24,7 @@ function EncyclopediaPage(props) {
 
     const fetchData = async () => {
         try {
-          const response = await fetch('http://192.168.1.249:8000/api/getbirdsbyuser/' + props.username + '/' + props.username)
+          const response = await fetch(API_URL + 'getbirdsbyuser/' + props.username + '/' + props.username)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -47,6 +50,16 @@ function EncyclopediaPage(props) {
         setDetailBirdModalIsVisible(true)
     }
 
+    function closeAddNewBirdModal(){
+        setAddNewBirdModalIsVisible(false)
+        fetchData()
+        setIsLoadingItems(true)
+    }
+
+    function openAddNewBirdModal(){
+        setAddNewBirdModalIsVisible(true)
+    }
+
     return (
         <>
         {
@@ -63,23 +76,42 @@ function EncyclopediaPage(props) {
                     closeModal={closeDetailBirdModal} 
                     loggedUsername={props.username}
                 />
+                <AddNewBird 
+                    visible={addNewBirdmodalIsVisible}
+                    closeModal={closeAddNewBirdModal} 
+                    loggedUsername={props.username}
+                />
                 <ScrollView style={styles.container}>
                     {
                         birdsData.length === 0 ?
                         <View style={styles.textContainer}>
                             <Text style={styles.text}>No birds here!</Text>
-                            <Text style={styles.text}>Try adding one with the "new bird" button below, it's easy!</Text>
+                            <Text style={styles.text}>Try adding one with the "Add new bird" button below, it's easy!</Text>
                         </View>
                         :
                         <View style={styles.ItemsContainer}>
                         {birdsData.map((item) => (
                             <View key={item.id}>
-                                <BirdItemEncyclopedia id={item.id} name={item.name} image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username }} sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} onBirdPressed={openDetailBirdModal}/>
+                                <BirdItemEncyclopedia 
+                                id={item.id} 
+                                name={item.name} 
+                                image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username }} 
+                                sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} 
+                                onBirdPressed={openDetailBirdModal}/>
                             </View>
                         ))}
                         </View>
                     }
-            </ScrollView>
+                </ScrollView>
+                <Pressable 
+                    style={({ pressed }) => [
+                        styles.floatingButton,
+                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                    ]} 
+                    onPress={openAddNewBirdModal} 
+                    >
+                    <Text style={styles.buttonText}>Add new bird</Text>
+                </Pressable>
             </>
         }
         </>
@@ -129,5 +161,24 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-    }
+    },
+    floatingButton: {
+        position: 'absolute',
+        bottom: 40,
+        width: 200,
+        height: 70,
+        borderWidth: 2,
+        paddingVertical: 10,
+        backgroundColor: 'white',
+        borderColor: 'black',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        elevation: 3,
+    },
+    buttonText: {
+        color: 'black',
+        fontSize: 18,
+    },
 })

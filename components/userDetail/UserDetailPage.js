@@ -3,11 +3,10 @@ import { View, Modal, StyleSheet, ScrollView, Pressable, Text } from 'react-nati
 import UserEncyclopedia from './UserEncyclopedia'
 import DetailUserHeaderBar from '../headerBars/DetailUserHeaderBar'
 import UserUpperInfos from './UserUpperInfos'
-import { Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons'
+import { API_URL } from '../../env'
 
 function UserDetailPage(props){
-
-  const APIPrefix = 'http://192.168.1.249:8000/api/'
 
   const [likes, setLikes] = useState(props.likes)
   const [followers, setFollowers] = useState(props.followers)
@@ -49,7 +48,7 @@ function UserDetailPage(props){
   async function followAndUnfollowButtonHandler(){
     if(isLoggedUserFollowing === true){
       removeFollowerToCounter()
-      await fetch(APIPrefix + 'removefollower', {
+      await fetch(API_URL + 'removefollower', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -58,7 +57,7 @@ function UserDetailPage(props){
       });
     }else{
       addFollowerToCounter()
-      await fetch(APIPrefix + 'addfollower', {
+      await fetch(API_URL + 'addfollower', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -76,7 +75,7 @@ function UserDetailPage(props){
           <View style={styles.headerContainer}>
             <DetailUserHeaderBar 
               userName={props.name} 
-              userAvatar={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + (props.usernameFollowed) }} 
+              userAvatar={{ uri: API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
               onBackButtonPress={closeModal}
             />
           </View>

@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable, Image} from "react-native"
 
 function BirdItemEncyclopedia(props) {
     function onBirdPressedHandler(){
+        console.log(props.image)
         props.onBirdPressed(props.id)
     }
     return (

@@ -1,6 +1,6 @@
 import { View, Text, Pressable } from 'react-native'
 
-function DeleteBirdButton(props){
+function EditBirdButton(props){
 
     function onDeletePress(){
         props.handleDeletePress()
@@ -12,7 +12,7 @@ function DeleteBirdButton(props){
                 onPress={onDeletePress}
                 style={({ pressed }) => [
                 {
-                    backgroundColor: pressed ? '#f56d6d' : '#facbcb',
+                    backgroundColor: pressed ? '#697ef5' : '#cbd2fa',
                     padding: 10,
                     borderRadius: 10,
                     width: '80%',
@@ -24,7 +24,7 @@ function DeleteBirdButton(props){
             >
                 {({ pressed }) => (
                 <Text style={{ color: pressed ? 'black' : 'black', fontSize: 15 }}>
-                    Delete this bird
+                    Edit this bird
                 </Text>
                 )}
             </Pressable>
@@ -32,4 +32,4 @@ function DeleteBirdButton(props){
     )
 }
 
-export default DeleteBirdButton
+export default EditBirdButton

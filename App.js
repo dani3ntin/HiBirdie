@@ -3,10 +3,12 @@ import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
 import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { API_URL } from './env'
 
 export default function App() {
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(null)
+
 
   useEffect(() => {
     //AsyncStorage.clear()
@@ -21,7 +23,7 @@ export default function App() {
     } else {
       //here the user will have to go to the login page
       try {
-        const response = await fetch('http://192.168.1.249:8000/api/login', {
+        const response = await fetch( API_URL + 'login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -40,7 +42,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.SafeArea}>
       <View style={styles.headerContainer}>
-        <HomeHeaderBar userName={userData ? userData.name : ''} userAvatar={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + (userData ? userData.username : '') }} />
+        <HomeHeaderBar userName={userData ? userData.name : ''} userAvatar={{ uri: API_URL + 'getuserbyusername/' + (userData ? userData.username : '') + '/' + (userData ? userData.username : '') }} />
       </View>
       <Home/>
       <StatusBar style="auto" />

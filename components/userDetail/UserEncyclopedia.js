@@ -5,6 +5,7 @@ import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuth
 import { useState } from "react"
 import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { API_URL } from "../../env"
 
 function UserEncyclopedia(props) {
     const isFocused = useIsFocused()
@@ -35,7 +36,7 @@ function UserEncyclopedia(props) {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
         try {
             console.log(data)
-            const response = await fetch('http://192.168.1.249:8000/api/getbirdsbyusernamewithdistance', {
+            const response = await fetch(API_URL + 'getbirdsbyusernamewithdistance', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ function UserEncyclopedia(props) {
                                 <BirdItemLatestSightings 
                                     id={item.id} 
                                     name={item.name} 
-                                    image={{ uri: 'http://192.168.1.249:8000/api/getbird/' + item.id + '/' + props.username }} 
+                                    image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username }} 
                                     sightingDate={item.sightingDate} 
                                     likes={item.likes} 
                                     distance={Math.round(item.distance)}

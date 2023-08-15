@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { API_URL } from '../../env'
 
 const DetailBirdHeaderBar = (props) => {
-  const APIPrefix = 'http://192.168.1.249:8000/api/'
   const [liked, setLiked] = useState(props.userPutLike)
   const [likeNumber, setLikeNumber] = useState(props.likes)
 
@@ -39,7 +39,7 @@ const DetailBirdHeaderBar = (props) => {
     if(newValue === true){
       addLikeHandler()
       setLikeNumber(likeNumber + 1)
-      await fetch(APIPrefix + 'addlike', {
+      await fetch(API_URL + 'addlike', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ const DetailBirdHeaderBar = (props) => {
     }else{
       removeLikeHandler()
       setLikeNumber(likeNumber - 1)
-      await fetch(APIPrefix + 'removelike', {
+      await fetch(API_URL + 'removelike', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

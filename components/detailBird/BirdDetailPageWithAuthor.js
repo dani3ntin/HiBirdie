@@ -7,6 +7,7 @@ import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 import DeleteBirdButton from "./DeleteBirdButton"
+import { API_URL } from "../../env"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -16,20 +17,17 @@ function BirdDetailPageWithAuthor(props){
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
 
-    const imageUrl = 'http://192.168.1.249:8000/api/getbird/' + props.id + '/' + props.loggedUsername
-    const deleteBirdAPI = 'http://192.168.1.249:8000/api/deletebird/' + birdData.id
-
     useEffect(() => {
         setIsLoadingBirdData(true)
         if(props.visible){
-            calculateOptimizedImageSize(imageUrl, setBirdImageWidth, setBirdImageHeight)
+            calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, 50, setBirdImageWidth, setBirdImageHeight)
             fetchData()
         } 
     }, [props.visible])
 
     const fetchData = async () => {
         try {
-            const response = await fetch(imageUrl)
+            const response = await fetch(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername)
             if (!response.ok) {
                 throw new Error('Network response was not ok')
             }
@@ -54,7 +52,7 @@ function BirdDetailPageWithAuthor(props){
     }
 
     async function deleteBird(){
-        await fetch(deleteBirdAPI)
+        await fetch(API_URL + 'deletebird/' + birdData.id)
         closeModal()
     }
 
@@ -79,7 +77,7 @@ function BirdDetailPageWithAuthor(props){
                     {
                         birdData.id === -1 ? null : (
                             <View style={styles.imageContainer}>
-                                <Image source={{ uri: imageUrl }} style={[styles.birdImage, imageSizeStyle]} />
+                                <Image source={{ uri: API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
                             </View>
                         )
                     }

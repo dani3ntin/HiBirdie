@@ -1,9 +1,11 @@
-import { View, Text, StyleSheet, ScrollView} from "react-native"
+import { View, Text, StyleSheet, ScrollView, Pressable} from "react-native"
 import { useIsFocused } from '@react-navigation/native'
 import FollowedItem from "../items/FollowedItem"
 import { useState, useEffect } from "react"
 import { ActivityIndicator } from "react-native"
 import UserDetailPage from "../userDetail/UserDetailPage"
+import { API_URL } from "../../env"
+import SearchUsers from "../searchUsers/SearchUsers"
 
 function FollowedPage(props) {
     const isFocused = useIsFocused()
@@ -15,6 +17,7 @@ function FollowedPage(props) {
     const [followerStateForDetailUserModal, setFollowerStateForDetailUserModal] = useState('')
     const [followerlikesForDetailUserModal, setFollowerLikesForDetailUserModal] = useState('')
     const [followerNumOfFollowersForDetailUserModal, setFollowerNumOfFollowersForDetailUserModal] = useState('')
+    const [searchUsersModalIsVisible, setsearchUsersModalIsVisible] = useState(false)
 
     useEffect(() => {
         if(isFocused){
@@ -25,7 +28,7 @@ function FollowedPage(props) {
 
     const fetchData = async () => {
         try {
-          const response = await fetch('http://192.168.1.249:8000/api/getfollowedbyusername/' + props.username)
+          const response = await fetch( API_URL + 'getfollowedbyusername/' + props.username)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -60,6 +63,14 @@ function FollowedPage(props) {
         }
         return state
     }
+
+    function openSearchUsersModal(){
+        setsearchUsersModalIsVisible(true)
+    }
+
+    function closeSearchUsersModal(){
+        setsearchUsersModalIsVisible(false)
+    }
     
     return (
         isLoadingItems ?
@@ -80,6 +91,10 @@ function FollowedPage(props) {
                 isLoggedUserFollowing={true}
                 loggedUsername={props.username}
             />
+            <SearchUsers 
+                    visible={searchUsersModalIsVisible}
+                    closeModal={closeSearchUsersModal}
+                />
             <ScrollView style={styles.container}>
                 {
                     followersData.length === 0 ?
@@ -93,7 +108,7 @@ function FollowedPage(props) {
                             <FollowedItem 
                                 username={item.usernameFollowed}
                                 name={item.name} 
-                                profilePic={{ uri: 'http://192.168.1.249:8000/api/getuserbyusername/' + item.usernameFollowed }} 
+                                profilePic={{ uri: API_URL + 'getuserbyusername/' + item.username + '/' + item.usernameFollowed }} 
                                 state={editState(item.state)}
                                 onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state, item.likes, item.followers)}
                             />
@@ -102,6 +117,15 @@ function FollowedPage(props) {
                     </View>
                 }
             </ScrollView>
+            <Pressable 
+                style={({ pressed }) => [
+                    styles.floatingButton,
+                    pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                ]} 
+                onPress={() => openSearchUsersModal()} 
+                >
+                <Text style={styles.buttonText}>Search Users</Text>
+            </Pressable>
         </>
     )
 }
@@ -150,5 +174,24 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-    }
+    },
+    floatingButton: {
+        position: 'absolute',
+        bottom: 40,
+        width: 200,
+        height: 70,
+        borderWidth: 2,
+        paddingVertical: 10,
+        backgroundColor: 'white',
+        borderColor: 'black',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        elevation: 3,
+    },
+    buttonText: {
+        color: 'black',
+        fontSize: 18,
+    },
 })
