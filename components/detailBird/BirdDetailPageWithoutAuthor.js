@@ -79,7 +79,7 @@ function BirdDetailPageWithoutAuthor(){
     }
 
     function handleEditBirdPress(){
-        navigation.navigate('EditBird', { loggedUsername: props.username, birdData: birdData, })
+        navigation.navigate('EditBird', { loggedUsername: props.loggedUsername, birdData: birdData, })
     }
       
     function getBirdDetails(){

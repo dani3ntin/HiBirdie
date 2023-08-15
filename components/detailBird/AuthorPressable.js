@@ -2,20 +2,15 @@ import { View, Text, StyleSheet, Image, ActivityIndicator, Pressable} from "reac
 import { useState, useEffect } from "react"
 import UserDetailPage from "../userDetail/UserDetailPage"
 import { API_URL } from "../../env"
+import { useNavigation } from "@react-navigation/native"
 
 
 function AuthorPressable(props) {
     const [nFollowersAuthor, setNFollowersAuthor] = useState(0)
     const [authorData, setAuthorData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
-    const [detailFollowerModalIsVisible, setDetailFollowerModalIsVisible] = useState(false)
-    const [followerUsernameForDetailUserModal, setFollowerUsernameForDetailUserModal] = useState('')
-    const [followerNameForDetailUserModal, setFollowerNameForDetailUserModal] = useState('')
-    const [followerStateForDetailUserModal, setFollowerStateForDetailUserModal] = useState('')
-    const [followerlikesForDetailUserModal, setFollowerLikesForDetailUserModal] = useState('')
-    const [followerNumOfFollowersForDetailUserModal, setFollowerNumOfFollowersForDetailUserModal] = useState('')
-    const [followerIsLoggedUserFollowingForDetailUserModal, setFollowerIsLoggedUserFollowingForDetailUserModal] = useState('')
-    
+
+    const navigation = useNavigation()
 
     useEffect(() => {
         fetchAuthorData()
@@ -34,33 +29,13 @@ function AuthorPressable(props) {
         setIsLoadingItems(false)
     }
 
-    function closeUserDetailModal(){
-        setDetailFollowerModalIsVisible(false)
-    }
-
     function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
-        setFollowerUsernameForDetailUserModal(usernameFollowed)
-        setFollowerNameForDetailUserModal(nameFollowed)
-        setFollowerStateForDetailUserModal(stateFollowed)
-        setFollowerLikesForDetailUserModal(likesFollowed)
-        setFollowerNumOfFollowersForDetailUserModal(nOfFollowersFollowed)
-        setFollowerIsLoggedUserFollowingForDetailUserModal(isLoggedUserFollowing)
-        setDetailFollowerModalIsVisible(true)
+        navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, name: nameFollowed, state: stateFollowed, likes: likesFollowed,
+            followes: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})
     }
 
     return (
         <>
-            <UserDetailPage 
-                visible={detailFollowerModalIsVisible} 
-                closeUserDetailModal={closeUserDetailModal}
-                usernameFollowed={followerUsernameForDetailUserModal}
-                name={followerNameForDetailUserModal}
-                state={followerStateForDetailUserModal}
-                likes={followerlikesForDetailUserModal}
-                followers={followerNumOfFollowersForDetailUserModal}
-                isLoggedUserFollowing={followerIsLoggedUserFollowingForDetailUserModal}
-                loggedUsername={props.loggedUsername}
-            />
             {
                 isLoadingItems ?
                 <View style={styles.loadingContainer}>

@@ -11,6 +11,7 @@ import EditBird from './components/addNewBird-editBird/EditBird'
 import * as Location from 'expo-location'
 import BirdDetailPageWithoutAuthor from './components/detailBird/BirdDetailPageWithoutAuthor'
 import BirdDetailPageWithAuthor from './components/detailBird/BirdDetailPageWithAuthor'
+import UserDetailPage from './components/userDetail/UserDetailPage'
 
 const Stack = createStackNavigator();
 
@@ -85,6 +86,7 @@ export default function App() {
             <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
             <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
             <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
+            <Stack.Screen name="UserDetailPage" options={{ headerShown: false }} component={UserDetailPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

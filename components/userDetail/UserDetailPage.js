@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react'
-import { View, Modal, StyleSheet, ScrollView, Pressable, Text } from 'react-native'
+import { View, StyleSheet, ScrollView, Pressable, Text } from 'react-native'
 import UserEncyclopedia from './UserEncyclopedia'
 import DetailUserHeaderBar from '../headerBars/DetailUserHeaderBar'
 import UserUpperInfos from './UserUpperInfos'
 import { Feather } from '@expo/vector-icons'
 import { API_URL } from '../../env'
+import { useRoute } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 
-function UserDetailPage(props){
+function UserDetailPage(){
+  const navigation = useNavigation()
+  const route = useRoute()
+  const props = route.params
 
   const [likes, setLikes] = useState(props.likes)
   const [followers, setFollowers] = useState(props.followers)
   const [isLoggedUserFollowing, setIsLoggedUserFollowing] = useState(props.isLoggedUserFollowing)
 
   useEffect(() => {
+    console.log(props)
     setLikes(props.likes)
   }, [props.likes, props.isLoggedUserFollowing])
 
@@ -23,11 +29,6 @@ function UserDetailPage(props){
   useEffect(() => {
     setIsLoggedUserFollowing(props.isLoggedUserFollowing)
   }, [props.isLoggedUserFollowing])
-
-  function closeModal(){
-    setIsLoggedUserFollowing(true)
-    props.closeUserDetailModal()
-  }
 
   function addLikeToCounter(){
     setLikes(likes + 1)
@@ -76,7 +77,7 @@ function UserDetailPage(props){
             <DetailUserHeaderBar 
               userName={props.name} 
               userAvatar={{ uri: API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
-              onBackButtonPress={closeModal}
+              onBackButtonPress={() => navigation.goBack()}
             />
           </View>
           <ScrollView style={styles.scrollViewcontainer}>
@@ -126,11 +127,11 @@ function UserDetailPage(props){
   }
 
   return(
-      <Modal visible={props.visible} animationType='slide' onRequestClose={closeModal}>
+      <>
       {
         getUserDetails()
       }
-    </Modal>
+      </>
   )
 }
 

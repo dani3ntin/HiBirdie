@@ -6,17 +6,13 @@ import { ActivityIndicator } from "react-native"
 import UserDetailPage from "../userDetail/UserDetailPage"
 import { API_URL } from "../../env"
 import SearchUsers from "../searchUsers/SearchUsers"
+import { useNavigation } from "@react-navigation/native"
 
 function FollowedPage(props) {
+    const navigation = useNavigation()
     const isFocused = useIsFocused()
     const [followersData, setFollowersData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
-    const [detailFollowerModalIsVisible, setDetailFollowerModalIsVisible] = useState(false)
-    const [followerUsernameForDetailUserModal, setFollowerUsernameForDetailUserModal] = useState('')
-    const [followerNameForDetailUserModal, setFollowerNameForDetailUserModal] = useState('')
-    const [followerStateForDetailUserModal, setFollowerStateForDetailUserModal] = useState('')
-    const [followerlikesForDetailUserModal, setFollowerLikesForDetailUserModal] = useState('')
-    const [followerNumOfFollowersForDetailUserModal, setFollowerNumOfFollowersForDetailUserModal] = useState('')
     const [searchUsersModalIsVisible, setsearchUsersModalIsVisible] = useState(false)
 
     useEffect(() => {
@@ -43,17 +39,8 @@ function FollowedPage(props) {
     }
 
     function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed){
-        setFollowerUsernameForDetailUserModal(usernameFollowed)
-        setFollowerNameForDetailUserModal(nameFollowed)
-        setFollowerStateForDetailUserModal(stateFollowed)
-        setFollowerLikesForDetailUserModal(likesFollowed)
-        setFollowerNumOfFollowersForDetailUserModal(nOfFollowersFollowed)
-        setDetailFollowerModalIsVisible(true)
-    }
-
-    function closeUserDetailModal(){
-        setDetailFollowerModalIsVisible(false)
-        fetchData()
+        navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, name: nameFollowed, state: stateFollowed, likes: likesFollowed,
+        followes: nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
     }
 
     function editState(state){
@@ -79,18 +66,6 @@ function FollowedPage(props) {
             </View>
         :  
         <>
-            <UserDetailPage 
-                visible={detailFollowerModalIsVisible} 
-                closeUserDetailModal={closeUserDetailModal}
-                usernameFollowed={followerUsernameForDetailUserModal}
-                name={followerNameForDetailUserModal}
-                state={followerStateForDetailUserModal}
-                likes={followerlikesForDetailUserModal}
-                followers={followerNumOfFollowersForDetailUserModal}
-                username={props.username}
-                isLoggedUserFollowing={true}
-                loggedUsername={props.username}
-            />
             <SearchUsers 
                     visible={searchUsersModalIsVisible}
                     closeModal={closeSearchUsersModal}

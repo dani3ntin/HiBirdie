@@ -1,16 +1,15 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from "react-native"
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import BirdItemLatestSightings from "../items/BirdItemLatestSightings"
-import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor"
 import { useState } from "react"
 import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { API_URL } from "../../env"
 
 function UserEncyclopedia(props) {
+    const navigation = useNavigation()
+
     const isFocused = useIsFocused()
-    const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
-    const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
     const [latUser, setLatUser] = useState(0)
@@ -35,7 +34,6 @@ function UserEncyclopedia(props) {
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
         try {
-            console.log(data)
             const response = await fetch(API_URL + 'getbirdsbyusernamewithdistance', {
                 method: 'POST',
                 headers: {
@@ -57,15 +55,14 @@ function UserEncyclopedia(props) {
         }
     }
 
-    function closeDetailBirdModal(){
-        setDetailBirdModalIsVisible(false)
-        fetchData()
-        setIsLoadingItems(true)
-    }
 
-    function openDetailBirdModal(id){
-        setBirdIdForDetailBirdModal(id)
-        setDetailBirdModalIsVisible(true)
+    function openDetailBirdPage(id, author){
+        navigation.setOptions({
+            addLike: addLikeHandler,
+            removeLike: removeLikeHandler,
+        })
+        navigation.navigate('BirdDetailPageWithAuthor', { loggedUsername: props.username, id: id, originPage: "UserDetail", authorUsername: author})
+        
     }
 
     function addLikeHandler(){
@@ -85,15 +82,6 @@ function UserEncyclopedia(props) {
             </View>
             :
             <>
-                <BirdDetailPageWithoutAuthor 
-                    visible={detailBirdmodalIsVisible} 
-                    id={birdIdForDetailBirdModal} 
-                    originPage={"UserDetail"} 
-                    closeModal={closeDetailBirdModal} 
-                    loggedUsername={props.username}
-                    addLike={addLikeHandler}
-                    removeLike={removeLikeHandler}
-                />
                 <Text style={styles.title}>{props.name}'s Encyclopedia:</Text>
                     {
                         birdsData.length === 0 ?
@@ -114,7 +102,7 @@ function UserEncyclopedia(props) {
                                     distance={Math.round(item.distance)}
                                     userPutLike={item.userPutLike} 
                                     loggedUsername={props.username}
-                                    onBirdPressed={openDetailBirdModal}
+                                    onBirdPressed={() => openDetailBirdPage(item.id, item.user)}
                                     addLike={addLikeHandler}
                                     removeLike={removeLikeHandler}
                                 />

@@ -17,6 +17,7 @@ function BirdItemLatestSightings(props) {
     function addLikeHandler(){
         if(props.addLike)//This function is used to add the like also in the detail user page. If the user is not coming from the detail user page, I do nothing
             props.addLike()
+
     }
 
     function removeLikeHandler(){

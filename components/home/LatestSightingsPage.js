@@ -2,7 +2,6 @@ import { View, Button, StyleSheet, ScrollView, ActivityIndicator, Pressable, Tex
 import { useIsFocused } from '@react-navigation/native'
 import BirdItemLatestSightings from "../items/BirdItemLatestSightings"
 import { useEffect, useState } from "react"
-import BirdDetailPageWithAuthor from "../detailBird/BirdDetailPageWithAuthor"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatestSightingsPage"
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
