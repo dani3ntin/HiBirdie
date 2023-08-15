@@ -17,8 +17,8 @@ const windowWidth = Dimensions.get('window').width
 function AddNewBird(props){
     const [birdName, setBirdName] = useState('')
     const [personalNotes, setPersonalNotes] = useState('')
-    const [latUser, setLatUser] = useState(props.coordinates.latitude)
-    const [lonUser, setLonUser] = useState(props.coordinates.longitude)
+    const [latUser, setLatUser] = useState(setLatitude(props.coordinates))
+    const [lonUser, setLonUser] = useState(setLongitude(props.coordinates))
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
@@ -27,6 +27,16 @@ function AddNewBird(props){
     const [isUploadingBird, setIsUploadingBird] = useState(false)
     
     const navigation = useNavigation()
+
+    function setLatitude(coordinate){
+        if(coordinate == null) return 0
+        else return props.coordinates.latitude
+    }
+
+    function setLongitude(coordinate){
+        if(coordinate == null) return 0
+        else return props.coordinates.longitude
+    }
 
     useEffect(() => {
         calculateOptimizedLocalImageSize(image, 80, setBirdImageWidth, setBirdImageHeight)
