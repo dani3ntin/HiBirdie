@@ -1,4 +1,4 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
@@ -8,25 +8,30 @@ import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 import DeleteBirdButton from "./DeleteBirdButton"
 import EditBirdButton from "./EditBirdButton"
 import { API_URL } from "../../env"
-import EditBird from "../addNewBird-editBird/EditBird"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { useRoute } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
+import { useIsFocused } from "@react-navigation/native"
 
 const windowWidth = Dimensions.get('window').width
 
-function BirdDetailPageWithoutAuthor(props){
+function BirdDetailPageWithoutAuthor(){
+    const navigation = useNavigation()
+    const route = useRoute()
+    const props = route.params
+    const isFocused = useIsFocused()
+
     const [birdData, setBirdData] = useState([])
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
-    const [editBirdmodalIsVisible, setEditBirdModalIsVisible] = useState(false)
 
     useEffect(() => {
         setIsLoadingBirdData(true)
-        if(props.visible){
-            calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
+        calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
+        if(isFocused){
             fetchData()
-        } 
-    }, [props.visible])
+        }
+    }, [isFocused])
 
     const fetchData = async () => {
         try {
@@ -49,14 +54,9 @@ function BirdDetailPageWithoutAuthor(props){
         height: birdImageHeight || 200,
     }
 
-    function closeModal(){
-        setBirdData([])
-        props.closeModal()
-    }
-
     async function deleteBird(){
         await fetch(API_URL + 'deletebird/' + birdData.id)
-        closeModal()
+        navigation.goBack()
     }
 
     function handleDeletePress(){
@@ -78,32 +78,21 @@ function BirdDetailPageWithoutAuthor(props){
         props.removeLike()
     }
 
-    function closeEditBirdBirdModal(){
-        setEditBirdModalIsVisible(false)
-        fetchData()
-        setIsLoadingBirdData(true)
-    }
-
-    function openEditBirdModal(){
-        setEditBirdModalIsVisible(true)
+    function handleEditBirdPress(){
+        navigation.navigate('EditBird', { loggedUsername: props.username, birdData: birdData, })
     }
       
     function getBirdDetails(){
         return(
             <>
-                <EditBird 
-                        visible={editBirdmodalIsVisible}
-                        closeModal={closeEditBirdBirdModal} 
-                        loggedUsername={props.username}
-                        birdData={birdData}
-                    />
-                <View style={styles.modalContainer}>
+                <View style={styles.pageContainer}>
                     <View style={styles.headerContainer}>
                     <DetailBirdHeaderBar 
                         id={birdData.id} 
                         birdName={birdData.name} 
                         loggedUsername={props.loggedUsername} 
-                        onBackButtonPress={closeModal} likes={birdData.likes} 
+                        onBackButtonPress={() => navigation.goBack()} 
+                        likes={birdData.likes} 
                         userPutLike={birdData.userPutLike}
                         addLike={addLike}
                         removeLike={removeLike}
@@ -127,7 +116,7 @@ function BirdDetailPageWithoutAuthor(props){
                             ?
                             <View style={styles.rowContainer}>
                                 <DeleteBirdButton handleDeletePress={handleDeletePress} />
-                                <EditBirdButton handleDeletePress={openEditBirdModal} />
+                                <EditBirdButton handleDeletePress={handleEditBirdPress } />
                             </View>
                             : null
                         }
@@ -138,8 +127,7 @@ function BirdDetailPageWithoutAuthor(props){
     }
 
     return (
-        <Modal visible={props.visible} animationType='slide' onRequestClose={closeModal}>
-            <SafeAreaView style={styles.SafeArea}>
+        <>
             {
                 isLoadingBirdData ?
                 <View style={styles.loadingContainer}>
@@ -148,8 +136,7 @@ function BirdDetailPageWithoutAuthor(props){
                 :
                 getBirdDetails()
             }
-            </SafeAreaView>
-        </Modal>
+        </>
       )
 }
 
@@ -169,10 +156,7 @@ const shadowStyle = Platform.select({
 })
 
 const styles = StyleSheet.create({
-    SafeArea: {
-        flex: 1,
-    },
-    modalContainer: {
+    pageContainer: {
         flex: 1,
         backgroundColor: '#e9e7e7',
     },

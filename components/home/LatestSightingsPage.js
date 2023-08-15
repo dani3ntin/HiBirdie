@@ -7,19 +7,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatestSightingsPage"
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
 import { API_URL } from "../../env"
+import { useNavigation } from "@react-navigation/native"
 
 function LatestSightingsPage(props) {
     const isFocused = useIsFocused()
-    const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
     const [filtermodalIsVisible, setfilterModalIsVisible] = useState(false)
-    const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
-    const [authorUsernameForDetailBirdModal, setAuthorUsernameForDetailBirdModal] = useState('')
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
     const [filterMaximumDays, setFilterMaximumDays] = useState(0)
     const [filterMaximumDistance, setFilterMaximumDistance] = useState(0)
     const [latUser, setLatUser] = useState(0)
     const [lonUser, setLonUser] = useState(0)
+
+    const navigation = useNavigation()
 
     useEffect(() => {
         if(isFocused){
@@ -71,16 +71,9 @@ function LatestSightingsPage(props) {
                 setIsLoadingItems(false)
             }
     }
-    
-    function closeDetailBirdModal(){
-        fetchData()
-        setDetailBirdModalIsVisible(false)
-    }
 
-    function openDetailBirdModal(id, username){
-        setAuthorUsernameForDetailBirdModal(username)
-        setBirdIdForDetailBirdModal(id)
-        setDetailBirdModalIsVisible(true)
+    function openDetailBirdPage(id, username){
+        navigation.navigate('BirdDetailPageWithAuthor', { loggedUsername: props.username, id: id, originPage: "LatestSightings", authorUsername: username})
     }
 
     function openFilterModal(){
@@ -110,14 +103,6 @@ function LatestSightingsPage(props) {
             </View>
             :
             <>
-                <BirdDetailPageWithAuthor 
-                    visible={detailBirdmodalIsVisible} 
-                    id={birdIdForDetailBirdModal} 
-                    originPage={"LatestSightings"} 
-                    closeModal={closeDetailBirdModal} 
-                    authorUsername={authorUsernameForDetailBirdModal}
-                    loggedUsername={props.username}
-                />
                 <FilterLatestSightingsPage 
                     visible={filtermodalIsVisible}
                     closeModal={closeFilterModal}
@@ -146,7 +131,7 @@ function LatestSightingsPage(props) {
                                         distance={Math.round(item.distance)}
                                         userPutLike={item.userPutLike} 
                                         loggedUsername={props.username}
-                                        onBirdPressed={() => openDetailBirdModal(item.id, item.user)}
+                                        onBirdPressed={() => openDetailBirdPage(item.id, item.user)}
                                     />
                                 </View>
                                 ))}

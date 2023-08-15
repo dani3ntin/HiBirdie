@@ -10,29 +10,23 @@ import DatePicker from 'react-native-modern-datepicker'
 import { formatDateToString } from "../utils/utils"
 import { stringToDate } from "../utils/utils"
 import { API_URL } from "../../env"
-
+import { useNavigation } from "@react-navigation/native"
 
 const windowWidth = Dimensions.get('window').width
 
 function AddNewBird(props){
-    const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdName, setBirdName] = useState('')
     const [personalNotes, setPersonalNotes] = useState('')
-    const [latUser, setLatUser] = useState(null)
-    const [lonUser, setLonUser] = useState(null)
+    const [latUser, setLatUser] = useState(props.coordinates.latitude)
+    const [lonUser, setLonUser] = useState(props.coordinates.longitude)
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
     const [image, setImage] = useState(null)
     const [isUploadingBird, setIsUploadingBird] = useState(false)
-
-
-    useEffect(() => {
-        setIsLoadingBirdData(true)
-        fetchData()
-        setIsLoadingBirdData(false)
-    }, [])
+    
+    const navigation = useNavigation()
 
     useEffect(() => {
         calculateOptimizedLocalImageSize(image, 80, setBirdImageWidth, setBirdImageHeight)
@@ -45,34 +39,18 @@ function AddNewBird(props){
         })()
     }, [])
 
-    const fetchData = async () => {
-        settingUserCoordinates()
-    }
-
-    async function settingUserCoordinates(){
-        const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
-        if (storedCoordinatesUserData) {
-          const parsedUserData = JSON.parse(storedCoordinatesUserData)
-          setLatUser(parsedUserData.latitude)
-          setLonUser(parsedUserData.longitude)
-        }
-    }
-
-    function closeModalAlert(){
+    function closePageAlert(){
         Alert.alert(
             'Request for confirmation',
             'If you go back, all data entered will be lost',
             [
               { text: 'Annulla', },
-              { text: 'OK', onPress: () => closeModal() }
+              { text: 'OK', onPress: () => navigation.goBack() }
             ],
             { cancelable: true }
         )
     }
 
-    function closeModal(){
-        props.closeModal()
-    }
 
     function getLocationHandler(coordinate){
         setLatUser(coordinate.latitude)
@@ -160,7 +138,7 @@ function AddNewBird(props){
                 body: formData,
             })
             console.log(response.status)
-            closeModal()
+            navigation.goBack()
         } catch (error) {
             console.error(error);
         }
@@ -171,6 +149,19 @@ function AddNewBird(props){
         return(
             <>
                 <ScrollView style={styles.scrollViewcontainer}>
+                    <View style={styles.imageContainer}>
+                        {image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />}
+                        {!image && <Text>Press the button and pick a bird photo from your gallery!</Text>}
+                        <Pressable
+                            style={({ pressed }) => [
+                                styles.imageButtonPicker,
+                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                            ]} 
+                            onPress={() => pickImage()}
+                            >
+                            <Text style={styles.textPickPhotoPressable}>Pick the bird photo</Text>
+                        </Pressable>
+                    </View>
                     <View style={styles.locationContainer}>
                         <Text style={styles.text}>Enter the location of the sighting:</Text>
                         <View style={styles.mapContainer}>
@@ -206,19 +197,6 @@ function AddNewBird(props){
                             current={formatDateToString(new Date())}
                         />
                     </View>
-                    <View style={styles.imageContainer}>
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.imageButtonPicker,
-                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
-                            ]} 
-                            onPress={() => pickImage()}
-                            >
-                            <Text style={styles.textPickPhotoPressable}>Pick the bird photo</Text>
-                        </Pressable>
-                        {image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />}
-                        {!image && <Text>Press the button and pick a bird photo from your gallery!</Text>}
-                    </View>
                     <Pressable
                         style={({ pressed }) => [
                             styles.uploadPressable,
@@ -227,7 +205,7 @@ function AddNewBird(props){
                         onPress={() => controlInputData()}
                         >
                             {
-                                isLoadingBirdData ? 
+                                isUploadingBird ? 
                                 <ActivityIndicator size="large" color="#000000"/>
                                 :
                                 <Text style={styles.textUploadPressable}>Add this bird to your encyclopedia</Text>
@@ -240,19 +218,14 @@ function AddNewBird(props){
     }
 
     return (
-        <Modal visible={props.visible} animationType='slide' onRequestClose={closeModalAlert}>
+        <>
             <View style={styles.headerContainer}>
-                <AddBirdHeaderBar onBackButtonPress={closeModalAlert}/>
+                <AddBirdHeaderBar onBackButtonPress={closePageAlert}/>
             </View>
             {
-                isUploadingBird ?
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#0000ff"/>
-                </View>
-                :
                 getAddBird()
             }
-        </Modal>
+        </>
       )
 }
 
@@ -293,7 +266,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 20,
+        marginTop: 20,
         backgroundColor: 'white',
         borderRadius: 13,
         paddingLeft: 20,
@@ -359,7 +332,7 @@ const styles = StyleSheet.create({
         height: 50,
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 20,
+        marginTop: 20,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',

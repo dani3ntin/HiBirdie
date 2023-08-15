@@ -1,4 +1,4 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, TextInput, Button } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, TextInput, Button } from "react-native"
 import { useEffect, useState } from "react"
 import { Input } from 'react-native-elements'
 import EditBirdHeaderBar from "../headerBars/EditBirdHeaderBar"
@@ -8,11 +8,17 @@ import DatePicker from 'react-native-modern-datepicker'
 import { stringToDate } from "../utils/utils"
 import { API_URL } from "../../env"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import { useNavigation } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native"
 
 
 const windowWidth = Dimensions.get('window').width
 
-function EditBird(props){
+function EditBird(){
+    const navigation = useNavigation()
+    const route = useRoute()
+    const props = route.params
+
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdName, setBirdName] = useState(props.birdData.name)
     const [personalNotes, setPersonalNotes] = useState(props.birdData.personalNotes)
@@ -24,7 +30,6 @@ function EditBird(props){
     const [birdImageHeight, setBirdImageHeight] = useState(0)
     const [image, setImage] = useState(null)
     const [isUploadingBird, setIsUploadingBird] = useState(false)
-
 
     useEffect(() => {
         setIsLoadingBirdData(true)
@@ -50,20 +55,16 @@ function EditBird(props){
         return image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />
     }
 
-    function closeModalAlert(){
+    function closePageAlert(){
         Alert.alert(
             'Request for confirmation',
             'If you go back, all data entered will be lost',
             [
               { text: 'Annulla', },
-              { text: 'OK', onPress: () => closeModal() }
+              { text: 'OK', onPress: () => navigation.goBack() }
             ],
             { cancelable: true }
         )
-    }
-
-    function closeModal(){
-        props.closeModal()
     }
 
     function getLocationHandler(coordinate){
@@ -112,17 +113,7 @@ function EditBird(props){
         else if(selectedDate.length === 0) showAlertError('Sighting date')
         else if(stringToDate(selectedDate.replace(/\//g, "-")) > new Date()) showAlertError('Invalid date')
         else if(lonUser.length === 0) showAlertError('Location')
-        else if(!image || image[0].uri === ''){
-            Alert.alert(
-                'Missing bird image',
-                'You have not uploaded the bird photo, a default image will be used',
-                [
-                  { text: 'Annulla', },
-                  { text: 'OK', onPress: () => uploadBird() }
-                ],
-                { cancelable: true }
-            )
-        }else{ uploadBird() }
+        else{ uploadBird() }
     }
 
     async function uploadBird(){
@@ -142,6 +133,8 @@ function EditBird(props){
         formData.append('personalNotes', personalNotes)
         formData.append('xPosition', latUser)
         formData.append('yPosition', lonUser)
+
+        console.log(formData)
         
         try {
             const response = await fetch(API_URL + 'editbird', {
@@ -152,22 +145,30 @@ function EditBird(props){
                 body: formData,
             })
             console.log(response.status)
-            closeModal()
         } catch (error) {
             console.error(error);
         }
         setIsUploadingBird(false)
+        navigation.goBack()
     }
       
     function getAddBird(){
         return(
             <>
                 <ScrollView style={styles.scrollViewcontainer}>
-                    <View style={styles.locationContainer}>
-                        <Text style={styles.text}>Enter the location of the sighting:</Text>
-                        <View style={styles.mapContainer}>
-                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler}/>
-                        </View>
+                    <View style={styles.imageContainer}>
+                        {
+                            getBirdImage()
+                        }
+                        <Pressable
+                            style={({ pressed }) => [
+                                styles.imageButtonPicker,
+                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                            ]} 
+                            onPress={() => pickImage()}
+                            >
+                            <Text style={styles.textPickPhotoPressable}>Pick the bird photo</Text>
+                        </Pressable>
                     </View>
                     <View style={styles.ItemsContainer}>
                         <Input
@@ -198,19 +199,11 @@ function EditBird(props){
                             current={selectedDate}
                         />
                     </View>
-                    <View style={styles.imageContainer}>
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.imageButtonPicker,
-                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
-                            ]} 
-                            onPress={() => pickImage()}
-                            >
-                            <Text style={styles.textPickPhotoPressable}>Pick the bird photo</Text>
-                        </Pressable>
-                        {
-                            getBirdImage()
-                        }
+                    <View style={styles.locationContainer}>
+                        <Text style={styles.text}>Enter the location of the sighting:</Text>
+                        <View style={styles.mapContainer}>
+                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler}/>
+                        </View>
                     </View>
                     <Pressable
                         style={({ pressed }) => [
@@ -220,7 +213,7 @@ function EditBird(props){
                         onPress={() => controlInputData()}
                         >
                             {
-                                isLoadingBirdData ? 
+                                isUploadingBird ? 
                                 <ActivityIndicator size="large" color="#000000"/>
                                 :
                                 <Text style={styles.textUploadPressable}>Edit and save</Text>
@@ -233,19 +226,19 @@ function EditBird(props){
     }
 
     return (
-        <Modal visible={props.visible} animationType='slide' onRequestClose={closeModalAlert}>
+        <>
             <View style={styles.headerContainer}>
-                <EditBirdHeaderBar onBackButtonPress={closeModalAlert}/>
+                <EditBirdHeaderBar onBackButtonPress={closePageAlert}/>
             </View>
             {
-                isUploadingBird ?
+                isLoadingBirdData ?
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="#0000ff"/>
                 </View>
                 :
                 getAddBird()
             }
-        </Modal>
+        </>
       )
 }
 
@@ -274,8 +267,6 @@ const styles = StyleSheet.create({
     ItemsContainer: {
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 20,
-        marginTop: 20,
         backgroundColor: 'white',
         borderRadius: 13,
         paddingLeft: 20,
@@ -287,6 +278,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         marginBottom: 20,
+        marginTop: 20,
         backgroundColor: 'white',
         borderRadius: 13,
         paddingLeft: 20,
@@ -333,6 +325,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 2,
         height: 70,
+        marginTop: 20,
         marginLeft: 20,
         marginRight: 20,
         marginBottom: 20,
@@ -352,7 +345,7 @@ const styles = StyleSheet.create({
         height: 50,
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 20,
+        marginTop: 20,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',

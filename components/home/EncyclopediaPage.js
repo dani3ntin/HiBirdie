@@ -1,20 +1,18 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable} from "react-native"
 import { useIsFocused } from '@react-navigation/native'
 import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
-import BirdDetailPageWithoutAuthor from "../detailBird/BirdDetailPageWithoutAuthor"
-import AddNewBird from "../addNewBird-editBird/AddNewBird"
 import { useState } from "react"
 import { useEffect } from "react"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 import { API_URL } from "../../env"
+import { useNavigation } from "@react-navigation/native"
 
 function EncyclopediaPage(props) {
     const isFocused = useIsFocused()
-    const [detailBirdmodalIsVisible, setDetailBirdModalIsVisible] = useState(false)
-    const [addNewBirdmodalIsVisible, setAddNewBirdModalIsVisible] = useState(false)
-    const [birdIdForDetailBirdModal, setBirdIdForDetailBirdModal] = useState(-1)
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
+
+    const navigation = useNavigation()
 
     useEffect(() => {
         if(isFocused){
@@ -39,25 +37,13 @@ function EncyclopediaPage(props) {
         }
     }
 
-    function closeDetailBirdModal(){
-        setDetailBirdModalIsVisible(false)
-        fetchData()
-        setIsLoadingItems(true)
-    }
 
-    function openDetailBirdModal(id){
-        setBirdIdForDetailBirdModal(id)
-        setDetailBirdModalIsVisible(true)
-    }
-
-    function closeAddNewBirdModal(){
-        setAddNewBirdModalIsVisible(false)
-        fetchData()
-        setIsLoadingItems(true)
+    function openDetailBirdPage(id){
+        navigation.navigate('BirdDetailPageWithoutAuthor', { loggedUsername: props.username, id: id, originPage: "Encyclopedia" })
     }
 
     function openAddNewBirdModal(){
-        setAddNewBirdModalIsVisible(true)
+        navigation.navigate('AddBird')
     }
 
     return (
@@ -69,18 +55,6 @@ function EncyclopediaPage(props) {
             </View>
             :
             <>
-                <BirdDetailPageWithoutAuthor 
-                    visible={detailBirdmodalIsVisible} 
-                    id={birdIdForDetailBirdModal} 
-                    originPage={"Encyclopedia"} 
-                    closeModal={closeDetailBirdModal} 
-                    loggedUsername={props.username}
-                />
-                <AddNewBird 
-                    visible={addNewBirdmodalIsVisible}
-                    closeModal={closeAddNewBirdModal} 
-                    loggedUsername={props.username}
-                />
                 <ScrollView style={styles.container}>
                     {
                         birdsData.length === 0 ?
@@ -97,7 +71,7 @@ function EncyclopediaPage(props) {
                                 name={item.name} 
                                 image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username }} 
                                 sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} 
-                                onBirdPressed={openDetailBirdModal}/>
+                                onBirdPressed={openDetailBirdPage}/>
                             </View>
                         ))}
                         </View>

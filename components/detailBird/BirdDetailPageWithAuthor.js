@@ -1,4 +1,4 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
@@ -6,12 +6,17 @@ import AuthorPressable from "./AuthorPressable"
 import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
-import DeleteBirdButton from "./DeleteBirdButton"
 import { API_URL } from "../../env"
+import { useRoute } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 
 const windowWidth = Dimensions.get('window').width
 
-function BirdDetailPageWithAuthor(props){
+function BirdDetailPageWithAuthor(){
+    const navigation = useNavigation()
+    const route = useRoute()
+    const props = route.params
+
     const [birdData, setBirdData] = useState([])
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
@@ -19,11 +24,9 @@ function BirdDetailPageWithAuthor(props){
 
     useEffect(() => {
         setIsLoadingBirdData(true)
-        if(props.visible){
-            calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, 50, setBirdImageWidth, setBirdImageHeight)
-            fetchData()
-        } 
-    }, [props.visible])
+        calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, 50, setBirdImageWidth, setBirdImageHeight)
+        fetchData()
+    }, [])
 
     const fetchData = async () => {
         try {
@@ -45,33 +48,12 @@ function BirdDetailPageWithAuthor(props){
         width: birdImageWidth || 200,
         height: birdImageHeight || 200,
     }
-
-    function closeModal(){
-        setBirdData([])
-        props.closeModal()
-    }
-
-    async function deleteBird(){
-        await fetch(API_URL + 'deletebird/' + birdData.id)
-        closeModal()
-    }
-
-    function handleDeletePress(){
-        Alert.alert(
-            'Delete Bird',
-            'Are you sure you want to delete this bird?',
-            [
-              { text: 'Cancel'},
-              { text: 'OK', onPress: () => deleteBird() },
-            ]
-          );
-    }
       
     function getBirdDetails(){
         return(
-            <View style={styles.modalContainer}>
+            <View style={styles.pageContainer}>
                 <View style={styles.headerContainer}>
-                <DetailBirdHeaderBar id={birdData.id} birdName={birdData.name} loggedUsername={props.loggedUsername} onBackButtonPress={closeModal} likes={birdData.likes} userPutLike={birdData.userPutLike} />
+                <DetailBirdHeaderBar id={birdData.id} birdName={birdData.name} loggedUsername={props.loggedUsername} onBackButtonPress={() => navigation.goBack()} likes={birdData.likes} userPutLike={birdData.userPutLike} />
                 </View>
                 <ScrollView>
                     {
@@ -93,19 +75,13 @@ function BirdDetailPageWithAuthor(props){
                         <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
                     </View>
                     <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
-                    {
-                        props.originPage === "Encyclopedia"
-                        ?
-                        <DeleteBirdButton handleDeletePress={handleDeletePress} />
-                        : null
-                    }
                 </ScrollView>
             </View>
         )
     }
 
     return (
-        <Modal visible={props.visible} animationType='slide' onRequestClose={closeModal}>
+        <>
           {
             isLoadingBirdData ?
             <View style={styles.loadingContainer}>
@@ -114,7 +90,7 @@ function BirdDetailPageWithAuthor(props){
             :
             getBirdDetails()
           }
-        </Modal>
+        </>
       )
 }
 
@@ -134,7 +110,7 @@ const shadowStyle = Platform.select({
 })
 
 const styles = StyleSheet.create({
-    modalContainer: {
+    pageContainer: {
         flex: 1,
         backgroundColor: '#e9e7e7',
     },

@@ -4,16 +4,45 @@ import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { API_URL } from './env'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import AddNewBird from './components/addNewBird-editBird/AddNewBird'
+import EditBird from './components/addNewBird-editBird/EditBird'
+import * as Location from 'expo-location'
+import BirdDetailPageWithoutAuthor from './components/detailBird/BirdDetailPageWithoutAuthor'
+import BirdDetailPageWithAuthor from './components/detailBird/BirdDetailPageWithAuthor'
+
+const Stack = createStackNavigator();
 
 export default function App() {
 
   const [userData, setUserData] = useState(null)
-
+  const [username, setUsername] = useState(null)
+  const [coordinates, setCoordinates] = useState(null)
 
   useEffect(() => {
     //AsyncStorage.clear()
     fetchData()
+    settingUsername()
+    const fetchLocation = async () => {
+      const coordinates = await getLocationCoordinates()
+      setCoordinates(coordinates)
+      console.log('Coordinate:', coordinates)
+      await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: coordinates.latitude, longitude: coordinates.longitude}))
+    }
+    fetchLocation()
   }, []);
+
+  const getLocationCoordinates = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permesso di geolocalizzazione non concesso');
+      return null;
+    }
+  
+    const currentLocation = await Location.getCurrentPositionAsync({});
+    return currentLocation.coords;
+  }
 
   const fetchData = async () => {
     const storedUserData = await AsyncStorage.getItem('userData')
@@ -39,13 +68,25 @@ export default function App() {
     }
   };
 
+  async function settingUsername(){
+    const storedUserData = await AsyncStorage.getItem('userData')
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData)
+      setUsername(parsedUserData.username)
+    }
+  }
+
   return (
     <SafeAreaView style={styles.SafeArea}>
-      <View style={styles.headerContainer}>
-        <HomeHeaderBar userName={userData ? userData.name : ''} userAvatar={{ uri: API_URL + 'getuserbyusername/' + (userData ? userData.username : '') + '/' + (userData ? userData.username : '') }} />
-      </View>
-      <Home/>
-      <StatusBar style="auto" />
+      <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={username}/>}</Stack.Screen>
+            <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
+            <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
+            <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
+            <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaView>
   );
 }
