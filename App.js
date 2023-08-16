@@ -30,21 +30,25 @@ export default function App() {
     const fetchLocation = async () => {
       const coordinates = await getLocationCoordinates()
       setCoordinates(coordinates)
-      console.log('Coordinate:', coordinates)
-      await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: coordinates.latitude, longitude: coordinates.longitude}))
+      await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: coordinates.latitude, longitude: coordinates.longitude, defaultPosition: coordinates.defaultPosition}))
     }
     fetchLocation()
   }, []);
 
   const getLocationCoordinates = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
+    const { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== 'granted') {
       console.log('Permesso di geolocalizzazione non concesso');
       return null;
     }
-  
-    const currentLocation = await Location.getCurrentPositionAsync({});
-    return currentLocation.coords;
+    try {
+      const currentLocation = await Location.getCurrentPositionAsync({})
+      return currentLocation.coords
+    } catch (error) {
+      const storedUserData = await AsyncStorage.getItem('userData')
+      const parsedUserData = JSON.parse(storedUserData)
+      return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
+    }
   }
 
   const fetchData = async () => {

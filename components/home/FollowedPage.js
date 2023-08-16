@@ -7,8 +7,10 @@ import UserDetailPage from "../userDetail/UserDetailPage"
 import { API_URL } from "../../env"
 import SearchUsers from "../searchUsers/SearchUsers"
 import { useNavigation } from "@react-navigation/native"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 function FollowedPage(props) {
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const navigation = useNavigation()
     const isFocused = useIsFocused()
     const [followersData, setFollowersData] = useState([])
@@ -33,7 +35,7 @@ function FollowedPage(props) {
           setIsLoadingItems(false)
           
         } catch (error) {
-          console.error('Error on getting the datas:', error)
+          console.error('Followed page Error on getting the datas:', error)
           setIsLoadingItems(false)
         }
     }
@@ -63,7 +65,7 @@ function FollowedPage(props) {
     
     return (
         isLoadingItems ?
-            <View style={styles.loadingContainer}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
         :  
@@ -73,7 +75,7 @@ function FollowedPage(props) {
                     closeModal={closeSearchUsersModal}
                     loggedUsername={props.username}
                 />
-            <ScrollView style={styles.container}>
+            <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
                 {
                     followersData.length === 0 ?
                         <View style={styles.textContainer}>
@@ -95,7 +97,7 @@ function FollowedPage(props) {
                     </View>
                 }
             </ScrollView>
-            <View style={styles.bottomFiller}></View>
+            <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgoundColor}]}></View>
             <Pressable 
                 style={({ pressed }) => [
                     styles.floatingButton,
@@ -131,7 +133,6 @@ const styles = StyleSheet.create({
     },
     bottomFiller: {
         height: 70,
-        backgroundColor: '#e9e7e7',
     },
     ItemsContainer: {
         marginLeft: 10,

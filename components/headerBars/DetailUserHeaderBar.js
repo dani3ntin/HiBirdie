@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
-import { Feather } from '@expo/vector-icons'
+import { useGlobalContext } from '../globalContext/GlobalContext';
 
 const DetailUserHeaderBar = (props) => {
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
     const CustomIcon = ({ name, size, color }) => {
         const IconComponent = Icon;
         return <IconComponent name={name} size={size} color={color} />;
@@ -14,7 +15,7 @@ const DetailUserHeaderBar = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: globalVariable.headerColor}]}>
           <Pressable style={({pressed}) => pressed && styles.pressedButton} onPress={backButtonPressedHandler}>
               <View style={styles.backIcon}>
                   <CustomIcon name="left" size={35} color="black" />

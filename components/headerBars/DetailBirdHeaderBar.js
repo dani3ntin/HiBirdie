@@ -4,8 +4,10 @@ import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { API_URL } from '../../env'
+import { useGlobalContext } from '../globalContext/GlobalContext'
 
 const DetailBirdHeaderBar = (props) => {
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
   const [liked, setLiked] = useState(props.userPutLike)
   const [likeNumber, setLikeNumber] = useState(props.likes)
 
@@ -60,7 +62,7 @@ const DetailBirdHeaderBar = (props) => {
 }
 
   return (
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: globalVariable.headerColor}]}>
         <View style={styles.backButton}>
           <Pressable style={({pressed}) => pressed && styles.pressedBackButton} onPress={backButtonPressedHandler}>
             <View style={styles.backIcon}>

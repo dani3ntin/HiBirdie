@@ -9,6 +9,7 @@ import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOp
 import { useNavigation } from "@react-navigation/native"
 import UserUpperInfos from "../userDetail/UserUpperInfos"
 import { useGlobalContext } from "../globalContext/GlobalContext"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 
 const windowWidth = Dimensions.get('window').width
@@ -25,12 +26,15 @@ function UserSetting(props){
     const [email, setEmail] = useState(props.userData.email)
     const [likes, setLikes] = useState(props.userData.likes)
     const [followers, setFollowers] = useState(props.userData.followers)
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null)
     const [userImageWidth, setUserImageWidth] = useState(0)
     const [userImageHeight, setUserImageHeight] = useState(0)
     const [image, setImage] = useState(null)
     const [isSaving, setIsSaving] = useState(false)
     const [editButtonText, setEditButtonText] = useState('Edit')
+    const [changinPassword, setChanginPassword] = useState(false)
 
     useEffect(() => {
         setIsLoadingUserData(true)
@@ -57,10 +61,10 @@ function UserSetting(props){
     }
 
     function closePageAlert(){
-        if(editButtonText === 'Save changes')
+        if(editButtonText === 'Save changes' || changinPassword)
             Alert.alert(
                 'Request for confirmation',
-                'If you go back, all changes will be lost. To save your changes, press on the "Save changes" button on the bottom.',
+                'If you go back, all changes will be lost.',
                 [
                 { text: 'Annulla', },
                 { text: 'OK', onPress: () => navigation.goBack() }
@@ -94,14 +98,10 @@ function UserSetting(props){
         height: userImageHeight || 200,
     }
 
-    function showAlertError(missingData){
-        let errorPhrase
-        let errorTitle = 'Missing data' 
-        if(missingData === 'name') errorPhrase = 'Please enter your name'
-        if(missingData === 'Location') errorPhrase = 'Please enter the location of the sighting in the map'
+    function showAlert(title, message){
         Alert.alert(
-            errorTitle,
-            errorPhrase,
+            title,
+            message,
             [
               { text: 'OK'}
             ],
@@ -110,8 +110,8 @@ function UserSetting(props){
     }
 
     function controlInputData(){
-        if(name.length === 0) showAlertError('name')
-        else if(lonUser.length === 0) showAlertError('Location')
+        if(name.length === 0) showAlert('Missing data', 'Please enter your name')
+        else if(lonUser.length === 0) showAlert('Missing data', 'Please enter the location of the sighting in the map')
         else{ 
             saveChanges()
             return true
@@ -168,8 +168,53 @@ function UserSetting(props){
         }
     }
 
-    function pickColor(headerColor, backgoundColor){
+    function checkNewPasswordData(){
+        if(password === '') showAlert('Missing password', 'Please insert the password')
+        else if(confirmPassword === '') showAlert('Missing confirm password', 'Please insert the confirm password')
+        else if(password !== confirmPassword) showAlert('Different password and confirm password', 'Password and confirm password are different')
+        else changePassword()
+    }
+
+    async function changePassword(){
+        let formData = new FormData()
+        formData.append('password', password)
+        formData.append('username', props.userData.username)
+
+        console.log(formData)
+        
+        try {
+            const response = await fetch(API_URL + 'changepassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                body: formData,
+            })
+            const jsonUserData = await response.json()
+            if(response.ok){
+                showAlert('Password changed', 'Password was successfully changed')
+                setChanginPassword(false)
+                setPassword('')
+                setConfirmPassword('')
+            }
+            console.log(jsonUserData[0])
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function pickColor(headerColor, backgoundColor){
         setGlobalVariable({backgoundColor: backgoundColor, headerColor: headerColor})
+        await AsyncStorage.setItem('applicationColor', JSON.stringify({backgoundColor: backgoundColor, headerColor: headerColor}))
+    }
+
+    function changePasswordButtonHandler(){
+        const newValue = !changinPassword
+        if(newValue === true)
+            setChanginPassword(true)
+        else{
+            checkNewPasswordData()
+        }
     }
 
     function getUserSettings(){
@@ -209,7 +254,7 @@ function UserSetting(props){
                         <Input
                             placeholder='Insert your name'
                             errorStyle={{ color: 'red' }}
-                            label='name'
+                            label='Name'
                             value={name}
                             onChangeText={text => setName(text)}
                             maxLength={30}
@@ -227,13 +272,63 @@ function UserSetting(props){
                         <Input
                             placeholder='Insert your state'
                             errorStyle={{ color: 'red' }}
-                            label='state'
+                            label='State'
                             multiline={true}
                             value={state}
                             onChangeText={text => setState(text)}
                             maxLength={200}
                             disabled={editButtonText === 'Edit' ? true : false}
                         />
+                    </View>
+                    <View style={styles.colorsContainer}>
+                        <Pressable
+                            style={({ pressed }) => [
+                                styles.changePasswordButton,
+                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                            ]} 
+                            onPress={() => changePasswordButtonHandler()}
+                            >
+                            {
+                                changinPassword ? 
+                                <Text style={styles.textPickPhotoPressable}>Confirm new password</Text>
+                                :
+                                <Text style={styles.textPickPhotoPressable}>Change your password</Text>
+                            }
+                        </Pressable>
+                        {
+                            changinPassword ?
+                            <>
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.changePasswordButton,
+                                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                                    ]} 
+                                    onPress={() => setChanginPassword(false)}
+                                    >
+                                    <Text style={styles.textPickPhotoPressable}>Cancel</Text>
+                                </Pressable>
+                                <Input
+                                placeholder='Insert password'
+                                errorStyle={{ color: 'red' }}
+                                label='Password'
+                                multiline={true}
+                                value={password}
+                                onChangeText={text => setPassword(text)}
+                                maxLength={200}
+                                disabled={changinPassword === true ? false : true}
+                                />
+                                <Input
+                                placeholder='Insert confirm password'
+                                errorStyle={{ color: 'red' }}
+                                label='Confirm password'
+                                multiline={true}
+                                value={confirmPassword}
+                                onChangeText={text => setConfirmPassword(text)}
+                                maxLength={200}
+                                />
+                            </>
+                            :null
+                        }
                     </View>
                     <View style={styles.colorsContainer}>
                         <Text style={styles.text}>Select the color of the application:</Text>
@@ -282,7 +377,10 @@ function UserSetting(props){
                     </View>
                     <View style={styles.locationContainer}>
                         <Text style={styles.text}>Default location:</Text>
-                        <Text>(Press edit to change it)</Text>
+                        {
+                            editButtonText === 'Edit' ?
+                            <Text>(Press edit to change it)</Text> : null
+                        }
                         <View style={styles.mapContainer}>
                             <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler} enablePressing={false}/>
                         </View>
@@ -431,6 +529,19 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         marginTop: 20,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 3,
+    },
+    changePasswordButton: {
+        backgroundColor: '#dfdfdf',
+        borderColor: 'black',
+        borderWidth: 2,
+        height: 50,
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 20,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',

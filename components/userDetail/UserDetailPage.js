@@ -7,8 +7,10 @@ import { Feather } from '@expo/vector-icons'
 import { API_URL } from '../../env'
 import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
+import { useGlobalContext } from '../globalContext/GlobalContext'
 
 function UserDetailPage(){
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
   const navigation = useNavigation()
   const route = useRoute()
   const props = route.params
@@ -72,7 +74,7 @@ function UserDetailPage(){
   function getUserDetails(){
     return(
       <>
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
           <View style={styles.headerContainer}>
             <DetailUserHeaderBar 
               username={props.usernameFollowed}
@@ -81,7 +83,7 @@ function UserDetailPage(){
               onBackButtonPress={() => navigation.goBack()}
             />
           </View>
-          <ScrollView style={styles.scrollViewcontainer}>
+          <ScrollView>
             <UserUpperInfos state={props.state} likes={likes} followers={followers}/>
             <UserEncyclopedia 
               username={props.loggedUsername} 
@@ -162,9 +164,6 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     height: '8%'
-  },
-  scrollViewcontainer: {
-    backgroundColor: '#e9e7e7',
   },
   floatingButton: {
     position: 'absolute',

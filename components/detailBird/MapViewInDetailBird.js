@@ -13,7 +13,6 @@ function MapViewInDetailBird(props) {
 
     const handlePress = () => {
         setEnableMapScrolling(true)
-        console.log('premuto')
     }
 
     return (

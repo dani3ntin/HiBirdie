@@ -11,10 +11,12 @@ import { formatDateToString } from "../utils/utils"
 import { stringToDate } from "../utils/utils"
 import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 const windowWidth = Dimensions.get('window').width
 
 function AddNewBird(props){
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const [birdName, setBirdName] = useState('')
     const [personalNotes, setPersonalNotes] = useState('')
     const [latUser, setLatUser] = useState(setLatitude(props.coordinates))
@@ -158,7 +160,7 @@ function AddNewBird(props){
     function getAddBird(){
         return(
             <>
-                <ScrollView style={styles.scrollViewcontainer}>
+                <ScrollView style={{backgroundColor: globalVariable.backgoundColor}}>
                     <View style={styles.imageContainer}>
                         {image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />}
                         {!image && <Text style={styles.textImage}>Press the button and pick a bird photo from your gallery!</Text>}
@@ -229,7 +231,7 @@ function AddNewBird(props){
 
     return (
         <>
-            <View style={styles.headerContainer}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
                 <AddBirdHeaderBar onBackButtonPress={closePageAlert}/>
             </View>
             {
@@ -293,9 +295,6 @@ const styles = StyleSheet.create({
         borderRadius: 13,
         padding: 20,
         ...shadowStyle
-    },
-    scrollViewcontainer: {
-        backgroundColor: '#e9e7e7',
     },
     loadingContainer: {
         flex: 1,

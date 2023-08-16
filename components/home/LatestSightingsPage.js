@@ -19,6 +19,7 @@ function LatestSightingsPage(props) {
     const [filterMaximumDistance, setFilterMaximumDistance] = useState(0)
     const [latUser, setLatUser] = useState(0)
     const [lonUser, setLonUser] = useState(0)
+    const [defaultPosition, setDefaultPosition] = useState(false)
 
     const navigation = useNavigation()
 
@@ -32,10 +33,13 @@ function LatestSightingsPage(props) {
 
     async function settingUserCoordinates(){
         const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
+        console.log(storedCoordinatesUserData)
         if (storedCoordinatesUserData) {
           const parsedUserData = JSON.parse(storedCoordinatesUserData)
           setLatUser(parsedUserData.latitude)
           setLonUser(parsedUserData.longitude)
+          if(parsedUserData.defaultPosition)
+            setDefaultPosition(true)
         }
     }
 
@@ -51,26 +55,26 @@ function LatestSightingsPage(props) {
     
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
-            try {
-                const response = await fetch(API_URL + 'getbirdswithfilterexceptyours', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-              })
-                if (!response.ok) {
-                  throw new Error('Network response was not ok')
-                }
-                const jsonData = await response.json()
-            
-                setBirdsData(jsonData)
-                setIsLoadingItems(false)
-                
-              } catch (error) {
-                console.error('Error on getting the datas:', error)
-                setIsLoadingItems(false)
+        try {
+            const response = await fetch(API_URL + 'getbirdswithfilterexceptyours', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            })
+            if (!response.ok) {
+                throw new Error('Network response was not ok')
             }
+            const jsonData = await response.json()
+        
+            setBirdsData(jsonData)
+            setIsLoadingItems(false)
+            
+            } catch (error) {
+            console.error('Latest sighting Error on getting the datas:', error)
+            setIsLoadingItems(false)
+        }
     }
 
     function openDetailBirdPage(id, username){
@@ -99,7 +103,7 @@ function LatestSightingsPage(props) {
         <>
         {
             isLoadingItems ?
-            <View style={styles.loadingContainer}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
             :
@@ -133,12 +137,13 @@ function LatestSightingsPage(props) {
                                         userPutLike={item.userPutLike} 
                                         loggedUsername={props.username}
                                         onBirdPressed={() => openDetailBirdPage(item.id, item.user)}
+                                        defaultPosition={defaultPosition}
                                     />
                                 </View>
                                 ))}
                             </View>
                         }
-                        <View style={styles.bottomFiller}></View>
+                        <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgoundColor}]}></View>
                     </ScrollView>
                     <Pressable 
                         style={({ pressed }) => [
@@ -217,7 +222,6 @@ const styles = StyleSheet.create({
     },
     bottomFiller: {
         height: 70,
-        backgroundColor: '#e9e7e7',
     },
     textContainer: {
         flex: 1,

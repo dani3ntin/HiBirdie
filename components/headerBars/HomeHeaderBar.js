@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import { useGlobalContext } from '../globalContext/GlobalContext';
+import { useGlobalContext } from '../globalContext/GlobalContext'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const HomeHeaderBar = (props) => {
   const { globalVariable, setGlobalVariable } = useGlobalContext()
@@ -12,7 +13,7 @@ const HomeHeaderBar = (props) => {
     navigation.navigate('UserSetting')
   }
     return (
-      <Pressable onPress={userPressedHandler}>
+      <TouchableOpacity onPress={userPressedHandler}>
         <View style={[styles.container, {backgroundColor: globalVariable.headerColor}]}>
           <Image
             source={props.userAvatar}
@@ -20,7 +21,7 @@ const HomeHeaderBar = (props) => {
           />
           <Text style={styles.userName}>{props.userName}</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     );
   };
   

@@ -11,10 +11,12 @@ import { API_URL } from "../../env"
 import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
 import { useIsFocused } from "@react-navigation/native"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 const windowWidth = Dimensions.get('window').width
 
 function BirdDetailPageWithoutAuthor(){
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const navigation = useNavigation()
     const route = useRoute()
     const props = route.params
@@ -44,7 +46,7 @@ function BirdDetailPageWithoutAuthor(){
 
             setIsLoadingBirdData(false)
         } catch (error) {
-          console.error('Error on getting the datas:', error)
+          console.error('Bird detail page without author Error on getting the datas:', error)
           setIsLoadingBirdData(false)
         }
     }
@@ -71,14 +73,6 @@ function BirdDetailPageWithoutAuthor(){
           );
     }
 
-    function addLike(){
-        props.addLike()
-    }
-
-    function removeLike(){
-        props.removeLike()
-    }
-
     function handleEditBirdPress(){
         navigation.navigate('EditBird', { loggedUsername: props.loggedUsername, birdData: birdData, })
     }
@@ -86,7 +80,7 @@ function BirdDetailPageWithoutAuthor(){
     function getBirdDetails(){
         return(
             <>
-                <View style={styles.pageContainer}>
+                <View style={[styles.pageContainer, {backgroundColor: globalVariable.backgoundColor}]}>
                     <View style={styles.headerContainer}>
                     <DetailBirdHeaderBar 
                         id={birdData.id} 
@@ -129,7 +123,7 @@ function BirdDetailPageWithoutAuthor(){
         <>
             {
                 isLoadingBirdData ?
-                <View style={styles.loadingContainer}>
+                <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
                     <ActivityIndicator size="large"  color="#0000ff"/>
                 </View>
                 :
@@ -157,7 +151,6 @@ const shadowStyle = Platform.select({
 const styles = StyleSheet.create({
     pageContainer: {
         flex: 1,
-        backgroundColor: '#e9e7e7',
     },
     headerContainer: {
         height: '8%'

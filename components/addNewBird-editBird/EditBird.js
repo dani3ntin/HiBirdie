@@ -10,11 +10,12 @@ import { API_URL } from "../../env"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
 import { useNavigation } from "@react-navigation/native"
 import { useRoute } from "@react-navigation/native"
-
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 const windowWidth = Dimensions.get('window').width
 
 function EditBird(){
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const navigation = useNavigation()
     const route = useRoute()
     const props = route.params
@@ -155,7 +156,7 @@ function EditBird(){
     function getAddBird(){
         return(
             <>
-                <ScrollView style={styles.scrollViewcontainer}>
+                <ScrollView style={{backgroundColor: globalVariable.backgoundColor}}>
                     <View style={styles.imageContainer}>
                         {
                             getBirdImage()
@@ -295,9 +296,6 @@ const styles = StyleSheet.create({
         borderRadius: 13,
         padding: 20,
         ...shadowStyle
-    },
-    scrollViewcontainer: {
-        backgroundColor: '#e9e7e7',
     },
     loadingContainer: {
         flex: 1,

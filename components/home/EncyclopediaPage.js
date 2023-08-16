@@ -6,8 +6,10 @@ import { useEffect } from "react"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 function EncyclopediaPage(props) {
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const isFocused = useIsFocused()
     const [birdsData, setBirdsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
@@ -32,7 +34,7 @@ function EncyclopediaPage(props) {
           setIsLoadingItems(false)
           
         } catch (error) {
-          console.error('Error on getting the datas:', error)
+          console.error('Encyclopedia Error on getting the datas:', error)
           setIsLoadingItems(false)
         }
     }
@@ -50,12 +52,12 @@ function EncyclopediaPage(props) {
         <>
         {
             isLoadingItems ?
-            <View style={styles.loadingContainer}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
             :
             <>
-                <ScrollView style={styles.container}>
+                <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
                     {
                         birdsData.length === 0 ?
                         <View style={styles.textContainer}>
@@ -76,7 +78,7 @@ function EncyclopediaPage(props) {
                         ))}
                         </View>
                     }
-                    <View style={styles.bottomFiller}></View>
+                    <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgoundColor}]}></View>
                 </ScrollView>
                 <Pressable 
                     style={({ pressed }) => [

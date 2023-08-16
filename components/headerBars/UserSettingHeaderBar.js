@@ -1,6 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
+import { View, Text, Pressable, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { ActivityIndicator } from 'react-native'
 import { useGlobalContext } from '../globalContext/GlobalContext'

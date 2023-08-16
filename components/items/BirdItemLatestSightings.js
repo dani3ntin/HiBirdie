@@ -69,7 +69,7 @@ function BirdItemLatestSightings(props) {
                     <View style={styles.nameAndAuthor}>
                         <Text style={styles.birdName}>{props.name}</Text>
                         <Text style={styles.text}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.sightingDate))}</Text>
-                        <Text style={styles.text}>{props.distance} km away from you</Text>
+                        <Text style={styles.text14}>{props.distance} km away {props.defaultPosition ? 'from your default position' : 'from your actual position'}</Text>
                     </View>
                     <Pressable onPress={() => onPressLikeHandler()}>
                         <View style={styles.heartContainer}>
@@ -109,6 +109,11 @@ const styles = StyleSheet.create({
         color: 'black',
         paddingLeft: 8,
         fontSize: 15,
+    },
+    text14: {
+        color: 'black',
+        paddingLeft: 8,
+        fontSize: 14,
     },
     pressedItem: {
         opacity: 0.5,

@@ -31,12 +31,12 @@ export default function Home(props) {
       barStyle={{ backgroundColor: '#ffffff', borderTopColor: 'blue', borderTopWidth: 2 }}
       >
           <Tab.Screen name="Latest Sightings" options={{
-            tabBarLabel: 'Latest',
+            tabBarLabel: 'Sightings',
             tabBarIcon: ({ color }) => (
               <Icon name="binoculars" color={color} size={26} />
             ),
           }}>
-            {() => <LatestSightingsPage username={props.username}/>}
+            {() => <LatestSightingsPage username={props.username} userData={props.userData}/>}
           </Tab.Screen>
           <Tab.Screen name="My Encyclopedia" options={{
             tabBarLabel: 'Encyclopedia',

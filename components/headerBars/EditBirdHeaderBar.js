@@ -1,9 +1,10 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
+import { View, Text, Pressable, StyleSheet} from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { useGlobalContext } from '../globalContext/GlobalContext';
 
 const EditBirdHeaderBar = (props) => {
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
 
   const CustomIcon = ({ name, size, color }) => {
     const IconComponent = Icon;
@@ -17,7 +18,7 @@ const EditBirdHeaderBar = (props) => {
 
 
   return (
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: globalVariable.headerColor}]}>
         <View style={styles.backButton}>
           <Pressable style={({pressed}) => pressed && styles.pressedBackButton} onPress={backButtonPressedHandler}>
             <View style={styles.backIcon}>
