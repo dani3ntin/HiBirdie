@@ -71,16 +71,16 @@ function BirdItemLatestSightings(props) {
                         <Text style={styles.text}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.sightingDate))}</Text>
                         <Text style={styles.text}>{props.distance} km away from you</Text>
                     </View>
-                    <View style={styles.heartContainer}>
-                        <Text style={styles.likesNumber}>{likeNumber}</Text>
-                        <Pressable onPress={() => onPressLikeHandler()}>
-                            <MaterialCommunityIcons
-                                name={liked ? "heart" : "heart-outline"}
-                                size={32}
-                                color={liked ? "red" : "black"}
-                            />
-                        </Pressable>
-                    </View>
+                    <Pressable onPress={() => onPressLikeHandler()}>
+                        <View style={styles.heartContainer}>
+                            <Text style={styles.likesNumber}>{likeNumber}</Text>
+                                <MaterialCommunityIcons
+                                    name={liked ? "heart" : "heart-outline"}
+                                    size={32}
+                                    color={liked ? "red" : "black"}
+                                />
+                        </View>
+                    </Pressable>
                 </View>
             </Pressable>
         </View>
@@ -124,13 +124,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingRight: 10,
     },
     nameAndAuthor: {
        flex: 1
     }, 
     heartContainer : {
         paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 10,
         flexDirection: 'row',
     },
     likesNumber: {

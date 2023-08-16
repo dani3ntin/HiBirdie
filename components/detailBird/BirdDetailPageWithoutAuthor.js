@@ -66,7 +66,8 @@ function BirdDetailPageWithoutAuthor(){
             [
               { text: 'Cancel'},
               { text: 'OK', onPress: () => deleteBird() },
-            ]
+            ],
+            { cancelable: true }
           );
     }
 
@@ -94,8 +95,6 @@ function BirdDetailPageWithoutAuthor(){
                         onBackButtonPress={() => navigation.goBack()} 
                         likes={birdData.likes} 
                         userPutLike={birdData.userPutLike}
-                        addLike={addLike}
-                        removeLike={removeLike}
                     />
                     </View>
                     <ScrollView>

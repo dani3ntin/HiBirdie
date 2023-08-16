@@ -1,27 +1,51 @@
-import { View, StyleSheet} from "react-native"
+import { View, StyleSheet, Pressable, Text} from "react-native"
 import MapView, { Marker } from 'react-native-maps'
+import { useState } from "react"
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 function MapViewInDetailBird(props) {
+    const [enableMapScrolling, setEnableMapScrolling] = useState(false)
+
+    const CustomIcon = ({ name, size, color }) => {
+        const IconComponent = Icon;
+        return <IconComponent name={name} size={size} color={color} />;
+    }
+
+    const handlePress = () => {
+        setEnableMapScrolling(true)
+        console.log('premuto')
+    }
+
     return (
-        <View style={styles.mapContainer}>
-            <MapView
-                style={styles.map}
-                initialRegion={{        
-                    latitude: props.xPosition,
-                    longitude: props.yPosition,
-                    latitudeDelta: 1,
-                    longitudeDelta: 1,}}
-                    zoomEnabled={true}
-                    scrollEnabled={true}
-            >
-                <Marker
-                coordinate={{
-                    latitude: props.xPosition,
-                    longitude: props.yPosition,
-                }}
-                />
-            </MapView>
-        </View>
+        <Pressable onPress={handlePress}>
+            <View style={styles.locationContainer}>
+                <View style={styles.rowContainer}>
+                    <Text style={styles.text}>Press on the map to navigate it!</Text>
+                    <View style={styles.icon}>
+                        <CustomIcon name={enableMapScrolling ? "unlock" : "lock"} size={25} color="black" />
+                    </View>
+                </View>
+                <View style={styles.mapContainer}>
+                    <MapView
+                    onPress={handlePress}
+                        style={styles.map}
+                        initialRegion={{        
+                            latitude: props.xPosition,
+                            longitude: props.yPosition,
+                            latitudeDelta: 1,
+                            longitudeDelta: 1,}}
+                            scrollEnabled={enableMapScrolling}              
+                    >
+                        <Marker
+                        coordinate={{
+                            latitude: props.xPosition,
+                            longitude: props.yPosition,
+                        }}
+                        />
+                    </MapView>
+                </View>
+            </View>
+        </Pressable>
     )
 }
 
@@ -43,13 +67,29 @@ const shadowStyle = Platform.select({
 const styles = StyleSheet.create({
     mapContainer: {
         height: 350, // Imposta un'altezza appropriata per il componente MapView
-        marginLeft: 25,
-        marginRight: 25,
-        marginBottom: 20,
         padding: 20,
-        ...shadowStyle
     },
     map: {
         ...StyleSheet.absoluteFillObject,
     },
+    locationContainer: {
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 20,
+        backgroundColor: 'white',
+        borderRadius: 13,
+        padding: 20,
+        ...shadowStyle
+    },
+    text: {
+        fontSize: 18,
+        paddingBottom: 10,
+    },
+    rowContainer: {
+        flexDirection: 'row',
+    },
+    icon: {
+        flex: 1, 
+        alignItems: 'flex-end',
+    }
 })

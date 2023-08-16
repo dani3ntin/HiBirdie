@@ -12,8 +12,10 @@ import * as Location from 'expo-location'
 import BirdDetailPageWithoutAuthor from './components/detailBird/BirdDetailPageWithoutAuthor'
 import BirdDetailPageWithAuthor from './components/detailBird/BirdDetailPageWithAuthor'
 import UserDetailPage from './components/userDetail/UserDetailPage'
+import UserSetting from './components/userSetting/UserSetting'
+import { GlobalProvider } from './components/globalContext/GlobalContext'
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 export default function App() {
 
@@ -80,16 +82,19 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.SafeArea}>
-      <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={username}/>}</Stack.Screen>
-            <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
-            <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
-            <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
-            <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
-            <Stack.Screen name="UserDetailPage" options={{ headerShown: false }} component={UserDetailPage} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <GlobalProvider>
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={username}/>}</Stack.Screen>
+              <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
+              <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
+              <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
+              <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
+              <Stack.Screen name="UserDetailPage" options={{ headerShown: false }} component={UserDetailPage} />
+              <Stack.Screen name="UserSetting" options={{ headerShown: false }}>{() => <UserSetting userData={userData} setUserData={setUserData}/>}</Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GlobalProvider>
     </SafeAreaView>
   );
 }

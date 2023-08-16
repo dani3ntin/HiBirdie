@@ -10,9 +10,11 @@ function MapInputComponent(props) {
   }, [props.latUser, props.lonUser])
 
   const handleMapPress = (event) => {
-    const { coordinate } = event.nativeEvent
-    setSelectedLocation(coordinate)
-    props.sendLocation(coordinate)
+    if(props.enablePressing === true){
+      const { coordinate } = event.nativeEvent
+      setSelectedLocation(coordinate)
+      props.sendLocation(coordinate)
+    }
   };
 
   return (

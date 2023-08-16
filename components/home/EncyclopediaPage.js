@@ -76,6 +76,7 @@ function EncyclopediaPage(props) {
                         ))}
                         </View>
                     }
+                    <View style={styles.bottomFiller}></View>
                 </ScrollView>
                 <Pressable 
                     style={({ pressed }) => [
@@ -108,6 +109,10 @@ const shadowStyle = Platform.select({
 })
 
 const styles = StyleSheet.create({
+    bottomFiller: {
+        height: 70,
+        backgroundColor: '#e9e7e7',
+    },
     container: {
         backgroundColor: '#e9e7e7',
     },
@@ -138,9 +143,9 @@ const styles = StyleSheet.create({
     },
     floatingButton: {
         position: 'absolute',
-        bottom: 40,
+        bottom: 20,
         width: 200,
-        height: 70,
+        height: 50,
         borderWidth: 2,
         paddingVertical: 10,
         backgroundColor: 'white',

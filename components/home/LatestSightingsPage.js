@@ -7,8 +7,10 @@ import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatest
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
 import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 function LatestSightingsPage(props) {
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const isFocused = useIsFocused()
     const [filtermodalIsVisible, setfilterModalIsVisible] = useState(false)
     const [birdsData, setBirdsData] = useState([])
@@ -109,7 +111,7 @@ function LatestSightingsPage(props) {
                     maximumDaysDefault={filterMaximumDays}
                     maximumDistanceDefault={filterMaximumDistance}
                 />
-                <View style={styles.container}>
+                <View style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
                     <ScrollView style={styles.scrollViewcontainer}>
                         {
                             birdsData.length === 0 ?
@@ -171,7 +173,6 @@ const shadowStyle = Platform.select({
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#e9e7e7',
         flex: 1,
     },
     ItemsContainer: {
@@ -194,9 +195,9 @@ const styles = StyleSheet.create({
     },
     floatingButton: {
         position: 'absolute',
-        bottom: 40,
+        bottom: 20,
         width: 200,
-        height: 70,
+        height: 50,
         borderWidth: 2,
         paddingVertical: 10,
         backgroundColor: 'white',
@@ -215,7 +216,8 @@ const styles = StyleSheet.create({
         paddingBottom: 60
     },
     bottomFiller: {
-        height: 120
+        height: 70,
+        backgroundColor: '#e9e7e7',
     },
     textContainer: {
         flex: 1,

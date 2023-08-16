@@ -58,7 +58,7 @@ function EditBird(){
     function closePageAlert(){
         Alert.alert(
             'Request for confirmation',
-            'If you go back, all data entered will be lost',
+            'If you go back, all entered data will be lost',
             [
               { text: 'Annulla', },
               { text: 'OK', onPress: () => navigation.goBack() }
@@ -202,7 +202,7 @@ function EditBird(){
                     <View style={styles.locationContainer}>
                         <Text style={styles.text}>Enter the location of the sighting:</Text>
                         <View style={styles.mapContainer}>
-                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler}/>
+                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler} enablePressing={true}/>
                         </View>
                     </View>
                     <Pressable

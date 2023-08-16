@@ -87,7 +87,7 @@ function UserEncyclopedia(props) {
                         birdsData.length === 0 ?
                         <View style={styles.textContainer}>
                             <Text style={styles.text}>No birds here!</Text>
-                            <Text style={styles.text}>{props.name} hasn't added any birds yet</Text>
+                            <Text style={styles.text}>{props.name} hasn't sight any birds yet</Text>
                         </View>
                         :
                         <View style={styles.ItemsContainer}>

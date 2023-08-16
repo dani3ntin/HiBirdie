@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     width: 200,
-    height: 70,
+    height: 50,
     borderWidth: 2,
     paddingVertical: 10,
     backgroundColor: 'white',

@@ -26,9 +26,14 @@ function UserUpperInfos(props){
                     />
                 </View>
             </View>
-            <View style={styles.container}>
-                <Text style={styles.text}>{props.state}</Text>
-            </View>
+            {
+                props.state === '' ?
+                null
+                :
+                <View style={styles.container}>
+                    <Text style={styles.text}>{props.state}</Text>
+                </View>
+            }
         </>
     )
 }

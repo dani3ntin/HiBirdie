@@ -95,6 +95,7 @@ function FollowedPage(props) {
                     </View>
                 }
             </ScrollView>
+            <View style={styles.bottomFiller}></View>
             <Pressable 
                 style={({ pressed }) => [
                     styles.floatingButton,
@@ -128,6 +129,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#e9e7e7',
         flex: 1
     },
+    bottomFiller: {
+        height: 70,
+        backgroundColor: '#e9e7e7',
+    },
     ItemsContainer: {
         marginLeft: 10,
         marginRight: 10,
@@ -155,9 +160,9 @@ const styles = StyleSheet.create({
     },
     floatingButton: {
         position: 'absolute',
-        bottom: 40,
+        bottom: 20,
         width: 200,
-        height: 70,
+        height: 50,
         borderWidth: 2,
         paddingVertical: 10,
         backgroundColor: 'white',

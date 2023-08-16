@@ -52,7 +52,7 @@ function AddNewBird(props){
     function closePageAlert(){
         Alert.alert(
             'Request for confirmation',
-            'If you go back, all data entered will be lost',
+            'If you go back, all entered data will be lost',
             [
               { text: 'Annulla', },
               { text: 'OK', onPress: () => navigation.goBack() }
@@ -161,7 +161,7 @@ function AddNewBird(props){
                 <ScrollView style={styles.scrollViewcontainer}>
                     <View style={styles.imageContainer}>
                         {image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />}
-                        {!image && <Text>Press the button and pick a bird photo from your gallery!</Text>}
+                        {!image && <Text style={styles.textImage}>Press the button and pick a bird photo from your gallery!</Text>}
                         <Pressable
                             style={({ pressed }) => [
                                 styles.imageButtonPicker,
@@ -171,12 +171,6 @@ function AddNewBird(props){
                             >
                             <Text style={styles.textPickPhotoPressable}>Pick the bird photo</Text>
                         </Pressable>
-                    </View>
-                    <View style={styles.locationContainer}>
-                        <Text style={styles.text}>Enter the location of the sighting:</Text>
-                        <View style={styles.mapContainer}>
-                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler}/>
-                        </View>
                     </View>
                     <View style={styles.ItemsContainer}>
                         <Input
@@ -206,6 +200,12 @@ function AddNewBird(props){
                             selected={formatDateToString(new Date())}
                             current={formatDateToString(new Date())}
                         />
+                    </View>
+                    <View style={styles.locationContainer}>
+                        <Text style={styles.text}>Enter the location of the sighting:</Text>
+                        <View style={styles.mapContainer}>
+                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler} enablePressing={true}/>
+                        </View>
                     </View>
                     <Pressable
                         style={({ pressed }) => [
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     locationContainer: {
         marginLeft: 20,
         marginRight: 20,
-        marginTop: 20,
+        marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
         padding: 20,
@@ -304,6 +304,11 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
+    },
+    textImage: {
+        paddingTop: 90,
+        fontSize: 18,
+        paddingBottom: 90,
     },
     calendarText: {
         fontWeight: 'bold', 
