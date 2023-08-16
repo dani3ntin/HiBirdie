@@ -40,13 +40,15 @@ function FollowedPage(props) {
 
     function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed){
         navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, name: nameFollowed, state: stateFollowed, likes: likesFollowed,
-        followes: nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
+        followers: nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
     }
 
     function editState(state){
-        if(state.length > 35){
-            const truncatedState = state.slice(0, 30)
-            return truncatedState + "..."
+        if(state !== null){
+            if(state.length > 35){
+                const truncatedState = state.slice(0, 30)
+                return truncatedState + "..."
+            }
         }
         return state
     }
@@ -69,6 +71,7 @@ function FollowedPage(props) {
             <SearchUsers 
                     visible={searchUsersModalIsVisible}
                     closeModal={closeSearchUsersModal}
+                    loggedUsername={props.username}
                 />
             <ScrollView style={styles.container}>
                 {

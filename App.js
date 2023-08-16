@@ -47,6 +47,7 @@ export default function App() {
 
   const fetchData = async () => {
     const storedUserData = await AsyncStorage.getItem('userData')
+    console.log(storedUserData)
     if (storedUserData) {
       const parsedUserData = JSON.parse(storedUserData)
       setUserData(parsedUserData)
@@ -58,7 +59,7 @@ export default function App() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ input: 'a', password: 'password' }), // Dati da inviare nel corpo della richiesta
+          body: JSON.stringify({ input: 'apaolo', password: 'password' }), // Dati da inviare nel corpo della richiesta
         })
   
         const responseData = await response.json()

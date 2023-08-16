@@ -20,7 +20,12 @@ function FollowedItem(props) {
                     />
                     <View>
                         <Text style={styles.friendName}>{props.name}</Text>
-                        <Text style={styles.friendState}>{props.state}</Text>
+                        {
+                            props.state !== undefined ?
+                            <Text style={styles.friendState}>{props.state}</Text>
+                            :
+                            <Text style={styles.friendUsername}>@{props.username}</Text>
+                        }
                     </View>
                 </View>
             </Pressable>
@@ -46,6 +51,11 @@ const styles = StyleSheet.create({
     },
     friendState: {
         color: 'black',
+        paddingLeft: 8,
+        fontSize: 15,
+    },
+    friendUsername: {
+        color:'#0685c0',
         paddingLeft: 8,
         fontSize: 15,
     },

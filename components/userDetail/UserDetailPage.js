@@ -75,7 +75,8 @@ function UserDetailPage(){
         <View style={styles.container}>
           <View style={styles.headerContainer}>
             <DetailUserHeaderBar 
-              userName={props.name} 
+              username={props.usernameFollowed}
+              name={props.name} 
               userAvatar={{ uri: API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
               onBackButtonPress={() => navigation.goBack()}
             />

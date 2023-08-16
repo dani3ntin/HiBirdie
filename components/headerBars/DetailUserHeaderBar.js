@@ -24,7 +24,10 @@ const DetailUserHeaderBar = (props) => {
               source={props.userAvatar}
               style={styles.avatar}
           />
-          <Text style={styles.userName}>{props.userName}</Text>
+          <View style={styles.columnContainer}>
+            <Text style={styles.name}>{props.name}</Text>
+            <Text style={styles.userName}>@{props.username}</Text>
+          </View>
         </View>
     );
   };
@@ -47,11 +50,19 @@ const styles = StyleSheet.create({
       borderRadius: 100,
       marginLeft: 10
     },
-    userName: {
+    name: {
       marginLeft: 10,
-      fontSize: 18,
+      fontSize: 22,
       fontWeight: 'bold',
       paddingRight: 100,
+    },
+    userName: {
+      fontSize: 16,
+      marginLeft: 10,
+      color:'#0685c0'
+    },
+    columnContainer:{
+      flexDirection: 'column',
     },
     backIcon: {
       alignItems: 'center',
