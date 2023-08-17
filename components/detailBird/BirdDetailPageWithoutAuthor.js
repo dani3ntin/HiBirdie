@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, BackHandler, Alert } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
@@ -26,6 +26,20 @@ function BirdDetailPageWithoutAuthor(){
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
+
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress
+        );
+    
+        return () => backHandler.remove()
+    }, [])
+      
+    const handleBackPress = () => {
+        navigation.goBack()
+    }
+
 
     useEffect(() => {
         setIsLoadingBirdData(true)
@@ -80,7 +94,7 @@ function BirdDetailPageWithoutAuthor(){
     function getBirdDetails(){
         return(
             <>
-                <View style={[styles.pageContainer, {backgroundColor: globalVariable.backgoundColor}]}>
+                <View style={[styles.pageContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                     <View style={styles.headerContainer}>
                     <DetailBirdHeaderBar 
                         id={birdData.id} 
@@ -123,7 +137,7 @@ function BirdDetailPageWithoutAuthor(){
         <>
             {
                 isLoadingBirdData ?
-                <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
+                <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                     <ActivityIndicator size="large"  color="#0000ff"/>
                 </View>
                 :

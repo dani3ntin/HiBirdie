@@ -6,11 +6,12 @@ import FollowedPage from './FollowedPage'
 import LatestSightingsPage from './LatestSightingsPage'
 import { React, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { View, StyleSheet, StatusBar } from 'react-native'
+import { View, StyleSheet, StatusBar, BackHandler } from 'react-native'
 import HomeHeaderBar from '../headerBars/HomeHeaderBar'
 import { API_URL } from '../../env'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Platform } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 let Tab
 if(Platform.OS == 'ios'){
@@ -20,6 +21,24 @@ if(Platform.OS == 'ios'){
 }
   
 export default function Home(props) {
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    
+}, [])
+
+useEffect(() => {
+  const backHandler = BackHandler.addEventListener(
+  'hardwareBackPress',
+  handleBackPress
+  );
+
+  return () => backHandler.remove()
+}, [])
+
+const handleBackPress = () => {
+  return true
+}
 
   return (
     <>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, ScrollView, Pressable, Text } from 'react-native'
+import { View, StyleSheet, ScrollView, Pressable, Text, BackHandler } from 'react-native'
 import UserEncyclopedia from './UserEncyclopedia'
 import DetailUserHeaderBar from '../headerBars/DetailUserHeaderBar'
 import UserUpperInfos from './UserUpperInfos'
@@ -18,6 +18,19 @@ function UserDetailPage(){
   const [likes, setLikes] = useState(props.likes)
   const [followers, setFollowers] = useState(props.followers)
   const [isLoggedUserFollowing, setIsLoggedUserFollowing] = useState(props.isLoggedUserFollowing)
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    handleBackPress
+    );
+    return () => backHandler.remove()
+  }, [])
+    
+  const handleBackPress = () => {
+      navigation.goBack()
+  }
+
 
   useEffect(() => {
     console.log(props)
@@ -74,7 +87,7 @@ function UserDetailPage(){
   function getUserDetails(){
     return(
       <>
-        <View style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
+        <View style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
           <View style={styles.headerContainer}>
             <DetailUserHeaderBar 
               username={props.usernameFollowed}

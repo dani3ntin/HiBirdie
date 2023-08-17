@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, TextInput, Button } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, BackHandler, Button } from "react-native"
 import { useEffect, useState } from "react"
 import { Input } from 'react-native-elements'
 import UserSettingHeaderBar from "../headerBars/UserSettingHeaderBar"
@@ -37,6 +37,26 @@ function UserSetting(props){
     const [changinPassword, setChanginPassword] = useState(false)
 
     useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress
+        );
+    
+        return () => backHandler.remove()
+    }, [])
+      
+    const handleBackPress = () => {
+        if(editButtonText === 'Save changes'){
+            closePageAlert()
+            return true
+        }else{
+            navigation.goBack()
+        }
+    }
+
+
+    useEffect(() => {
+        console.log(props.userData)
         setIsLoadingUserData(true)
         calculateOptimizedImageSize(API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username, 80, setUserImageWidth, setUserImageHeight)
         setIsLoadingUserData(false)
@@ -66,13 +86,30 @@ function UserSetting(props){
                 'Request for confirmation',
                 'If you go back, all changes will be lost.',
                 [
-                { text: 'Annulla', },
+                { text: 'Cancel', },
                 { text: 'OK', onPress: () => navigation.goBack() }
                 ],
                 { cancelable: true }
             )
         else
             navigation.goBack()
+    }
+
+    function logoutAlert(){
+        Alert.alert(
+            'Confirm logout',
+            'Are you sure you want to log out?',
+            [
+            { text: 'Cancel', },
+            { text: 'Yes', onPress: () => logout() }
+            ],
+            { cancelable: true }
+        )
+    }
+
+    async function logout(){
+        await AsyncStorage.clear()
+        navigation.navigate('IntroPage')
     }
 
     function getLocationHandler(coordinate){
@@ -111,7 +148,7 @@ function UserSetting(props){
 
     function controlInputData(){
         if(name.length === 0) showAlert('Missing data', 'Please enter your name')
-        else if(lonUser.length === 0) showAlert('Missing data', 'Please enter the location of the sighting in the map')
+        else if(lonUser.length === 0) showAlert('Missing data', 'Please enter your default location in the map')
         else{ 
             saveChanges()
             return true
@@ -203,9 +240,9 @@ function UserSetting(props){
         }
     }
 
-    async function pickColor(headerColor, backgoundColor){
-        setGlobalVariable({backgoundColor: backgoundColor, headerColor: headerColor})
-        await AsyncStorage.setItem('applicationColor', JSON.stringify({backgoundColor: backgoundColor, headerColor: headerColor}))
+    async function pickColor(headerColor, backgroundColor, buttonColor){
+        setGlobalVariable({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor})
+        await AsyncStorage.setItem('applicationColor', JSON.stringify({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor}))
     }
 
     function changePasswordButtonHandler(){
@@ -220,7 +257,7 @@ function UserSetting(props){
     function getUserSettings(){
         return(
             <>
-                <ScrollView style={{backgroundColor: globalVariable.backgoundColor}}>
+                <ScrollView style={{backgroundColor: globalVariable.backgroundColor}}>
                     <UserUpperInfos likes={likes} followers={followers} state={''}/>
                     <View style={styles.imageContainer}>
                         {
@@ -335,10 +372,18 @@ function UserSetting(props){
                         <View style={styles.rowContainer}>
                             <Pressable
                                 style={({ pressed }) => [
+                                    styles.colorButtonPurple,
+                                    pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                                ]} 
+                                onPress={() => pickColor('#adb2fc', '#c0daf8', '#bcc9ff')}
+                                >
+                            </Pressable>
+                            <Pressable
+                                style={({ pressed }) => [
                                     styles.colorButtonGrey,
                                     pressed && { opacity: 0.8, backgroundColor: '#929292' }
                                 ]} 
-                                onPress={() => pickColor('#f2f2f2', '#e9e7e7')}
+                                onPress={() => pickColor('#f2f2f2', '#d1cfcf', '#f3f3f3')}
                                 >
                             </Pressable>
                             <Pressable
@@ -346,7 +391,7 @@ function UserSetting(props){
                                     styles.colorButtonYellow,
                                     pressed && { opacity: 0.8, backgroundColor: '#929292' }
                                 ]} 
-                                onPress={() => pickColor('#f2e28e', '#f1ebca')}
+                                onPress={() => pickColor('#f2e28e', '#f1ebca', '#f5d4be')}
                                 >
                             </Pressable>
                             <Pressable
@@ -354,7 +399,7 @@ function UserSetting(props){
                                     styles.colorButtonRed,
                                     pressed && { opacity: 0.8, backgroundColor: '#929292' }
                                 ]} 
-                                onPress={() => pickColor('#ff9a98', '#fdd8d8')}
+                                onPress={() => pickColor('#ff9a98', '#fdd8d8', '#fcb6b6')}
                                 >
                             </Pressable>
                             <Pressable
@@ -362,15 +407,7 @@ function UserSetting(props){
                                     styles.colorButtonGreen,
                                     pressed && { opacity: 0.8, backgroundColor: '#929292' }
                                 ]} 
-                                onPress={() => pickColor('#85D2D0', '#e0f2f1')}
-                                >
-                            </Pressable>
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.colorButtonPurple,
-                                    pressed && { opacity: 0.8, backgroundColor: '#929292' }
-                                ]} 
-                                onPress={() => pickColor('#887BB0', '#dbd4f1')}
+                                onPress={() => pickColor('#85D2D0', '#e0f2f1', '#acb9f3')}
                                 >
                             </Pressable>
                         </View>
@@ -382,8 +419,19 @@ function UserSetting(props){
                             <Text>(Press edit to change it)</Text> : null
                         }
                         <View style={styles.mapContainer}>
-                            <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler} enablePressing={false}/>
+                            <MapInputComponent latUser={parseFloat(props.userData.xPosition)} lonUser={parseFloat(props.userData.yPosition)} sendLocation={getLocationHandler} enablePressing={editButtonText !== 'Edit'}/>
                         </View>
+                    </View>
+                    <View style={styles.logoutContainer}>
+                        <Pressable
+                            style={({ pressed }) => [
+                                styles.logoutButton,
+                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                            ]} 
+                            onPress={() => logoutAlert()}
+                            >
+                            <Text style={styles.textPickPhotoPressable}>Logout</Text>
+                        </Pressable>
                     </View>
                 </ScrollView>
             </>
@@ -446,6 +494,17 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 20,
+        ...shadowStyle
+    },
+    logoutContainer: {
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: 'white',
+        borderRadius: 13,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 20,
+        marginBottom: 20,
         ...shadowStyle
     },
     colorsContainer: {
@@ -547,6 +606,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         elevation: 3,
     },
+    logoutButton: {
+        backgroundColor: '#ffb3b3',
+        borderColor: 'black',
+        borderWidth: 2,
+        height: 50,
+        marginLeft: 40,
+        marginRight: 40,
+        marginBottom: 20,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 3,
+    },
     colorButtonGrey: {
         ...colorButton,
         backgroundColor: '#e9e7e7',
@@ -565,7 +637,7 @@ const styles = StyleSheet.create({
     },
     colorButtonPurple: {
         ...colorButton,
-        backgroundColor: '#887BB0',
+        backgroundColor: '#adb2fc',
     },
     textPickPhotoPressable: {
         fontSize: 18,

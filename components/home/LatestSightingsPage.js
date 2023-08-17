@@ -24,6 +24,7 @@ function LatestSightingsPage(props) {
     const navigation = useNavigation()
 
     useEffect(() => {
+        console.log(props.userData)
         if(isFocused){
             settingUserCoordinates()
             settingFilter()
@@ -82,6 +83,7 @@ function LatestSightingsPage(props) {
     }
 
     function openFilterModal(){
+        console.log(globalVariable)
         setfilterModalIsVisible(true)
     }
 
@@ -103,7 +105,7 @@ function LatestSightingsPage(props) {
         <>
         {
             isLoadingItems ?
-            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
             :
@@ -115,7 +117,7 @@ function LatestSightingsPage(props) {
                     maximumDaysDefault={filterMaximumDays}
                     maximumDistanceDefault={filterMaximumDistance}
                 />
-                <View style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
+                <View style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
                     <ScrollView style={styles.scrollViewcontainer}>
                         {
                             birdsData.length === 0 ?
@@ -143,11 +145,12 @@ function LatestSightingsPage(props) {
                                 ))}
                             </View>
                         }
-                        <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgoundColor}]}></View>
+                        <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgroundColor}]}></View>
                     </ScrollView>
                     <Pressable 
                         style={({ pressed }) => [
                             styles.floatingButton,
+                            {backgroundColor: globalVariable.buttonColor},
                             pressed && { opacity: 0.8, backgroundColor: '#929292' }
                         ]} 
                         onPress={openFilterModal} 
@@ -187,7 +190,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
-        ...shadowStyle
+        ...shadowStyle,
     },
     loadingContainer: {
         flex: 1,
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     scrollViewcontainer: {
-        paddingBottom: 60
+        paddingBottom: 60,
     },
     bottomFiller: {
         height: 70,

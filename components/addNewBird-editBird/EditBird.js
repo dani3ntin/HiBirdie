@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, TextInput, Button } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, BackHandler, Button } from "react-native"
 import { useEffect, useState } from "react"
 import { Input } from 'react-native-elements'
 import EditBirdHeaderBar from "../headerBars/EditBirdHeaderBar"
@@ -31,6 +31,20 @@ function EditBird(){
     const [birdImageHeight, setBirdImageHeight] = useState(0)
     const [image, setImage] = useState(null)
     const [isUploadingBird, setIsUploadingBird] = useState(false)
+
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress
+        );
+    
+        return () => backHandler.remove()
+    }, [])
+      
+    const handleBackPress = () => {
+        closePageAlert()
+        return true
+    }
 
     useEffect(() => {
         setIsLoadingBirdData(true)
@@ -156,7 +170,7 @@ function EditBird(){
     function getAddBird(){
         return(
             <>
-                <ScrollView style={{backgroundColor: globalVariable.backgoundColor}}>
+                <ScrollView style={{backgroundColor: globalVariable.backgroundColor}}>
                     <View style={styles.imageContainer}>
                         {
                             getBirdImage()

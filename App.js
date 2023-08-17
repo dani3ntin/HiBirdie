@@ -14,6 +14,9 @@ import BirdDetailPageWithAuthor from './components/detailBird/BirdDetailPageWith
 import UserDetailPage from './components/userDetail/UserDetailPage'
 import UserSetting from './components/userSetting/UserSetting'
 import { GlobalProvider } from './components/globalContext/GlobalContext'
+import IntroPage from './components/introPage/IntroPage'
+import LoginPage from './components/introPage/LoginPage'
+import RegisterPage from './components/introPage/RegisterPage'
 
 const Stack = createStackNavigator()
 
@@ -24,8 +27,6 @@ export default function App() {
   const [coordinates, setCoordinates] = useState(null)
 
   useEffect(() => {
-    //AsyncStorage.clear()
-    fetchData()
     settingUsername()
     const fetchLocation = async () => {
       const coordinates = await getLocationCoordinates()
@@ -51,31 +52,6 @@ export default function App() {
     }
   }
 
-  const fetchData = async () => {
-    const storedUserData = await AsyncStorage.getItem('userData')
-    console.log(storedUserData)
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData)
-      setUserData(parsedUserData)
-    } else {
-      //here the user will have to go to the login page
-      try {
-        const response = await fetch( API_URL + 'login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ input: 'apaolo', password: 'password' }), // Dati da inviare nel corpo della richiesta
-        })
-  
-        const responseData = await response.json()
-        await AsyncStorage.setItem('userData', JSON.stringify(responseData))
-      } catch (error) {
-        console.error('Errore durante la richiesta API:', error)
-      }
-    }
-  };
-
   async function settingUsername(){
     const storedUserData = await AsyncStorage.getItem('userData')
     if (storedUserData) {
@@ -88,8 +64,11 @@ export default function App() {
     <SafeAreaView style={styles.SafeArea}>
       <GlobalProvider>
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={username}/>}</Stack.Screen>
+            <Stack.Navigator initialRouteName="IntroPage">
+              <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage />}</Stack.Screen>
+              <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData}/>}</Stack.Screen>
+              <Stack.Screen name="RegisterPage" options={{ headerShown: false }}>{() => <RegisterPage setUserData={setUserData}/>}</Stack.Screen>
+              <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>
               <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
               <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
               <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
@@ -109,7 +88,4 @@ const styles = StyleSheet.create({
   SafeArea: {
     flex: 1,
   },
-  headerContainer: {
-    height: '8%'
-  }
 });

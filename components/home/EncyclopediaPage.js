@@ -52,12 +52,12 @@ function EncyclopediaPage(props) {
         <>
         {
             isLoadingItems ?
-            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
             :
             <>
-                <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
+                <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
                     {
                         birdsData.length === 0 ?
                         <View style={styles.textContainer}>
@@ -78,11 +78,12 @@ function EncyclopediaPage(props) {
                         ))}
                         </View>
                     }
-                    <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgoundColor}]}></View>
+                    <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgroundColor}]}></View>
                 </ScrollView>
                 <Pressable 
                     style={({ pressed }) => [
                         styles.floatingButton,
+                        {backgroundColor: globalVariable.buttonColor},
                         pressed && { opacity: 0.8, backgroundColor: '#929292' }
                     ]} 
                     onPress={openAddNewBirdModal} 

@@ -65,7 +65,7 @@ function FollowedPage(props) {
     
     return (
         isLoadingItems ?
-            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
+            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                 <ActivityIndicator size="large"  color="#0000ff"/>
             </View>
         :  
@@ -75,7 +75,7 @@ function FollowedPage(props) {
                     closeModal={closeSearchUsersModal}
                     loggedUsername={props.username}
                 />
-            <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgoundColor}]}>
+            <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
                 {
                     followersData.length === 0 ?
                         <View style={styles.textContainer}>
@@ -97,10 +97,11 @@ function FollowedPage(props) {
                     </View>
                 }
             </ScrollView>
-            <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgoundColor}]}></View>
+            <View style={[styles.bottomFiller, {backgroundColor: globalVariable.backgroundColor}]}></View>
             <Pressable 
                 style={({ pressed }) => [
                     styles.floatingButton,
+                    {backgroundColor: globalVariable.buttonColor},
                     pressed && { opacity: 0.8, backgroundColor: '#929292' }
                 ]} 
                 onPress={() => openSearchUsersModal()} 

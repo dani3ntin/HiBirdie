@@ -1,4 +1,4 @@
-import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, TextInput, Button } from "react-native"
+import { View, StyleSheet, Modal, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, TextInput, Button, BackHandler  } from "react-native"
 import { useEffect, useState } from "react"
 import { calculateOptimizedLocalImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
 import { Input } from 'react-native-elements'
@@ -29,6 +29,20 @@ function AddNewBird(props){
     const [isUploadingBird, setIsUploadingBird] = useState(false)
     
     const navigation = useNavigation()
+
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress
+        );
+    
+        return () => backHandler.remove()
+    }, [])
+      
+    const handleBackPress = () => {
+        closePageAlert()
+        return true
+    }
 
     function setLatitude(coordinate){
         if(coordinate == null) return 0
@@ -160,7 +174,7 @@ function AddNewBird(props){
     function getAddBird(){
         return(
             <>
-                <ScrollView style={{backgroundColor: globalVariable.backgoundColor}}>
+                <ScrollView style={styles.scrollViewcontainer}>
                     <View style={styles.imageContainer}>
                         {image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />}
                         {!image && <Text style={styles.textImage}>Press the button and pick a bird photo from your gallery!</Text>}
@@ -231,7 +245,7 @@ function AddNewBird(props){
 
     return (
         <>
-            <View style={[styles.loadingContainer, {backgroundColor: globalVariable.backgoundColor}]}>
+            <View style={styles.headerContainer}>
                 <AddBirdHeaderBar onBackButtonPress={closePageAlert}/>
             </View>
             {
@@ -295,6 +309,9 @@ const styles = StyleSheet.create({
         borderRadius: 13,
         padding: 20,
         ...shadowStyle
+    },
+    scrollViewcontainer: {
+        backgroundColor: '#e9e7e7',
     },
     loadingContainer: {
         flex: 1,
