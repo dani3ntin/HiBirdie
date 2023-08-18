@@ -21,10 +21,6 @@ const DetailUserHeaderBar = (props) => {
                   <CustomIcon name="left" size={35} color="black" />
               </View>
           </Pressable>
-          <Image
-              source={props.userAvatar}
-              style={styles.avatar}
-          />
           <View style={styles.columnContainer}>
             <Text style={styles.name}>{props.name}</Text>
             <Text style={styles.userName}>@{props.username}</Text>

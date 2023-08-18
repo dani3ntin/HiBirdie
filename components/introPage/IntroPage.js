@@ -1,11 +1,30 @@
-import React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react'
+import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { useGlobalContext } from '../globalContext/GlobalContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const windowWidth = Dimensions.get('window').width
 
-function IntroPage() {
+function IntroPage(props) {
+    const [isLoadingItems, setIsLoadingItems] = useState(true)
     const navigation = useNavigation()
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
+
+    useEffect(() => {
+        getUserData()
+        setIsLoadingItems(false)
+    }, [])
+
+    async function getUserData(){
+        const userData = await AsyncStorage.getItem('userData')
+        const parsedUserData = JSON.parse(userData)
+        if(parsedUserData.username){
+            props.setUserData(parsedUserData)
+            navigation.navigate('Home')
+        }
+    }
+
   return (
     <View style={styles.container}>
         <Text style={{ fontFamily: 'sans-serif-thin', fontSize: 70 }}>HiBirdie</Text>
@@ -15,18 +34,25 @@ function IntroPage() {
         style={styles.image}
       />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonMargin]}
-          onPress={() => navigation.navigate('RegisterPage')}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonMargin]}
-          onPress={() => navigation.navigate('LoginPage')}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        {
+            isLoadingItems ?
+            <ActivityIndicator size="large"  color="#0000ff"/>
+            :
+            <>
+                <TouchableOpacity
+                    style={[styles.button, styles.buttonMargin]}
+                    onPress={() => navigation.navigate('RegisterPage')}
+                >
+                    <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.button, styles.buttonMargin]}
+                    onPress={() => navigation.navigate('LoginPage')}
+                >
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+            </>
+        }
       </View>
     </View>
   );

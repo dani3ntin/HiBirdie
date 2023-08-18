@@ -1,13 +1,14 @@
 import { Modal, View, Text, Pressable, StyleSheet, TextInput, FlatList } from 'react-native'
 import { useState } from 'react'
 import FollowedItem from '../items/FollowedItem'
-import { API_URL } from '../../env'
 import { useNavigation } from '@react-navigation/native'
+import { useGlobalContext } from '../globalContext/GlobalContext'
 
 function SearchUsers(props) {
   const navigation = useNavigation()
   const [searchText, setSearchText] = useState('')
   const [searchResult, setSearchResult] = useState([])
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
 
   function closeModal() {
       props.closeModal();
@@ -33,7 +34,7 @@ function SearchUsers(props) {
       setSearchText('')
     }else{
       setSearchText(text)
-      const response = await fetch( API_URL + 'searchuserbyusername/' + text)
+      const response = await fetch( globalVariable.API_URL + 'searchuserbyusername/' + text)
       const jsonData = await response.json()
       setSearchResult(jsonData)
     }
@@ -50,7 +51,7 @@ function SearchUsers(props) {
     <FollowedItem 
       username={item.username}
       name={item.name} 
-      profilePic={{ uri: API_URL + 'getuserbyusername/' + item.username + '/' + item.username }}
+      profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.username + '/' + item.username }}
       onFollowerPressed={() => onFollowerPressedHandler(item.username, item.name, item.state, item.likes, item.followers, item.isLoggedUserFollowing)}
     />
   )

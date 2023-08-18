@@ -4,7 +4,6 @@ import UserEncyclopedia from './UserEncyclopedia'
 import DetailUserHeaderBar from '../headerBars/DetailUserHeaderBar'
 import UserUpperInfos from './UserUpperInfos'
 import { Feather } from '@expo/vector-icons'
-import { API_URL } from '../../env'
 import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from '../globalContext/GlobalContext'
@@ -64,7 +63,7 @@ function UserDetailPage(){
   async function followAndUnfollowButtonHandler(){
     if(isLoggedUserFollowing === true){
       removeFollowerToCounter()
-      await fetch(API_URL + 'removefollower', {
+      await fetch(globalVariable.API_URL + 'removefollower', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -73,7 +72,7 @@ function UserDetailPage(){
       });
     }else{
       addFollowerToCounter()
-      await fetch(API_URL + 'addfollower', {
+      await fetch(globalVariable.API_URL + 'addfollower', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -92,12 +91,12 @@ function UserDetailPage(){
             <DetailUserHeaderBar 
               username={props.usernameFollowed}
               name={props.name} 
-              userAvatar={{ uri: API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
+              userAvatar={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
               onBackButtonPress={() => navigation.goBack()}
             />
           </View>
           <ScrollView>
-            <UserUpperInfos state={props.state} likes={likes} followers={followers}/>
+            <UserUpperInfos state={props.state} likes={likes} followers={followers} loggedUsername={props.loggedUsername} usernameFollowed={props.usernameFollowed} includeImage={true}/>
             <UserEncyclopedia 
               username={props.loggedUsername} 
               usernameFollowed={props.usernameFollowed} 

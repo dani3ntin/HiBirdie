@@ -1,13 +1,12 @@
-import { NavigationContainer } from '@react-navigation/native'
 import { React, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native'
-import { API_URL } from '../../env'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Platform, Dimensions, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import LoginHeaderBar from '../headerBars/LoginHeaderBar'
 import BackIcon from 'react-native-vector-icons/AntDesign'
+import { useGlobalContext } from '../globalContext/GlobalContext'
 
 const windowWidth = Dimensions.get('window').width
   
@@ -17,7 +16,7 @@ export default function LoginPage(props) {
   useEffect(() => {
     
 }, [])
-
+const { globalVariable, setGlobalVariable } = useGlobalContext()
 const [input, setInput] = useState('')
 const [password, setPassowrd] = useState('')
 const [showPassword, setShowPassword] = useState(false)
@@ -45,7 +44,7 @@ async function tryLogin(){
     }
     setCheckingPassword(true)
     try {
-        const response = await fetch( API_URL + 'login', {
+        const response = await fetch( globalVariable.API_URL + 'login', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ import BirdItemLatestSightings from "../items/BirdItemLatestSightings"
 import { useState } from "react"
 import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { API_URL } from "../../env"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 function UserEncyclopedia(props) {
     const navigation = useNavigation()
@@ -14,6 +14,7 @@ function UserEncyclopedia(props) {
     const [isLoadingItems, setIsLoadingItems] = useState(true)
     const [latUser, setLatUser] = useState(0)
     const [lonUser, setLonUser] = useState(0)
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
 
     useEffect(() => {
         if(isFocused){
@@ -34,7 +35,7 @@ function UserEncyclopedia(props) {
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
         try {
-            const response = await fetch(API_URL + 'getbirdsbyusernamewithdistance', {
+            const response = await fetch(globalVariable.API_URL + 'getbirdsbyusernamewithdistance', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -61,6 +62,7 @@ function UserEncyclopedia(props) {
             addLike: addLikeHandler,
             removeLike: removeLikeHandler,
         })
+        console.log({ loggedUsername: props.username, id: id, originPage: "UserDetail", authorUsername: author})
         navigation.navigate('BirdDetailPageWithAuthor', { loggedUsername: props.username, id: id, originPage: "UserDetail", authorUsername: author})
         
     }
@@ -96,7 +98,7 @@ function UserEncyclopedia(props) {
                                 <BirdItemLatestSightings 
                                     id={item.id} 
                                     name={item.name} 
-                                    image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username }} 
+                                    image={{ uri: globalVariable.API_URL + 'getbird/' + item.id + '/' + props.username }} 
                                     sightingDate={item.sightingDate} 
                                     likes={item.likes} 
                                     distance={Math.round(item.distance)}

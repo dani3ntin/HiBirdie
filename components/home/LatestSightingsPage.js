@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatestSightingsPage"
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
-import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 
@@ -24,7 +23,7 @@ function LatestSightingsPage(props) {
     const navigation = useNavigation()
 
     useEffect(() => {
-        console.log(props.userData)
+        console.log(globalVariable)
         if(isFocused){
             settingUserCoordinates()
             settingFilter()
@@ -57,7 +56,7 @@ function LatestSightingsPage(props) {
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
         try {
-            const response = await fetch(API_URL + 'getbirdswithfilterexceptyours', {
+            const response = await fetch(globalVariable.API_URL + 'getbirdswithfilterexceptyours', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -132,7 +131,7 @@ function LatestSightingsPage(props) {
                                     <BirdItemLatestSightings 
                                         id={item.id} 
                                         name={item.name} 
-                                        image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username}} 
+                                        image={{ uri: globalVariable.API_URL + 'getbird/' + item.id + '/' + props.username}} 
                                         sightingDate={item.sightingDate} 
                                         likes={item.likes} 
                                         distance={Math.round(item.distance)}

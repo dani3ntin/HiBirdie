@@ -9,7 +9,6 @@ import * as ImagePicker from 'expo-image-picker'
 import DatePicker from 'react-native-modern-datepicker'
 import { formatDateToString } from "../utils/utils"
 import { stringToDate } from "../utils/utils"
-import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 
@@ -156,7 +155,7 @@ function AddNewBird(props){
         formData.append('user', props.loggedUsername)
         
         try {
-            const response = await fetch(API_URL + 'addbird', {
+            const response = await fetch(globalVariable.API_URL + 'addbird', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',

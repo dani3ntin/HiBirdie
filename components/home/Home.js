@@ -8,10 +8,10 @@ import { React, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { View, StyleSheet, StatusBar, BackHandler } from 'react-native'
 import HomeHeaderBar from '../headerBars/HomeHeaderBar'
-import { API_URL } from '../../env'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { useGlobalContext } from '../globalContext/GlobalContext'
 
 let Tab
 if(Platform.OS == 'ios'){
@@ -21,6 +21,7 @@ if(Platform.OS == 'ios'){
 }
   
 export default function Home(props) {
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -37,13 +38,14 @@ useEffect(() => {
 }, [])
 
 const handleBackPress = () => {
+  console.log(globalVariable.API_URL)
   return true
 }
 
   return (
     <>
       <View style={styles.headerContainer}>
-        <HomeHeaderBar userName={props.userData ? props.userData.name : ''} userAvatar={{ uri: API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') }} />
+        <HomeHeaderBar userName={props.userData ? props.userData.name : ''} userAvatar={{ uri: globalVariable.API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate}} />
       </View>
       <Tab.Navigator
       activeColor='#0008ff'

@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, Image, ActivityIndicator, Pressable} from "react-native"
 import { useState, useEffect } from "react"
-import UserDetailPage from "../userDetail/UserDetailPage"
-import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
+import { useGlobalContext } from "../globalContext/GlobalContext"
 
 
 function AuthorPressable(props) {
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
     const [nFollowersAuthor, setNFollowersAuthor] = useState(0)
     const [authorData, setAuthorData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
@@ -17,13 +17,13 @@ function AuthorPressable(props) {
     }, [])
 
     async function fetchAuthorData(){
-        const responseAuthor = await fetch(API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername)
+        const responseAuthor = await fetch(globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername)
         if (!responseAuthor.ok) {
             throw new Error('Network response was not ok')
         }
         const imageMetadataAuthor = JSON.parse(responseAuthor.headers.get('imageInfos'))
         setAuthorData(imageMetadataAuthor)
-        const responseAuthorFollowers = await fetch(API_URL + 'getfollowersbyusername/' + props.authorUsername)
+        const responseAuthorFollowers = await fetch(globalVariable.API_URL + 'getfollowersbyusername/' + props.authorUsername)
         const responseDataAuthorFollowers = await responseAuthorFollowers.json()
         setNFollowersAuthor(responseDataAuthorFollowers.length)
         setIsLoadingItems(false)
@@ -49,7 +49,7 @@ function AuthorPressable(props) {
                 <View style={styles.friendItem}>
                         <View style={styles.itemContent}>
                             <Image
-                                source={{ uri: API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername }}
+                                source={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername }}
                                 style={styles.avatar}
                             />
                             <View>

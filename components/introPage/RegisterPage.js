@@ -2,12 +2,11 @@ import { NavigationContainer } from '@react-navigation/native'
 import { React, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Text, ActivityIndicator, ScrollView, Alert } from 'react-native'
-import { API_URL } from '../../env'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Platform, Dimensions, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import RegisterHeaderBar from '../headerBars/RegisterHeaderBar'
-import BackIcon from 'react-native-vector-icons/AntDesign'
+import { useGlobalContext } from '../globalContext/GlobalContext'
 import MapInputRegisterComponent from './MapInputRegisterComponent'
 
 const windowWidth = Dimensions.get('window').width
@@ -31,6 +30,8 @@ const [showPassword, setShowPassword] = useState(false)
 const [error, setError] = useState(null)
 const [checkingPassword, setCheckingPassword] = useState(false)
 const [isSaving, setIsSaving] = useState(false)
+const [isUsernameAlreadyUsed, setIsUsernameAlreadyUsed] = useState(false)
+const { globalVariable, setGlobalVariable } = useGlobalContext()
 
 
 const toggleShowPassword = () => {
@@ -82,7 +83,7 @@ async function register(){
     formData.append('yPosition', longitude)
     
     try {
-        const response = await fetch(API_URL + 'register', {
+        const response = await fetch(globalVariable.API_URL + 'register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -103,6 +104,24 @@ async function register(){
     }
     setIsSaving(false)
 }
+
+async function checkUsername(username){
+    if(username === '')
+        return
+    const response = await fetch(globalVariable.API_URL + 'isusernamealreadyused/' + username)
+    const jsonData = await response.json()
+    if(jsonData.response === 1){
+        setIsUsernameAlreadyUsed(true)
+    }else{
+        setIsUsernameAlreadyUsed(false)
+    }
+}
+
+function getTextCheckIfUsernameIsUsed(){
+    if(username === '') return null
+    if(isUsernameAlreadyUsed) return <Text style={styles.textNotOk}>This username is not available</Text>
+    if(!isUsernameAlreadyUsed) return <Text style={styles.textOk}>Username available</Text>
+}
   return (
     <>
         <View style={styles.headerContainer}>
@@ -113,11 +132,17 @@ async function register(){
                 <Text style={styles.welcomeText}>Oh, a new face!</Text>
                 <Text style={styles.text}>Please insert your data to register</Text>
                 <View style={styles.ItemsContainer}>
+                    {
+                        getTextCheckIfUsernameIsUsed()
+                    }
                     <TextInput
                         placeholder='Insert your username'
                         label='input'
                         value={username}
-                        onChangeText={text => setUsername(text)}
+                        onChangeText={text => {
+                            setUsername(text);
+                            checkUsername(text)
+                        }}
                         maxLength={50}
                         style={[styles.textInput]}
                     />
@@ -236,6 +261,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     welcomeText:{
+        paddingTop: 20,
         fontSize: 50, 
         paddingBottom: 20,
         fontFamily: 'sans-serif-thin',
@@ -244,6 +270,16 @@ const styles = StyleSheet.create({
     text:{
         fontSize: 18,
         paddingTop: 2,
+        alignSelf: 'center',
+    },
+    textOk:{
+        fontSize: 18,
+        color: '#43922f',
+        alignSelf: 'center',
+    },
+    textNotOk:{
+        fontSize: 18,
+        color: '#8a1a1a',
         alignSelf: 'center',
     },
     passwordContainer: {

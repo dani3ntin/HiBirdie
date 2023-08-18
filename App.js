@@ -3,7 +3,6 @@ import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
 import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { API_URL } from './env'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import AddNewBird from './components/addNewBird-editBird/AddNewBird'
@@ -34,7 +33,7 @@ export default function App() {
       await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: coordinates.latitude, longitude: coordinates.longitude, defaultPosition: coordinates.defaultPosition}))
     }
     fetchLocation()
-  }, []);
+  }, [userData]);
 
   const getLocationCoordinates = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync()
@@ -65,7 +64,7 @@ export default function App() {
       <GlobalProvider>
         <NavigationContainer>
             <Stack.Navigator initialRouteName="IntroPage">
-              <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage />}</Stack.Screen>
+              <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage setUserData={setUserData}/>}</Stack.Screen>
               <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData}/>}</Stack.Screen>
               <Stack.Screen name="RegisterPage" options={{ headerShown: false }}>{() => <RegisterPage setUserData={setUserData}/>}</Stack.Screen>
               <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>

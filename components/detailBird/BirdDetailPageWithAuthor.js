@@ -6,14 +6,15 @@ import AuthorPressable from "./AuthorPressable"
 import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
-import { API_URL } from "../../env"
 import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
+import { useIsFocused } from "@react-navigation/native"
 
 const windowWidth = Dimensions.get('window').width
 
 function BirdDetailPageWithAuthor(){
+    const isFocused = useIsFocused()
     const { globalVariable, setGlobalVariable } = useGlobalContext()
     const navigation = useNavigation()
     const route = useRoute()
@@ -39,13 +40,13 @@ function BirdDetailPageWithAuthor(){
 
     useEffect(() => {
         setIsLoadingBirdData(true)
-        calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, 50, setBirdImageWidth, setBirdImageHeight)
+        calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, 50, setBirdImageWidth, setBirdImageHeight)
         fetchData()
-    }, [])
+    }, [isFocused])
 
     const fetchData = async () => {
         try {
-            const response = await fetch(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername)
+            const response = await fetch(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername)
             if (!response.ok) {
                 throw new Error('Network response was not ok')
             }
@@ -74,7 +75,7 @@ function BirdDetailPageWithAuthor(){
                     {
                         birdData.id === -1 ? null : (
                             <View style={styles.imageContainer}>
-                                <Image source={{ uri: API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
+                                <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
                             </View>
                         )
                     }

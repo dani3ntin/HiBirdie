@@ -4,7 +4,6 @@ import BirdItemEncyclopedia from "../items/BirdItemEncyclopedia"
 import { useState } from "react"
 import { useEffect } from "react"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
-import { API_URL } from "../../env"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 
@@ -24,7 +23,7 @@ function EncyclopediaPage(props) {
 
     const fetchData = async () => {
         try {
-          const response = await fetch(API_URL + 'getbirdsbyuser/' + props.username + '/' + props.username)
+          const response = await fetch(globalVariable.API_URL + 'getbirdsbyuser/' + props.username + '/' + props.username)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -71,7 +70,7 @@ function EncyclopediaPage(props) {
                                 <BirdItemEncyclopedia 
                                 id={item.id} 
                                 name={item.name} 
-                                image={{ uri: API_URL + 'getbird/' + item.id + '/' + props.username }} 
+                                image={{ uri: globalVariable.API_URL + 'getbird/' + item.id + '/' + props.username + globalVariable.randomStringToUpdate }} 
                                 sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} 
                                 onBirdPressed={openDetailBirdPage}/>
                             </View>

@@ -6,7 +6,6 @@ import MapInputComponent from "./MapInputComponent"
 import * as ImagePicker from 'expo-image-picker'
 import DatePicker from 'react-native-modern-datepicker'
 import { stringToDate } from "../utils/utils"
-import { API_URL } from "../../env"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
 import { useNavigation } from "@react-navigation/native"
 import { useRoute } from "@react-navigation/native"
@@ -48,7 +47,7 @@ function EditBird(){
 
     useEffect(() => {
         setIsLoadingBirdData(true)
-        calculateOptimizedImageSize(API_URL + 'getbird/' + props.birdData.id + '/' + props.loggedUsername, 80, setBirdImageWidth, setBirdImageHeight)
+        calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.birdData.id + '/' + props.loggedUsername + globalVariable.randomStringToUpdate, 80, setBirdImageWidth, setBirdImageHeight)
         setIsLoadingBirdData(false)
     }, [])
 
@@ -66,7 +65,7 @@ function EditBird(){
     }, [])
 
     function getBirdImage(){
-        if(!image) return <Image source={{ uri: API_URL + 'getbird/' + props.birdData.id + '/' + props.loggedUsername }} style={[styles.birdImage, imageSizeStyle]} />
+        if(!image) return <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.birdData.id + '/' + props.loggedUsername + globalVariable.randomStringToUpdate}} style={[styles.birdImage, imageSizeStyle]} />
         return image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />
     }
 
@@ -152,7 +151,7 @@ function EditBird(){
         console.log(formData)
         
         try {
-            const response = await fetch(API_URL + 'editbird', {
+            const response = await fetch(globalVariable.API_URL + 'editbird', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -164,7 +163,13 @@ function EditBird(){
             console.error(error);
         }
         setIsUploadingBird(false)
+        createRandomStringToUpdateItems()
         navigation.goBack()
+    }
+
+    function createRandomStringToUpdateItems(){
+        setGlobalVariable({backgroundColor: globalVariable.backgroundColor, headerColor: globalVariable.headerColor, buttonColor: globalVariable.buttonColor, 
+        API_URL: globalVariable.API_URL, randomStringToUpdate: '?' + Math.random()})
     }
       
     function getAddBird(){

@@ -4,7 +4,6 @@ import FollowedItem from "../items/FollowedItem"
 import { useState, useEffect } from "react"
 import { ActivityIndicator } from "react-native"
 import UserDetailPage from "../userDetail/UserDetailPage"
-import { API_URL } from "../../env"
 import SearchUsers from "../searchUsers/SearchUsers"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
@@ -26,7 +25,7 @@ function FollowedPage(props) {
 
     const fetchData = async () => {
         try {
-          const response = await fetch( API_URL + 'getfollowedbyusername/' + props.username)
+          const response = await fetch( globalVariable.API_URL + 'getfollowedbyusername/' + props.username)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -88,7 +87,7 @@ function FollowedPage(props) {
                             <FollowedItem 
                                 username={item.usernameFollowed}
                                 name={item.name} 
-                                profilePic={{ uri: API_URL + 'getuserbyusername/' + item.username + '/' + item.usernameFollowed }} 
+                                profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.username + '/' + item.usernameFollowed }} 
                                 state={editState(item.state)}
                                 onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state, item.likes, item.followers)}
                             />

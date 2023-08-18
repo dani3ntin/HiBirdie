@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Button} from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { approximateNumberOfDays, calculateDifferenceBetweenTwoDates } from "./itemsUtils/FriendItemUtils"
-import { API_URL } from "../../env";
+import { useGlobalContext } from "../globalContext/GlobalContext";
 
 function BirdItemLatestSightings(props) {
     const today = new Date()
     const [liked, setLiked] = useState(props.userPutLike)
     const [likeNumber, setLikeNumber] = useState(props.likes)
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
 
     useEffect(() => {
         setLiked(props.userPutLike)
@@ -31,7 +32,7 @@ function BirdItemLatestSightings(props) {
         if(newValue === true){
             addLikeHandler()
             setLikeNumber(likeNumber + 1)
-            await fetch(API_URL + 'addlike', {
+            await fetch(globalVariable.API_URL + 'addlike', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -41,7 +42,7 @@ function BirdItemLatestSightings(props) {
         }else{
             removeLikeHandler()
             setLikeNumber(likeNumber - 1)
-            await fetch(API_URL + 'removelike', {
+            await fetch(globalVariable.API_URL + 'removelike', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

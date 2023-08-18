@@ -4,7 +4,6 @@ import { Input } from 'react-native-elements'
 import UserSettingHeaderBar from "../headerBars/UserSettingHeaderBar"
 import MapInputComponent from "../addNewBird-editBird/MapInputComponent"
 import * as ImagePicker from 'expo-image-picker'
-import { API_URL } from "../../env"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
 import { useNavigation } from "@react-navigation/native"
 import UserUpperInfos from "../userDetail/UserUpperInfos"
@@ -58,7 +57,7 @@ function UserSetting(props){
     useEffect(() => {
         console.log(props.userData)
         setIsLoadingUserData(true)
-        calculateOptimizedImageSize(API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username, 80, setUserImageWidth, setUserImageHeight)
+        calculateOptimizedImageSize(globalVariable.API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username, 80, setUserImageWidth, setUserImageHeight)
         setIsLoadingUserData(false)
     }, [])
 
@@ -76,7 +75,7 @@ function UserSetting(props){
     }, [])
 
     function getUserImage(){
-        if(!image) return <Image source={{ uri: API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username }} style={[styles.userImage, imageSizeStyle]} />
+        if(!image) return <Image source={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username + '?' + Math.random()}} style={[styles.userImage, imageSizeStyle]} />
         return image && <Image source={{ uri: image[0].uri }} style={[styles.userImage, imageSizeStyle]} />
     }
 
@@ -176,7 +175,7 @@ function UserSetting(props){
         console.log(formData)
         
         try {
-            const response = await fetch(API_URL + 'edituser', {
+            const response = await fetch(globalVariable.API_URL + 'edituser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -220,7 +219,7 @@ function UserSetting(props){
         console.log(formData)
         
         try {
-            const response = await fetch(API_URL + 'changepassword', {
+            const response = await fetch(globalVariable.API_URL + 'changepassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -241,7 +240,7 @@ function UserSetting(props){
     }
 
     async function pickColor(headerColor, backgroundColor, buttonColor){
-        setGlobalVariable({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor})
+        setGlobalVariable({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor, API_URL: globalVariable.API_URL})
         await AsyncStorage.setItem('applicationColor', JSON.stringify({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor}))
     }
 
@@ -258,7 +257,7 @@ function UserSetting(props){
         return(
             <>
                 <ScrollView style={{backgroundColor: globalVariable.backgroundColor}}>
-                    <UserUpperInfos likes={likes} followers={followers} state={''}/>
+                    <UserUpperInfos likes={likes} followers={followers} state={''} includeImage={false}/>
                     <View style={styles.imageContainer}>
                         {
                             getUserImage()

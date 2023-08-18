@@ -7,7 +7,6 @@ import MapViewInDetailBird from "./MapViewInDetailBird"
 import { changeDateFormatToDDMMYYYY } from "../utils/utils"
 import DeleteBirdButton from "./DeleteBirdButton"
 import EditBirdButton from "./EditBirdButton"
-import { API_URL } from "../../env"
 import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
 import { useIsFocused } from "@react-navigation/native"
@@ -43,7 +42,7 @@ function BirdDetailPageWithoutAuthor(){
 
     useEffect(() => {
         setIsLoadingBirdData(true)
-        calculateOptimizedImageSize(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
+        calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
         if(isFocused){
             fetchData()
         }
@@ -51,7 +50,7 @@ function BirdDetailPageWithoutAuthor(){
 
     const fetchData = async () => {
         try {
-            const response = await fetch(API_URL + 'getbird/' + props.id + '/' + props.loggedUsername  + '?' + Math.random(10))
+            const response = await fetch(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername  + '?' + Math.random(10))
             if (!response.ok) {
                 throw new Error('Network response was not ok')
             }
@@ -71,7 +70,7 @@ function BirdDetailPageWithoutAuthor(){
     }
 
     async function deleteBird(){
-        await fetch(API_URL + 'deletebird/' + birdData.id)
+        await fetch(globalVariable.API_URL + 'deletebird/' + birdData.id)
         navigation.goBack()
     }
 
@@ -109,7 +108,7 @@ function BirdDetailPageWithoutAuthor(){
                         {
                             birdData.id === -1 ? null : (
                                 <View style={styles.imageContainer}>
-                                    <Image source={{ uri: API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
+                                    <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
                                 </View>
                             )
                         }

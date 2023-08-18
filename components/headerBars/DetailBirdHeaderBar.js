@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { API_URL } from '../../env'
 import { useGlobalContext } from '../globalContext/GlobalContext'
 
 const DetailBirdHeaderBar = (props) => {
@@ -41,7 +40,7 @@ const DetailBirdHeaderBar = (props) => {
     if(newValue === true){
       addLikeHandler()
       setLikeNumber(likeNumber + 1)
-      await fetch(API_URL + 'addlike', {
+      await fetch(globalVariable.API_URL + 'addlike', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,7 +50,7 @@ const DetailBirdHeaderBar = (props) => {
     }else{
       removeLikeHandler()
       setLikeNumber(likeNumber - 1)
-      await fetch(API_URL + 'removelike', {
+      await fetch(globalVariable.API_URL + 'removelike', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
