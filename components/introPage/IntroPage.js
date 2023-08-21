@@ -19,7 +19,7 @@ function IntroPage(props) {
     async function getUserData(){
         const userData = await AsyncStorage.getItem('userData')
         const parsedUserData = JSON.parse(userData)
-        if(parsedUserData.username){
+        if(parsedUserData && parsedUserData.username){
             props.setUserData(parsedUserData)
             navigation.navigate('Home')
         }
