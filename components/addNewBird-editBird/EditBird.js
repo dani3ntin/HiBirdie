@@ -221,6 +221,7 @@ function EditBird(){
                     </View>
                     <View style={styles.locationContainer}>
                         <Text style={styles.text}>Enter the location of the sighting:</Text>
+                        <Text style={styles.text}>(Press on the map to select the location)</Text>
                         <View style={styles.mapContainer}>
                             <MapInputComponent latUser={latUser} lonUser={lonUser} sendLocation={getLocationHandler} enablePressing={true}/>
                         </View>

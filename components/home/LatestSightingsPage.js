@@ -7,6 +7,7 @@ import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatest
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
+import * as Sentry from '@sentry/react-native'
 
 function LatestSightingsPage(props) {
     const { globalVariable, setGlobalVariable } = useGlobalContext()
@@ -23,7 +24,6 @@ function LatestSightingsPage(props) {
     const navigation = useNavigation()
 
     useEffect(() => {
-        console.log(globalVariable)
         if(isFocused){
             settingUserCoordinates()
             settingFilter()
@@ -33,7 +33,8 @@ function LatestSightingsPage(props) {
 
     async function settingUserCoordinates(){
         const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
-        console.log(storedCoordinatesUserData)
+        //console.log('storedCoordinatesUserData:')
+        //console.log(storedCoordinatesUserData)
         if (storedCoordinatesUserData) {
           const parsedUserData = JSON.parse(storedCoordinatesUserData)
           setLatUser(parsedUserData.latitude)
@@ -55,6 +56,8 @@ function LatestSightingsPage(props) {
     
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+        //console.log('getbirdswithfilterexceptyours:')
+        //console.log(data)
         try {
             const response = await fetch(globalVariable.API_URL + 'getbirdswithfilterexceptyours', {
             method: 'POST',
@@ -64,7 +67,8 @@ function LatestSightingsPage(props) {
             body: JSON.stringify(data),
             })
             if (!response.ok) {
-                throw new Error('Network response was not ok')
+                const errorMessage = await response.text();
+                throw new Error(errorMessage)
             }
             const jsonData = await response.json()
         
@@ -82,7 +86,6 @@ function LatestSightingsPage(props) {
     }
 
     function openFilterModal(){
-        console.log(globalVariable)
         setfilterModalIsVisible(true)
     }
 
@@ -155,6 +158,7 @@ function LatestSightingsPage(props) {
                         onPress={openFilterModal} 
                     >
                         <Text style={styles.buttonText}>Open Filters</Text>
+                        
                     </Pressable>
                 </View>
             </>

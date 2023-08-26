@@ -16,6 +16,7 @@ import { GlobalProvider } from './components/globalContext/GlobalContext'
 import IntroPage from './components/introPage/IntroPage'
 import LoginPage from './components/introPage/LoginPage'
 import RegisterPage from './components/introPage/RegisterPage'
+import * as Sentry from '@sentry/react-native'
 
 const Stack = createStackNavigator()
 
@@ -35,29 +36,35 @@ export default function App() {
     fetchLocation()
   }, [userData]);
 
-  const getLocationCoordinates = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync()
-    if (status !== 'granted') {
-      console.log('Permesso di geolocalizzazione non concesso');
-      return null;
-    }
-    try {
-      const currentLocation = await Location.getCurrentPositionAsync({})
-      return currentLocation.coords
-    } catch (error) {
-      const storedUserData = await AsyncStorage.getItem('userData')
-      const parsedUserData = JSON.parse(storedUserData)
-      return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
-    }
-  }
 
-  async function settingUsername(){
-    const storedUserData = await AsyncStorage.getItem('userData')
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData)
-      setUsername(parsedUserData.username)
-    }
+Sentry.init({ 
+  dsn: 'https://4e797a3d4a7c93316b5ed9a767f1ef17@o4505745355702272.ingest.sentry.io/4505745357012992', 
+});
+
+
+const getLocationCoordinates = async () => {
+  const { status } = await Location.requestForegroundPermissionsAsync()
+  if (status !== 'granted') {
+    console.log('Permesso di geolocalizzazione non concesso');
+    return null;
   }
+  try {
+    const currentLocation = await Location.getCurrentPositionAsync({})
+    return currentLocation.coords
+  } catch (error) {
+    const storedUserData = await AsyncStorage.getItem('userData')
+    const parsedUserData = JSON.parse(storedUserData)
+    return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
+  }
+}
+
+async function settingUsername(){
+  const storedUserData = await AsyncStorage.getItem('userData')
+  if (storedUserData) {
+    const parsedUserData = JSON.parse(storedUserData)
+    setUsername(parsedUserData.username)
+  }
+}
 
   return (
     <SafeAreaView style={styles.SafeArea}>

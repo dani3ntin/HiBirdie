@@ -7,23 +7,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const windowWidth = Dimensions.get('window').width
 
 function IntroPage(props) {
-    const [isLoadingItems, setIsLoadingItems] = useState(true)
-    const navigation = useNavigation()
-    const { globalVariable, setGlobalVariable } = useGlobalContext()
+  const [isLoadingItems, setIsLoadingItems] = useState(true)
+  const navigation = useNavigation()
+  const { globalVariable, setGlobalVariable } = useGlobalContext()
 
-    useEffect(() => {
-        getUserData()
-        setIsLoadingItems(false)
-    }, [])
+  useEffect(() => {
+      getUserData()
+      setIsLoadingItems(false)
+  }, [])
 
-    async function getUserData(){
-        const userData = await AsyncStorage.getItem('userData')
-        const parsedUserData = JSON.parse(userData)
-        if(parsedUserData && parsedUserData.username){
-            props.setUserData(parsedUserData)
-            navigation.navigate('Home')
-        }
+  async function getUserData(){
+      const userData = await AsyncStorage.getItem('userData')
+      const parsedUserData = JSON.parse(userData)
+      if(parsedUserData && parsedUserData.username){
+        const updatedUserData = await updateUserData(parsedUserData)
+        console.log(updatedUserData)
+        props.setUserData(updatedUserData)
+        navigation.navigate('Home')
+      }
+  }
+
+  async function updateUserData(userdata){
+    try {
+      const response = await fetch(globalVariable.API_URL + 'getuserbyusername/' + userdata.username + '/' + userdata.username)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const jsonData = JSON.parse(response.headers.get('imageInfos'))
+      console.log(jsonData)
+      return jsonData
+    } catch (error) {
+      console.error('Followed page Error on getting the datas:', error)
+      return userdata
     }
+  }
 
   return (
     <View style={styles.container}>

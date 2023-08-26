@@ -1,11 +1,9 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { NavigationContainer } from '@react-navigation/native'
 import EncyclopediaPage from './EncyclopediaPage'
 import FollowedPage from './FollowedPage'
 import LatestSightingsPage from './LatestSightingsPage'
-import { React, useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { React, useEffect } from 'react'
 import { View, StyleSheet, StatusBar, BackHandler } from 'react-native'
 import HomeHeaderBar from '../headerBars/HomeHeaderBar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -24,8 +22,9 @@ export default function Home(props) {
   const { globalVariable, setGlobalVariable } = useGlobalContext()
   const navigation = useNavigation()
 
-  useEffect(() => {
-    
+useEffect(() => {
+  console.log(globalVariable.API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate)
+  console.log(props.userData)
 }, [])
 
 useEffect(() => {
@@ -38,12 +37,12 @@ useEffect(() => {
 }, [])
 
 const handleBackPress = () => {
-  console.log(globalVariable.API_URL)
+  //console.log(globalVariable.API_URL)
   return true
 }
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <HomeHeaderBar userName={props.userData ? props.userData.name : ''} userAvatar={{ uri: globalVariable.API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate}} />
       </View>
@@ -73,12 +72,15 @@ const handleBackPress = () => {
           }}>{() => <FollowedPage username={props.username}/>}</Tab.Screen>
       </Tab.Navigator>
       <StatusBar style="auto" />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   headerContainer: {
     height: '8%'
+  },
+  container: {
+    flex: 1,
   }
 });

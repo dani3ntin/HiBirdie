@@ -75,7 +75,7 @@ function UserSetting(props){
     }, [])
 
     function getUserImage(){
-        if(!image) return <Image source={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username + '?' + Math.random()}} style={[styles.userImage, imageSizeStyle]} />
+        if(!image) return <Image source={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username + globalVariable.randomStringToUpdate}} style={[styles.userImage, imageSizeStyle]} />
         return image && <Image source={{ uri: image[0].uri }} style={[styles.userImage, imageSizeStyle]} />
     }
 
@@ -240,8 +240,9 @@ function UserSetting(props){
     }
 
     async function pickColor(headerColor, backgroundColor, buttonColor){
-        setGlobalVariable({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor, API_URL: globalVariable.API_URL})
-        await AsyncStorage.setItem('applicationColor', JSON.stringify({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor}))
+        setGlobalVariable({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor, API_URL: globalVariable.API_URL, randomStringToUpdate: '?' + (Math.random() * 100)})
+        await AsyncStorage.setItem('applicationColor', JSON.stringify({backgroundColor: backgroundColor, headerColor: headerColor, buttonColor: buttonColor, 
+            randomStringToUpdate: '?' + (Math.random() * 100)}))
     }
 
     function changePasswordButtonHandler(){

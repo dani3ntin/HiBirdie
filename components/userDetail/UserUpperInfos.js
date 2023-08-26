@@ -58,7 +58,7 @@ function UserUpperInfos(props){
                 </View>
             </View>
             {
-                props.state === '' ?
+                props.state === '' || props.state === null ?
                 null
                 :
                 <View style={styles.container}>

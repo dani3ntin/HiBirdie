@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Text, ActivityIndicator, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Platform, Dimensions, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -73,51 +73,53 @@ async function tryLogin(){
             <LoginHeaderBar onBackButtonPress={() => navigation.goBack()}/>
         </View>
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Welcome back!</Text>
-            <Image
-                source={require('../../assets/images/introImages/intro1.jpg')} 
-                style={styles.image}
-            />
-            <Text style={styles.text}>Please insert your credentials to login</Text>
-            <View style={styles.ItemsContainer}>
-                <TextInput
-                    placeholder='Insert your username or email'
-                    label='input'
-                    value={input}
-                    onChangeText={text => setInput(text)}
-                    maxLength={50}
-                    style={[styles.textInput]}
+            <ScrollView>
+                <Text style={styles.welcomeText}>Welcome back!</Text>
+                <Image
+                    source={require('../../assets/images/introImages/intro1.jpg')} 
+                    style={styles.image}
                 />
-                <View style={styles.passwordContainer}>
+                <Text style={styles.text}>Please insert your credentials to login</Text>
+                <View style={styles.ItemsContainer}>
                     <TextInput
-                        placeholder='Insert password'
-                        label='password'
-                        value={password}
-                        onChangeText={text => setPassowrd(text)}
+                        placeholder='Insert your username or email'
+                        label='input'
+                        value={input}
+                        onChangeText={text => setInput(text)}
                         maxLength={50}
-                        secureTextEntry={!showPassword}
-                        style={[styles.passwordText]}
+                        style={[styles.textInput]}
                     />
-                    <TouchableOpacity style={styles.iconContainer} onPress={toggleShowPassword}>
-                        <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
+                    <View style={styles.passwordContainer}>
+                        <TextInput
+                            placeholder='Insert password'
+                            label='password'
+                            value={password}
+                            onChangeText={text => setPassowrd(text)}
+                            maxLength={50}
+                            secureTextEntry={!showPassword}
+                            style={[styles.passwordText]}
+                        />
+                        <TouchableOpacity style={styles.iconContainer} onPress={toggleShowPassword}>
+                            <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                    {error && <Text style={styles.errorText}>{error}</Text>}
+                    {
+                        //<Text style={styles.linkText} onPress={() => console.log('s')}>Do you forget your password?</Text>
+                    }
+                    <TouchableOpacity
+                        style={[styles.button, styles.buttonMargin]}
+                        onPress={tryLogin}
+                    >
+                        {
+                            checkingPassword ? 
+                            <ActivityIndicator size="large"  color="#0000ff"/>
+                            :
+                            <Text style={styles.buttonText}>Login</Text>
+                        }
                     </TouchableOpacity>
                 </View>
-                {error && <Text style={styles.errorText}>{error}</Text>}
-                {
-                    //<Text style={styles.linkText} onPress={() => console.log('s')}>Do you forget your password?</Text>
-                }
-                <TouchableOpacity
-                    style={[styles.button, styles.buttonMargin]}
-                    onPress={tryLogin}
-                >
-                    {
-                        checkingPassword ? 
-                        <ActivityIndicator size="large"  color="#0000ff"/>
-                        :
-                        <Text style={styles.buttonText}>Login</Text>
-                    }
-                </TouchableOpacity>
-            </View>
+            </ScrollView>
         </View>
         <StatusBar style="auto" />
     </>
@@ -162,6 +164,7 @@ const styles = StyleSheet.create({
         borderRadius: 200,
         width: 0.45 * windowWidth, 
         height: 0.45 * windowWidth,
+        alignSelf: 'center',
     },
     passwordText: {
         fontSize: 18,
@@ -171,10 +174,13 @@ const styles = StyleSheet.create({
         fontSize: 50, 
         paddingBottom: 20,
         fontFamily: 'sans-serif-thin',
+        paddingTop: 20,
+        alignSelf: 'center'
     },
     text:{
         fontSize: 18,
         paddingTop: 2,
+        alignSelf: 'center',
     },
     passwordContainer: {
         flexDirection: 'row',

@@ -70,7 +70,7 @@ function BirdItemLatestSightings(props) {
                     <View style={styles.nameAndAuthor}>
                         <Text style={styles.birdName}>{props.name}</Text>
                         <Text style={styles.text}>{approximateNumberOfDays(calculateDifferenceBetweenTwoDates(today, props.sightingDate))}</Text>
-                        <Text style={styles.text14}>{props.distance} km away {props.defaultPosition ? 'from your default position' : 'from your actual position'}</Text>
+                        <Text style={styles.text14}>{props.distance} km {props.defaultPosition ? 'from your default position' : 'from your actual position'}</Text>
                     </View>
                     <Pressable onPress={() => onPressLikeHandler()}>
                         <View style={styles.heartContainer}>

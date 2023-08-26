@@ -34,6 +34,7 @@ function UserEncyclopedia(props) {
 
     const fetchData = async () => {
         const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
+        console.log(JSON.stringify(data))
         try {
             const response = await fetch(globalVariable.API_URL + 'getbirdsbyusernamewithdistance', {
                 method: 'POST',
@@ -51,7 +52,7 @@ function UserEncyclopedia(props) {
             setIsLoadingItems(false)
           
         } catch (error) {
-            console.error('Error on getting the datas:', error)
+            console.error('Error on getting the datas on getbirdsbyusernamewithdistance:', error)
             setIsLoadingItems(false)
         }
     }
