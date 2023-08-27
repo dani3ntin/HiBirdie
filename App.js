@@ -53,8 +53,11 @@ const getLocationCoordinates = async () => {
     return currentLocation.coords
   } catch (error) {
     const storedUserData = await AsyncStorage.getItem('userData')
-    const parsedUserData = JSON.parse(storedUserData)
-    return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
+    if(storedUserData){
+      const parsedUserData = JSON.parse(storedUserData)
+      return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
+    }
+    return {latitude: 0, longitude: 0, defaultPosition: true}
   }
 }
 

@@ -34,7 +34,7 @@ function SearchUsers(props) {
       setSearchText('')
     }else{
       setSearchText(text)
-      const response = await fetch( globalVariable.API_URL + 'searchuserbyusername/' + text)
+      const response = await fetch( globalVariable.API_URL + 'searchuserbyusername/' + text + '/' + props.loggedUsername)
       const jsonData = await response.json()
       setSearchResult(jsonData)
     }

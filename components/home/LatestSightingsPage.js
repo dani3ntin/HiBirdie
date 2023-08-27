@@ -24,11 +24,15 @@ function LatestSightingsPage(props) {
     const navigation = useNavigation()
 
     useEffect(() => {
-        if(isFocused){
-            settingUserCoordinates()
-            settingFilter()
-            fetchData()
-        } 
+        const fetchDataWithCoordinates = async () => {
+            if (isFocused) {
+                const userCoordinates = await settingUserCoordinates()
+                console.log(userCoordinates)
+                settingFilter()
+                fetchData(userCoordinates.latitude, userCoordinates.longitude)
+            }
+        }
+        fetchDataWithCoordinates()
     }, [isFocused , props.username, filterMaximumDays, filterMaximumDistance])
 
     async function settingUserCoordinates(){
@@ -36,12 +40,14 @@ function LatestSightingsPage(props) {
         //console.log('storedCoordinatesUserData:')
         //console.log(storedCoordinatesUserData)
         if (storedCoordinatesUserData) {
-          const parsedUserData = JSON.parse(storedCoordinatesUserData)
-          setLatUser(parsedUserData.latitude)
-          setLonUser(parsedUserData.longitude)
-          if(parsedUserData.defaultPosition)
-            setDefaultPosition(true)
+            const parsedUserData = JSON.parse(storedCoordinatesUserData)
+            setLatUser(parsedUserData.latitude)
+            setLonUser(parsedUserData.longitude)
+            if(parsedUserData.defaultPosition)
+                setDefaultPosition(true)
+            return {latitude: parsedUserData.latitude, longitude: parsedUserData.longitude}
         }
+        return {latitude: undefined, longitude: undefined}
     }
 
     async function settingFilter(){
@@ -54,8 +60,12 @@ function LatestSightingsPage(props) {
     }
 
     
-    const fetchData = async () => {
-        const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+    async function fetchData(localLat, localLon) {
+        let data
+        if(localLat !== undefined && localLon !== undefined)
+            data = { requestingUser: props.username, latUser: localLat, lonUser: localLon, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+        else
+            data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
         //console.log('getbirdswithfilterexceptyours:')
         //console.log(data)
         try {

@@ -87,7 +87,7 @@ function FollowedPage(props) {
                             <FollowedItem 
                                 username={item.usernameFollowed}
                                 name={item.name} 
-                                profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.username + '/' + item.usernameFollowed }} 
+                                profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.username + '/' + item.usernameFollowed + globalVariable.randomStringToUpdate }} 
                                 state={editState(item.state)}
                                 onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state, item.likes, item.followers)}
                             />
