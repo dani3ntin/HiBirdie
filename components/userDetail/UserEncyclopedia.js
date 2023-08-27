@@ -17,23 +17,34 @@ function UserEncyclopedia(props) {
     const { globalVariable, setGlobalVariable } = useGlobalContext()
 
     useEffect(() => {
-        if(isFocused){
-            fetchData()
-            settingUserCoordinates()
-        } 
+        const fetchDataWithCoordinates = async () => {
+            if(isFocused){
+                const userCoordinates = await settingUserCoordinates()
+                fetchData(userCoordinates.latitude, userCoordinates.longitude)
+            } 
+        }
+        fetchDataWithCoordinates()
     }, [isFocused, props.username])
 
     async function settingUserCoordinates(){
         const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
         if (storedCoordinatesUserData) {
-          const parsedUserData = JSON.parse(storedCoordinatesUserData)
-          setLatUser(parsedUserData.latitude)
-          setLonUser(parsedUserData.longitude)
+            const parsedUserData = JSON.parse(storedCoordinatesUserData)
+            setLatUser(parsedUserData.latitude)
+            setLonUser(parsedUserData.longitude)
+            if(parsedUserData.defaultPosition)
+                setDefaultPosition(true)
+            return {latitude: parsedUserData.latitude, longitude: parsedUserData.longitude}
         }
+        return {latitude: undefined, longitude: undefined}
     }
 
-    const fetchData = async () => {
-        const data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
+    async function fetchData(localLat, localLon) {
+        let data
+        if(localLat !== undefined && localLon !== undefined)
+            data = { requestingUser: props.username, latUser: localLat, lonUser: localLon, authorUsername: props.usernameFollowed }
+        else
+            data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, authorUsername: props.usernameFollowed }
         console.log(JSON.stringify(data))
         try {
             const response = await fetch(globalVariable.API_URL + 'getbirdsbyusernamewithdistance', {
