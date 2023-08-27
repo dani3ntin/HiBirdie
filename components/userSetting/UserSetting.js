@@ -529,6 +529,8 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 20,
         paddingBottom: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
         ...shadowStyle
     },
     locationContainer: {

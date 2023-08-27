@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         borderRadius: 6,
         backgroundColor: 'white',
-        height: 70,
     },
     birdName: {
         color: 'black',

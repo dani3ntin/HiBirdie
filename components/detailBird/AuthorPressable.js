@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     friendItem: {
         borderRadius: 6,
         backgroundColor: '#e9e7e7',
-        height: 70,
         borderBlockColor: 'black',
         borderWidth: 1,
     },

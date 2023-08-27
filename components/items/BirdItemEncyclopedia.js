@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 6,
         backgroundColor: 'white',
-        height: 60,
     },
     birdName: {
         color: 'black',

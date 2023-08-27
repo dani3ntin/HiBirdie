@@ -37,26 +37,18 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      backgroundColor: '#f2f2f2',
       width: '100%',
       height: '100%'
-    },
-    avatar: {
-      width: 60,
-      height: 60,
-      borderRadius: 100,
-      marginLeft: 10
     },
     name: {
       marginLeft: 10,
       fontSize: 22,
       fontWeight: 'bold',
-      paddingRight: 100,
     },
     userName: {
       fontSize: 16,
       marginLeft: 10,
-      color:'#0685c0'
+      color:'#0004ff'
     },
     columnContainer:{
       flexDirection: 'column',
@@ -65,7 +57,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
-      padding: 17,
+      paddingLeft: 17,
+      paddingRight: 17,
     },
     pressedButton: {
         opacity: 0.3,
