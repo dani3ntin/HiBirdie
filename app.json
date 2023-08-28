@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "androidStatusBar": {
+      "backgroundColor": "#000000",
+      "translucent": false
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -27,7 +31,7 @@
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.dani3ntin.birdWatching"

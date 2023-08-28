@@ -65,15 +65,16 @@ function SearchUsers(props) {
           <View style={styles.maximumSightingDays}>
             <Text style={styles.text}>Search a user:</Text>
             <View style={styles.rowContainer}>
-              <Text style={styles.text}>@</Text><TextInput
-                  placeholder='Insert username'
-                  errorStyle={{ color: 'red' }}
-                  label='User name'
-                  value={searchText}
-                  onChangeText={text => textChangedHandler(text)}
-                  maxLength={20}
-                  style={styles.searchTextInput}
-              />
+              <Text style={styles.at}>@</Text>
+                <TextInput
+                    placeholder='Insert username'
+                    errorStyle={{ color: 'red' }}
+                    label='User name'
+                    value={searchText}
+                    onChangeText={text => textChangedHandler(text)}
+                    maxLength={20}
+                    style={styles.searchTextInput}
+                />
             </View>
           </View>
         </View>
@@ -115,12 +116,23 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   searchTextInput: {
-    fontSize: 18
+    fontSize: 18,
+    backgroundColor: '#edebeb',
+    borderRadius: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 10,
+    paddingLeft: 5,
   },
   text: {
     fontSize: 18
   },
+  at: {
+    paddingTop: 10,
+    fontSize: 18,
+  },
   rowContainer: {
+    paddingTop: 10,
     flexDirection: 'row',
 },
 });

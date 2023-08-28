@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#e9e7e7',
         borderBlockColor: 'black',
         borderWidth: 1,
+        padding: 5,
     },
     friendName: {
         color: 'black',
@@ -92,8 +93,6 @@ const styles = StyleSheet.create({
         width: 55,
         height: 55,
         borderRadius: 100,
-        marginLeft: 5,
-        marginTop: 5,
     },
     itemContent: {
         flexDirection: 'row',
