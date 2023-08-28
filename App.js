@@ -26,13 +26,19 @@ export default function App() {
   const [username, setUsername] = useState(null)
   const [coordinates, setCoordinates] = useState(null)
 
+  const fetchLocation = async () => {
+    const coordinates = await getLocationCoordinates()
+    setCoordinates(coordinates)
+    await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: coordinates.latitude, longitude: coordinates.longitude, defaultPosition: coordinates.defaultPosition}))
+  }
+
+  async function getLocationFromLogin(location){
+    setCoordinates(location)
+    await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: location.latitude, longitude: location.longitude, defaultPosition: location.defaultPosition}))
+  }
+
   useEffect(() => {
     settingUsername()
-    const fetchLocation = async () => {
-      const coordinates = await getLocationCoordinates()
-      setCoordinates(coordinates)
-      await AsyncStorage.setItem('userCoordinates', JSON.stringify({latitude: coordinates.latitude, longitude: coordinates.longitude, defaultPosition: coordinates.defaultPosition}))
-    }
     fetchLocation()
   }, [userData]);
 
@@ -75,7 +81,7 @@ async function settingUsername(){
         <NavigationContainer>
             <Stack.Navigator initialRouteName="IntroPage">
               <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage setUserData={setUserData}/>}</Stack.Screen>
-              <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData}/>}</Stack.Screen>
+              <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData} sendLocation={getLocationFromLogin}/>}</Stack.Screen>
               <Stack.Screen name="RegisterPage" options={{ headerShown: false }}>{() => <RegisterPage setUserData={setUserData}/>}</Stack.Screen>
               <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>
               <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>

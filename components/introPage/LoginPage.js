@@ -56,6 +56,7 @@ async function tryLogin(){
         if(responseData && responseData.username){
             props.setUserData(responseData)
             const userCoordinates = {latitude: responseData.xPosition, longitude: responseData.yPosition, defaultPosition: true}
+            props.sendLocation(userCoordinates)
             await AsyncStorage.setItem('userData', JSON.stringify(responseData))
             await AsyncStorage.setItem('userCoordinates', JSON.stringify(userCoordinates))
             navigation.navigate('Home')

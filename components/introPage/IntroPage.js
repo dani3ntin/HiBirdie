@@ -13,7 +13,6 @@ function IntroPage(props) {
 
   useEffect(() => {
       getUserData()
-      setIsLoadingItems(false)
   }, [])
 
   async function getUserData(){
@@ -24,6 +23,8 @@ function IntroPage(props) {
         console.log(updatedUserData)
         props.setUserData(updatedUserData)
         navigation.navigate('Home')
+      }else{
+        setIsLoadingItems(false)
       }
   }
 

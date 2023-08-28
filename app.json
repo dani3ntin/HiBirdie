@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "birdWatching",
-    "slug": "birdWatching",
+    "name": "HiBirdie",
+    "slug": "HiBirdie",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -41,7 +41,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "b8300439-18d0-4fea-a5b0-ab205ecc2703"
+        "projectId": "fd0b6f1c-caa0-491e-be74-d2d15674899e"
       }
     }
   }
