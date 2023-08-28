@@ -42,6 +42,27 @@ function IntroPage(props) {
     }
   }
 
+  function getIntroPage(){
+    if(isLoadingItems)
+      return <ActivityIndicator size="large"  color="#0000ff"/>
+    return(
+      <>
+        <TouchableOpacity
+            style={[styles.button, styles.buttonMargin]}
+            onPress={() => navigation.navigate('RegisterPage')}
+        >
+            <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+            style={[styles.button, styles.buttonMargin]}
+            onPress={() => navigation.navigate('LoginPage')}
+        >
+            <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      </>
+    )
+  }
+
   return (
     <View style={styles.container}>
         <Text style={{ fontFamily: 'sans-serif-thin', fontSize: 70 }}>HiBirdie</Text>
@@ -52,23 +73,7 @@ function IntroPage(props) {
       />
       <View style={styles.buttonContainer}>
         {
-            isLoadingItems ?
-            <ActivityIndicator size="large"  color="#0000ff"/>
-            :
-            <>
-                <TouchableOpacity
-                    style={[styles.button, styles.buttonMargin]}
-                    onPress={() => navigation.navigate('RegisterPage')}
-                >
-                    <Text style={styles.buttonText}>Register</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.button, styles.buttonMargin]}
-                    onPress={() => navigation.navigate('LoginPage')}
-                >
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-            </>
+          getIntroPage()
         }
       </View>
     </View>

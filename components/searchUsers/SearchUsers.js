@@ -18,16 +18,6 @@ function SearchUsers(props) {
       e.stopPropagation();
   }
 
-  function editState(state){
-    if(state !== null){
-        if(state.length > 35){
-            const truncatedState = state.slice(0, 30)
-            return truncatedState + "..."
-        }
-    }
-    return state
-}
-
   async function textChangedHandler(text){
     if(text===''){
       setSearchResult([])

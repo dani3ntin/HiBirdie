@@ -32,8 +32,6 @@ function UserEncyclopedia(props) {
             const parsedUserData = JSON.parse(storedCoordinatesUserData)
             setLatUser(parsedUserData.latitude)
             setLonUser(parsedUserData.longitude)
-            if(parsedUserData.defaultPosition)
-                setDefaultPosition(true)
             return {latitude: parsedUserData.latitude, longitude: parsedUserData.longitude}
         }
         return {latitude: undefined, longitude: undefined}
