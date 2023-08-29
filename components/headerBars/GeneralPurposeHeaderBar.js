@@ -3,7 +3,7 @@ import { View, Text, Pressable, StyleSheet, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { useGlobalContext } from '../globalContext/GlobalContext'
 
-const RegisterHeaderBar = (props) => {
+const GeneralPurposeHeaderBar = (props) => {
   const { globalVariable, setGlobalVariable } = useGlobalContext()
   const CustomIcon = ({ name, size, color }) => {
     const IconComponent = Icon;
@@ -25,12 +25,12 @@ const RegisterHeaderBar = (props) => {
             </View>
           </Pressable>
         </View>
-        <Text style={styles.title}>Register</Text>
+        <Text style={styles.title}>{props.text}</Text>
       </View>
   );
 };
   
-export default RegisterHeaderBar
+export default GeneralPurposeHeaderBar
 
 const styles = StyleSheet.create({
     container: {

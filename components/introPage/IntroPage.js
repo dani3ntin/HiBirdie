@@ -3,6 +3,7 @@ import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions, ActivityIn
 import { useNavigation } from '@react-navigation/native'
 import { useGlobalContext } from '../globalContext/GlobalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useIsFocused } from '@react-navigation/native'
 
 const windowWidth = Dimensions.get('window').width
 
@@ -10,10 +11,11 @@ function IntroPage(props) {
   const [isLoadingItems, setIsLoadingItems] = useState(true)
   const navigation = useNavigation()
   const { globalVariable, setGlobalVariable } = useGlobalContext()
+  const isFocused = useIsFocused()
 
   useEffect(() => {
       getUserData()
-  }, [])
+  }, [isFocused])
 
   async function getUserData(){
       const userData = await AsyncStorage.getItem('userData')

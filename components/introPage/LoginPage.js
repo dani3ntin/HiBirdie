@@ -4,9 +4,9 @@ import { View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Text, Activit
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Platform, Dimensions, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import LoginHeaderBar from '../headerBars/LoginHeaderBar'
 import BackIcon from 'react-native-vector-icons/AntDesign'
 import { useGlobalContext } from '../globalContext/GlobalContext'
+import GeneralPurposeHeaderBar from '../headerBars/GeneralPurposeHeaderBar'
 
 const windowWidth = Dimensions.get('window').width
   
@@ -73,7 +73,7 @@ async function tryLogin(){
   return (
     <>
         <View style={styles.headerContainer}>
-            <LoginHeaderBar onBackButtonPress={() => navigation.goBack()}/>
+            <GeneralPurposeHeaderBar text={'Login'} onBackButtonPress={() => navigation.goBack()}/>
         </View>
         <View style={styles.container}>
             <ScrollView>

@@ -375,7 +375,7 @@ function UserSetting(props){
                                     styles.colorButtonPurple,
                                     pressed && { opacity: 0.8, backgroundColor: '#929292' }
                                 ]} 
-                                onPress={() => pickColor('#adb2fc', '#c0daf8', '#bcc9ff')}
+                                onPress={() => pickColor('#b8bdff', '#deeeff', '#bcc9ff')}
                                 >
                             </Pressable>
                             <Pressable

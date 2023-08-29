@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, Dimensions } from "react-native"
+import { StyleSheet, View, Text, Image, Dimensions, Pressable } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Feather } from '@expo/vector-icons'
 import { useGlobalContext } from "../globalContext/GlobalContext"
@@ -26,6 +26,10 @@ function UserUpperInfos(props){
         height: userImageHeight || 200,
     }
 
+    function followersButtonPressedHandler(){
+        props.followersButtonPressed()
+    }
+
     return(
         <>
             {
@@ -47,7 +51,7 @@ function UserUpperInfos(props){
                         style={styles.heart}
                     />
                 </View>
-                <View style={[styles.container, styles.flexContainer]}>
+                <Pressable onPress={followersButtonPressedHandler} style={[styles.container, styles.flexContainer]}>
                     <Text style={styles.followersText}>Followers: {props.followers}</Text>
                     <Feather
                         name={"user"}
@@ -55,7 +59,7 @@ function UserUpperInfos(props){
                         color={"blue"}
                         style={styles.heart}
                     />
-                </View>
+                </Pressable>
             </View>
             {
                 props.state === '' || props.state === null ?

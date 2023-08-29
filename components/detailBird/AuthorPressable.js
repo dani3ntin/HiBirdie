@@ -23,7 +23,7 @@ function AuthorPressable(props) {
         }
         const imageMetadataAuthor = JSON.parse(responseAuthor.headers.get('imageInfos'))
         setAuthorData(imageMetadataAuthor)
-        const responseAuthorFollowers = await fetch(globalVariable.API_URL + 'getfollowersbyusername/' + props.authorUsername)
+        const responseAuthorFollowers = await fetch(globalVariable.API_URL + 'getfollowersbyusername/' + props.authorUsername + '/' + props.loggedUsername)
         const responseDataAuthorFollowers = await responseAuthorFollowers.json()
         setNFollowersAuthor(responseDataAuthorFollowers.length)
         setIsLoadingItems(false)

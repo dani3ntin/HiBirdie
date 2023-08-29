@@ -17,6 +17,7 @@ function UserDetailPage(){
   const [likes, setLikes] = useState(props.likes)
   const [followers, setFollowers] = useState(props.followers)
   const [isLoggedUserFollowing, setIsLoggedUserFollowing] = useState(props.isLoggedUserFollowing)
+  const followButton = getFollowButton()
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -30,6 +31,10 @@ function UserDetailPage(){
       navigation.goBack()
   }
 
+  function followersButtonPressedHandler(){
+    navigation.navigate('ShowFollowersPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.name, stateFollowed: props.state, likesFollowed: props.likes,
+      nOfFollowersFollowed: props.followers, isLoggedUserFollowing: props.isLoggedUserFollowing, loggedUsername: props.loggedUsername})
+  }
 
   useEffect(() => {
     console.log(props)
@@ -83,6 +88,50 @@ function UserDetailPage(){
     setIsLoggedUserFollowing(!isLoggedUserFollowing)
   }
 
+  function getFollowButton(){
+    if(props.loggedUsername !== props.usernameFollowed)
+      if(isLoggedUserFollowing){
+        return(
+          <Pressable 
+            style={({ pressed }) => [
+              styles.floatingButton,
+              pressed && { opacity: 0.8 }
+            ]}
+            onPress={followAndUnfollowButtonHandler} 
+          >
+            <Text style={styles.buttonText}>Unfollow</Text>
+            <Feather
+                name={"user-minus"}
+                size={32}
+                color={"red"}
+                style={styles.heart}
+            />
+          </Pressable>
+        )
+      }
+      else{
+        return (
+          <Pressable 
+            style={({ pressed }) => [
+              styles.floatingButton,
+              pressed && { opacity: 0.8 }
+            ]}
+            onPress={followAndUnfollowButtonHandler} 
+          >
+          <Text style={styles.buttonText}>Follow</Text>
+          <Feather
+              name={"user-plus"}
+              size={32}
+              color={"green"}
+              style={styles.heart}
+          />
+          </Pressable>
+        )
+      }
+    else
+      return null
+  }
+
   function getUserDetails(){
     return(
       <>
@@ -96,7 +145,8 @@ function UserDetailPage(){
             />
           </View>
           <ScrollView>
-            <UserUpperInfos state={props.state} likes={likes} followers={followers} loggedUsername={props.loggedUsername} usernameFollowed={props.usernameFollowed} includeImage={true}/>
+            <UserUpperInfos state={props.state} likes={likes} followers={followers} loggedUsername={props.loggedUsername} usernameFollowed={props.usernameFollowed} 
+            includeImage={true} followersButtonPressed={followersButtonPressedHandler}/>
             <UserEncyclopedia 
               username={props.loggedUsername} 
               usernameFollowed={props.usernameFollowed} 
@@ -106,36 +156,9 @@ function UserDetailPage(){
             />
             <View style={styles.bottomFiller}></View>
           </ScrollView>
-          <Pressable 
-            style={({ pressed }) => [
-              styles.floatingButton,
-              pressed && { opacity: 0.8 }
-            ]}
-            onPress={followAndUnfollowButtonHandler} 
-          >
-            {
-              isLoggedUserFollowing ? 
-              <>
-                <Text style={styles.buttonText}>Unfollow</Text>
-                <Feather
-                    name={"user-minus"}
-                    size={32}
-                    color={"red"}
-                    style={styles.heart}
-                />
-              </>
-              :
-              <>
-                <Text style={styles.buttonText}>Follow</Text>
-                <Feather
-                    name={"user-plus"}
-                    size={32}
-                    color={"green"}
-                    style={styles.heart}
-                />
-              </>
-            }
-          </Pressable>
+          {
+            followButton
+          }
         </View>
       </>
     )

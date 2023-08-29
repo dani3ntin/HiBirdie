@@ -5,7 +5,7 @@ const GlobalContext = createContext()
 
 export const GlobalProvider = ({ children }) => {
 
-  const [globalVariable, setGlobalVariable] = useState({backgroundColor: '#adb2fc', headerColor: '#c0daf8', buttonColor: '#bcc9ff', 
+  const [globalVariable, setGlobalVariable] = useState({backgroundColor: '#b8bdff', headerColor: '#deeeff', buttonColor: '#bcc9ff', 
   API_URL: 'https://www.hibirdie.it/api/', randomStringToUpdate: '?' + (Math.random() * 100)})
 
   useEffect(() => {

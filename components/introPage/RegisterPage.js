@@ -5,7 +5,7 @@ import { View, StyleSheet, StatusBar, TextInput, TouchableOpacity, Text, Activit
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Platform, Dimensions, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import RegisterHeaderBar from '../headerBars/RegisterHeaderBar'
+import GeneralPurposeHeaderBar from '../headerBars/GeneralPurposeHeaderBar'
 import { useGlobalContext } from '../globalContext/GlobalContext'
 import MapInputRegisterComponent from './MapInputRegisterComponent'
 
@@ -125,7 +125,7 @@ function getTextCheckIfUsernameIsUsed(){
   return (
     <>
         <View style={styles.headerContainer}>
-            <RegisterHeaderBar onBackButtonPress={() => navigation.goBack()}/>
+        <GeneralPurposeHeaderBar text={'Register'} onBackButtonPress={() => navigation.goBack()}/>
         </View>
         <View style={styles.container}>
             <ScrollView>
