@@ -24,6 +24,10 @@ function UserDetailPage(){
     navigation.navigate('ShowFollowersPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.nameFollowed, loggedUsername: props.loggedUsername})
   }
 
+  function likesButtonPressedHandler(){
+    navigation.navigate('ShowLikesPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.nameFollowed, loggedUsername: props.loggedUsername})
+  }
+
   useEffect(() => {
     console.log(props)
     setLikes(props.likesFollowed)
@@ -134,7 +138,7 @@ function UserDetailPage(){
           </View>
           <ScrollView>
             <UserUpperInfos state={props.stateFollowed} likes={likes} followers={followers} loggedUsername={props.loggedUsername} usernameFollowed={props.usernameFollowed} 
-            includeImage={true} followersButtonPressed={followersButtonPressedHandler}/>
+            includeImage={true} followersButtonPressed={followersButtonPressedHandler} likesButtonPressed={likesButtonPressedHandler}/>
             <UserEncyclopedia 
               username={props.loggedUsername} 
               usernameFollowed={props.usernameFollowed} 

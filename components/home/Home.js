@@ -37,11 +37,7 @@ useEffect(() => {
 }, [])
 
 const handleBackPress = () => {
-  if (navigation.canGoBack()) {
-    navigation.goBack();
-    return true
-  }
-  return false
+  return true
 }
 
   return (

@@ -12,7 +12,7 @@ function ShowLikesPage(){
     const route = useRoute()
     const props = route.params
     const [isLoadingItems, setIsLoadingItems] = useState(true)
-    const [followersData, setFollowersData] = useState(true)
+    const [usersData, setUsersData] = useState(true)
 
     useEffect(() => {
         fetchData()
@@ -21,12 +21,12 @@ function ShowLikesPage(){
 
     async function fetchData(){
         try {
-            const response = await fetch( globalVariable.API_URL + 'getfollowersbyusername/' + props.usernameFollowed + '/' + props.loggedUsername)
+            const response = await fetch( globalVariable.API_URL + 'getlikesbyusername/' + props.usernameFollowed + '/' + props.loggedUsername)
             if (!response.ok) {
               throw new Error('Network response was not ok')
             }
             const jsonData = await response.json()
-            setFollowersData(jsonData)
+            setUsersData(jsonData)
             setIsLoadingItems(false)
             
           } catch (error) {
@@ -45,14 +45,14 @@ function ShowLikesPage(){
         return state
     }
 
-    function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
+    function onUserPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
         navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, nameFollowed: nameFollowed, stateFollowed: stateFollowed, likesFollowed: likesFollowed,
             nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})
     }
 
     function getHeaderBarText(){
-        if(props.usernameFollowed === props.loggedUsername) return 'My followers'
-        else return props.nameFollowed + '\'s followers'
+        if(props.usernameFollowed === props.loggedUsername) return 'Who liked my sightings'
+        else return 'Who liked ' + props.nameFollowed + '\'s sightings'
     }
 
   function getUserDetails(){
@@ -73,20 +73,20 @@ function ShowLikesPage(){
                     <View style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
                         <ScrollView style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
                             {
-                                followersData.length === 0 ?
+                                usersData.length === 0 ?
                                     <View style={styles.textContainer}>
-                                        <Text style={styles.text}>No one is following!</Text>
+                                        <Text style={styles.text}>No one put like!</Text>
                                     </View>
                                 :
                                 <View style={styles.ItemsContainer}>
-                                    {followersData.map((item) => (
-                                    <View key={item.id}>
+                                    {usersData.map((item) => (
+                                    <View key={item.user}>
                                         <FollowedItem 
-                                            username={item.usernameFollowed}
+                                            username={item.user}
                                             name={item.name} 
-                                            profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.usernameFollowed + '/' + item.username + globalVariable.randomStringToUpdate }} 
-                                            state={editState(item.state)}
-                                            onFollowerPressed={() => onFollowerPressedHandler(item.username, item.name, item.state, item.likes, item.followers, item.isLoggedUserFollowing)}
+                                            profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.user + '/' + item.user + globalVariable.randomStringToUpdate }} 
+                                            state={'Number of likes placed: ' + item.nLikes}
+                                            onFollowerPressed={() => onUserPressedHandler(item.user, item.name, item.state, item.likes, item.followers, item.isLoggedUserFollowing)}
                                         />
                                     </View>
                                     ))}
