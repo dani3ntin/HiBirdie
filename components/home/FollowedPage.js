@@ -40,8 +40,8 @@ function FollowedPage(props) {
     }
 
     function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed){
-        navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, name: nameFollowed, state: stateFollowed, likes: likesFollowed,
-        followers: nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
+        navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, nameFollowed: nameFollowed, stateFollowed: stateFollowed, likesFollowed: likesFollowed,
+            nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
     }
 
     function editState(state){

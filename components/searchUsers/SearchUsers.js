@@ -31,8 +31,8 @@ function SearchUsers(props) {
   }
 
   function onFollowerPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
-    navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, name: nameFollowed, state: stateFollowed, likes: likesFollowed,
-    followers: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})
+    navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, nameFollowed: nameFollowed, stateFollowed: stateFollowed, likesFollowed: likesFollowed,
+      nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})
     console.log(props.loggedUsername)
     closeModal()
   }

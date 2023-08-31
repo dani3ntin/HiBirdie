@@ -14,8 +14,8 @@ function UserDetailPage(){
   const route = useRoute()
   const props = route.params
 
-  const [likes, setLikes] = useState(props.likes)
-  const [followers, setFollowers] = useState(props.followers)
+  const [likes, setLikes] = useState(props.likesFollowed)
+  const [followers, setFollowers] = useState(props.nOfFollowersFollowed)
   const [isLoggedUserFollowing, setIsLoggedUserFollowing] = useState(props.isLoggedUserFollowing)
   const followButton = getFollowButton()
 
@@ -32,18 +32,18 @@ function UserDetailPage(){
   }
 
   function followersButtonPressedHandler(){
-    navigation.navigate('ShowFollowersPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.name, stateFollowed: props.state, likesFollowed: props.likes,
-      nOfFollowersFollowed: props.followers, isLoggedUserFollowing: props.isLoggedUserFollowing, loggedUsername: props.loggedUsername})
+    navigation.navigate('ShowFollowersPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.nameFollowed, stateFollowed: props.stateFollowed, likesFollowed: props.likesFollowed,
+      nOfFollowersFollowed: props.nOfFollowersFollowed, isLoggedUserFollowing: props.isLoggedUserFollowing, loggedUsername: props.loggedUsername})
   }
 
   useEffect(() => {
     console.log(props)
-    setLikes(props.likes)
-  }, [props.likes, props.isLoggedUserFollowing])
+    setLikes(props.likesFollowed)
+  }, [props.likesFollowed, props.isLoggedUserFollowing])
 
   useEffect(() => {
-    setFollowers(props.followers)
-  }, [props.followers])
+    setFollowers(props.nOfFollowersFollowed)
+  }, [props.nOfFollowersFollowed])
 
   useEffect(() => {
     setIsLoggedUserFollowing(props.isLoggedUserFollowing)
@@ -139,18 +139,18 @@ function UserDetailPage(){
           <View style={styles.headerContainer}>
             <DetailUserHeaderBar 
               username={props.usernameFollowed}
-              name={props.name} 
+              name={props.nameFollowed} 
               userAvatar={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
               onBackButtonPress={() => navigation.goBack()}
             />
           </View>
           <ScrollView>
-            <UserUpperInfos state={props.state} likes={likes} followers={followers} loggedUsername={props.loggedUsername} usernameFollowed={props.usernameFollowed} 
+            <UserUpperInfos state={props.stateFollowed} likes={likes} followers={followers} loggedUsername={props.loggedUsername} usernameFollowed={props.usernameFollowed} 
             includeImage={true} followersButtonPressed={followersButtonPressedHandler}/>
             <UserEncyclopedia 
               username={props.loggedUsername} 
               usernameFollowed={props.usernameFollowed} 
-              name={props.name} 
+              name={props.nameFollowed} 
               addLikeToCounter={addLikeToCounter} 
               removeLikeToCounter={removeLikeToCounter}
             />
