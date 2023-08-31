@@ -35,16 +35,6 @@ function ShowLikesPage(){
           }
     }
 
-    function editState(state){
-        if(state !== null){
-            if(state.length > 35){
-                const truncatedState = state.slice(0, 30)
-                return truncatedState + "..."
-            }
-        }
-        return state
-    }
-
     function onUserPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
         navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, nameFollowed: nameFollowed, stateFollowed: stateFollowed, likesFollowed: likesFollowed,
             nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})

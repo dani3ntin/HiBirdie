@@ -34,17 +34,15 @@ function UserSettings(props){
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
-        handleBackPress
+        handleBackPress,
         );
     
         return () => backHandler.remove()
     }, [])
       
     const handleBackPress = () => {
-        if(editButtonText === 'Save changes'){
+        if (navigation.canGoBack()) {
             closePageAlert()
-        }else{
-            navigation.goBack()
         }
         return true
     }

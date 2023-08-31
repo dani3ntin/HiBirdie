@@ -30,7 +30,6 @@ function BirdDetailPageWithAuthor(){
         'hardwareBackPress',
         handleBackPress
         );
-    
         return () => backHandler.remove()
     }, [])
       

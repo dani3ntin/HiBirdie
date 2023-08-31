@@ -40,7 +40,7 @@ function AddNewBird(props){
       
     const handleBackPress = () => {
         if (navigation.canGoBack()) {
-          navigation.goBack();
+            closePageAlert();
           return true
         }
         return false
