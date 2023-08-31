@@ -35,7 +35,11 @@ function BirdDetailPageWithAuthor(){
     }, [])
       
     const handleBackPress = () => {
-        navigation.goBack()
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true
+        }
+        return false
     }
 
     useEffect(() => {

@@ -39,8 +39,11 @@ function AddNewBird(props){
     }, [])
       
     const handleBackPress = () => {
-        closePageAlert()
-        return true
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true
+        }
+        return false
     }
 
     function setLatitude(coordinate){

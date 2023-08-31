@@ -11,13 +11,14 @@ import * as Location from 'expo-location'
 import BirdDetailPageWithoutAuthor from './components/detailBird/BirdDetailPageWithoutAuthor'
 import BirdDetailPageWithAuthor from './components/detailBird/BirdDetailPageWithAuthor'
 import UserDetailPage from './components/userDetail/UserDetailPage'
-import UserSetting from './components/userSetting/UserSetting'
+import UserSettings from './components/userSettings/UserSettings'
 import { GlobalProvider } from './components/globalContext/GlobalContext'
 import IntroPage from './components/introPage/IntroPage'
 import LoginPage from './components/introPage/LoginPage'
 import RegisterPage from './components/introPage/RegisterPage'
-import * as Sentry from '@sentry/react-native'
+//import * as Sentry from '@sentry/react-native'
 import ShowFollowersPage from './components/userDetail/ShowFollowersPage'
+import ShowLikesPage from './components/userDetail/ShowLikesPage'
 
 const Stack = createStackNavigator()
 
@@ -43,10 +44,11 @@ export default function App() {
     fetchLocation()
   }, [userData]);
 
-
+/*
 Sentry.init({ 
   dsn: 'https://4e797a3d4a7c93316b5ed9a767f1ef17@o4505745355702272.ingest.sentry.io/4505745357012992', 
 });
+*/
 
 
 const getLocationCoordinates = async () => {
@@ -91,7 +93,8 @@ async function settingUsername(){
               <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
               <Stack.Screen name="UserDetailPage" options={{ headerShown: false }} component={UserDetailPage} />
               <Stack.Screen name="ShowFollowersPage" options={{ headerShown: false }} component={ShowFollowersPage} />
-              <Stack.Screen name="UserSetting" options={{ headerShown: false }}>{() => <UserSetting userData={userData} setUserData={setUserData}/>}</Stack.Screen>
+              <Stack.Screen name="ShowLikesPage" options={{ headerShown: false }} component={ShowLikesPage} />
+              <Stack.Screen name="UserSettings" options={{ headerShown: false }}>{() => <UserSettings userData={userData} setUserData={setUserData}/>}</Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
       </GlobalProvider>

@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from '../globalContext/GlobalContext'
 import FollowedItem from '../items/FollowedItem'
 
-function ShowFollowersPage(){
+function ShowLikesPage(){
     const { globalVariable, setGlobalVariable } = useGlobalContext()
     const navigation = useNavigation()
     const route = useRoute()
@@ -17,14 +17,6 @@ function ShowFollowersPage(){
     useEffect(() => {
         fetchData()
         console.log(props)
-    }, [])
-
-    useEffect(() => {
-        const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            handleBackPress
-        );
-        return () => backHandler.remove()
     }, [])
 
     async function fetchData(){
@@ -42,11 +34,6 @@ function ShowFollowersPage(){
             setIsLoadingItems(false)
           }
     }
-    
-    const handleBackPress = () => {
-        navigation.navigate('UserDetailPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.nameFollowed, stateFollowed: props.stateFollowed, likesFollowed: props.likesFollowed,
-            nOfFollowersFollowed: props.nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
-    }
 
     function editState(state){
         if(state !== null){
@@ -63,11 +50,16 @@ function ShowFollowersPage(){
             nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})
     }
 
+    function getHeaderBarText(){
+        if(props.usernameFollowed === props.loggedUsername) return 'My followers'
+        else return props.nameFollowed + '\'s followers'
+    }
+
   function getUserDetails(){
     return(
         <View style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
             <View style={styles.headerContainer}>
-                <GeneralPurposeHeaderBar text={props.nameFollowed + '\'s followers'}
+                <GeneralPurposeHeaderBar text={getHeaderBarText()}
                 onBackButtonPress={() => navigation.goBack()}
                 />
             </View>
@@ -117,7 +109,7 @@ function ShowFollowersPage(){
     )
 }
 
-export default ShowFollowersPage
+export default ShowLikesPage
 
 const shadowStyle = Platform.select({
   ios: {

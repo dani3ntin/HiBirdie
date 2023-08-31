@@ -41,8 +41,11 @@ function EditBird(){
     }, [])
       
     const handleBackPress = () => {
-        closePageAlert()
-        return true
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true
+        }
+        return false
     }
 
     useEffect(() => {

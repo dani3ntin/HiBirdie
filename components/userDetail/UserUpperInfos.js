@@ -29,6 +29,9 @@ function UserUpperInfos(props){
     function followersButtonPressedHandler(){
         props.followersButtonPressed()
     }
+    function likesButtonPressedHandler(){
+        props.likesButtonPressed()
+    }
 
     return(
         <>
@@ -42,7 +45,7 @@ function UserUpperInfos(props){
                 : null
             }
             <View style={styles.rowContainer}>
-                <View style={[styles.container, styles.flexContainer]}>
+                <Pressable onPress={likesButtonPressedHandler} style={[styles.container, styles.flexContainer]}>
                     <Text style={styles.likesText}>Likes: {props.likes}</Text>
                     <MaterialCommunityIcons
                         name={"heart"}
@@ -50,7 +53,7 @@ function UserUpperInfos(props){
                         color={"red"}
                         style={styles.heart}
                     />
-                </View>
+                </Pressable>
                 <Pressable onPress={followersButtonPressedHandler} style={[styles.container, styles.flexContainer]}>
                     <Text style={styles.followersText}>Followers: {props.followers}</Text>
                     <Feather

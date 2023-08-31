@@ -19,21 +19,9 @@ function UserDetailPage(){
   const [isLoggedUserFollowing, setIsLoggedUserFollowing] = useState(props.isLoggedUserFollowing)
   const followButton = getFollowButton()
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    handleBackPress
-    );
-    return () => backHandler.remove()
-  }, [])
-    
-  const handleBackPress = () => {
-      navigation.goBack()
-  }
 
   function followersButtonPressedHandler(){
-    navigation.navigate('ShowFollowersPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.nameFollowed, stateFollowed: props.stateFollowed, likesFollowed: props.likesFollowed,
-      nOfFollowersFollowed: props.nOfFollowersFollowed, isLoggedUserFollowing: props.isLoggedUserFollowing, loggedUsername: props.loggedUsername})
+    navigation.navigate('ShowFollowersPage', {usernameFollowed: props.usernameFollowed, nameFollowed: props.nameFollowed, loggedUsername: props.loggedUsername})
   }
 
   useEffect(() => {

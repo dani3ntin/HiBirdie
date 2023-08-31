@@ -10,7 +10,7 @@ const HomeHeaderBar = (props) => {
   const navigation = useNavigation()
 
   function userPressedHandler(){
-    navigation.navigate('UserSetting')
+    navigation.navigate('UserSettings')
   }
     return (
       <TouchableOpacity onPress={userPressedHandler}>

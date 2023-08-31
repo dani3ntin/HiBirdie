@@ -37,8 +37,11 @@ useEffect(() => {
 }, [])
 
 const handleBackPress = () => {
-  //console.log(globalVariable.API_URL)
-  return true
+  if (navigation.canGoBack()) {
+    navigation.goBack();
+    return true
+  }
+  return false
 }
 
   return (

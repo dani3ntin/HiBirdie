@@ -5,8 +5,13 @@ const GlobalContext = createContext()
 
 export const GlobalProvider = ({ children }) => {
 
-  const [globalVariable, setGlobalVariable] = useState({backgroundColor: '#b8bdff', headerColor: '#deeeff', buttonColor: '#bcc9ff', 
-  API_URL: 'https://www.hibirdie.it/api/', randomStringToUpdate: '?' + (Math.random() * 100)})
+  const [globalVariable, setGlobalVariable] = useState({
+    backgroundColor: '#deeeff', 
+    headerColor: '#b8bdff',
+    buttonColor: '#bcc9ff', 
+    API_URL: 'https://www.hibirdie.it/api/', 
+    randomStringToUpdate: '?' + (Math.random() * 100),
+  })
 
   useEffect(() => {
     initializeGlobalVariable()
@@ -16,10 +21,13 @@ export const GlobalProvider = ({ children }) => {
     const applicationColor = await AsyncStorage.getItem('applicationColor')
     const parsedColor = JSON.parse(applicationColor)
     if(applicationColor !== null){
-      setGlobalVariable({backgroundColor: parsedColor.backgroundColor, headerColor: parsedColor.headerColor, buttonColor: parsedColor.buttonColor, 
-        API_URL: 'https://www.hibirdie.it/api/', randomStringToUpdate: '?' + (Math.random() * 100)})
-        console.log('PARSED COLOR')
-      console.log(parsedColor)
+      setGlobalVariable({
+        backgroundColor: parsedColor.backgroundColor, 
+        headerColor: parsedColor.headerColor, 
+        buttonColor: parsedColor.buttonColor, 
+        API_URL: 'https://www.hibirdie.it/api/', 
+        randomStringToUpdate: '?' + (Math.random() * 100),
+      })
     }
   }
 
