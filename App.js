@@ -54,27 +54,40 @@ Sentry.init({
 const getLocationCoordinates = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync()
   if (status !== 'granted') {
-    console.log('Permesso di geolocalizzazione non concesso');
-    return null;
+    const storedLocation = getStoredLocationIfPresent()
+    if(storedLocation) return storedLocation
+    return {latitude: 0, longitude: 0, defaultPosition: true}
   }
   try {
     const currentLocation = await Location.getCurrentPositionAsync({})
     return currentLocation.coords
   } catch (error) {
-    const storedUserData = await AsyncStorage.getItem('userData')
-    if(storedUserData){
-      const parsedUserData = JSON.parse(storedUserData)
-      return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
-    }
+    const storedLocation = getStoredLocationIfPresent()
+    if(storedLocation) return storedLocation
     return {latitude: 0, longitude: 0, defaultPosition: true}
   }
 }
 
-async function settingUsername(){
+async function getStoredLocationIfPresent(){
   const storedUserData = await AsyncStorage.getItem('userData')
-  if (storedUserData) {
+  if(storedUserData){
     const parsedUserData = JSON.parse(storedUserData)
-    setUsername(parsedUserData.username)
+    return {latitude: parsedUserData.xPosition, longitude: parsedUserData.yPosition, defaultPosition: true}
+  }
+  else return null
+}
+
+async function settingUsername(){
+  if(userData){
+    setUsername(userData.username)
+  }else{
+    const storedUserData = await AsyncStorage.getItem('userData')
+    console.log('storedUserData')
+    console.log(JSON.parse(storedUserData))
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData)
+      setUsername(parsedUserData.username)
+    }
   }
 }
 
