@@ -44,6 +44,7 @@ async function tryLogin(){
     }
     setCheckingPassword(true)
     try {
+        console.log(globalVariable.API_URL + 'login')
         const response = await fetch( globalVariable.API_URL + 'login', {
             method: 'POST',
             headers: {

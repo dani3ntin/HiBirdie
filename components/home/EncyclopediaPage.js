@@ -70,7 +70,7 @@ function EncyclopediaPage(props) {
                                 <BirdItemEncyclopedia 
                                 id={item.id} 
                                 name={item.name} 
-                                image={{ uri: globalVariable.API_URL + 'getbird/' + item.id + '/' + props.username + globalVariable.randomStringToUpdate }} 
+                                image={{ uri: globalVariable.API_URL + 'getbirdicon/' + item.id + globalVariable.randomStringToUpdate }} 
                                 sightingDate={changeDateFormatToDDMMYYYY(item.sightingDate)} 
                                 onBirdPressed={openDetailBirdPage}/>
                             </View>
