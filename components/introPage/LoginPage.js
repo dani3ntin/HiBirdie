@@ -77,7 +77,7 @@ async function tryLogin(){
         </View>
         <View style={styles.container}>
             <ScrollView>
-                <Text style={styles.welcomeText}>Welcome back!</Text>
+                <Text style={[platformFont, styles.welcomeText]}>Welcome back!</Text>
                 <Image
                     source={require('../../assets/images/introImages/intro1.jpg')} 
                     style={styles.image}
@@ -142,6 +142,16 @@ const shadowStyle = Platform.select({
     default: {},
 })
 
+const platformFont = Platform.select({
+    ios: {
+      fontFamily: 'AvenirNext-UltraLight'
+    },
+    android: {
+      fontFamily: 'sans-serif-thin'
+    },
+    default: {},
+})
+
 const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: 'row',
@@ -176,7 +186,6 @@ const styles = StyleSheet.create({
     welcomeText:{
         fontSize: 50, 
         paddingBottom: 20,
-        fontFamily: 'sans-serif-thin',
         paddingTop: 20,
         alignSelf: 'center'
     },

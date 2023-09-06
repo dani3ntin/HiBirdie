@@ -68,8 +68,8 @@ function IntroPage(props) {
 
   return (
     <View style={styles.container}>
-        <Text style={{ fontFamily: 'sans-serif-thin', fontSize: 70 }}>HiBirdie</Text>
-        <Text style={{ fontFamily: 'sans-serif-thin', fontSize: 30, paddingBottom: 20 }}>Share your bird watching </Text>
+        <Text style={[platformFont, {fontSize: 70 }]}>HiBirdie</Text>
+        <Text style={[platformFont, { fontSize: 30, paddingBottom: 20 }]}>Share your bird watching </Text>
       <Image
         source={require('../../assets/images/introImages/intro2.jpg')} 
         style={styles.image}
@@ -83,7 +83,20 @@ function IntroPage(props) {
   );
 }
 
-export default IntroPage;
+export default IntroPage
+
+//sans-serif-thin
+//AvenirNext-UltraLight
+
+const platformFont = Platform.select({
+  ios: {
+    fontFamily: 'AvenirNext-UltraLight'
+  },
+  android: {
+    fontFamily: 'sans-serif-thin'
+  },
+  default: {},
+})
 
 const styles = StyleSheet.create({
   container: {

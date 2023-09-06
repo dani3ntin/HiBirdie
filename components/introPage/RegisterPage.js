@@ -129,7 +129,7 @@ function getTextCheckIfUsernameIsUsed(){
         </View>
         <View style={styles.container}>
             <ScrollView>
-                <Text style={styles.welcomeText}>Oh, a new face!</Text>
+                <Text style={[platformFont, styles.welcomeText]}>Oh, a new face!</Text>
                 <Text style={styles.text}>Please insert your data to register</Text>
                 <View style={styles.ItemsContainer}>
                     {
@@ -229,6 +229,16 @@ const shadowStyle = Platform.select({
     default: {},
 })
 
+const platformFont = Platform.select({
+    ios: {
+      fontFamily: 'AvenirNext-UltraLight'
+    },
+    android: {
+      fontFamily: 'sans-serif-thin'
+    },
+    default: {},
+})
+
 const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: 'row',
@@ -264,7 +274,6 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         fontSize: 50, 
         paddingBottom: 20,
-        fontFamily: 'sans-serif-thin',
         alignSelf: 'center'
     },
     text:{
