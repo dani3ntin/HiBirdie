@@ -1,7 +1,8 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, BackHandler } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, BackHandler, Modal, TouchableOpacity } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import { calculateFullScreenImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
 import AuthorPressable from "./AuthorPressable"
 import TextInDetailBird from "./TextInDetailBird"
 import MapViewInDetailBird from "./MapViewInDetailBird"
@@ -10,8 +11,10 @@ import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import { useIsFocused } from "@react-navigation/native"
+import FullScreenImageModal from "./FullScreenImageModal"
 
 const windowWidth = Dimensions.get('window').width
+const windowHeight = Dimensions.get('window').height
 
 function BirdDetailPageWithAuthor(){
     const isFocused = useIsFocused()
@@ -24,6 +27,9 @@ function BirdDetailPageWithAuthor(){
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
+    const [fullScreenBirdImageHeight, setFullScreenBirdImageHeight] = useState(0)
+    const [fullScreenBirdImageWidth, setFullScreenBirdImageWidth] = useState(0)
+    const [isModalVisible, setIsModalVisible] = useState(false)
 
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
@@ -44,6 +50,7 @@ function BirdDetailPageWithAuthor(){
     useEffect(() => {
         setIsLoadingBirdData(true)
         calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, 50, setBirdImageWidth, setBirdImageHeight)
+        calculateFullScreenImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, setFullScreenBirdImageWidth, setFullScreenBirdImageHeight)
         fetchData()
     }, [isFocused])
 
@@ -67,9 +74,25 @@ function BirdDetailPageWithAuthor(){
         width: birdImageWidth || 200,
         height: birdImageHeight || 200,
     }
+
+    function closeFullScreenImageModal(){
+        setIsModalVisible(false)
+    }
       
     function getBirdDetails(){
         return(
+            <>
+            {
+                isModalVisible ?
+                <FullScreenImageModal 
+                    image={globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10)} 
+                    width={fullScreenBirdImageWidth} 
+                    height={fullScreenBirdImageHeight}
+                    closeModal={closeFullScreenImageModal}
+                />
+                :
+                null
+            }
             <View style={[styles.pageContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                 <View style={styles.headerContainer}>
                 <DetailBirdHeaderBar id={birdData.id} birdName={birdData.name} loggedUsername={props.loggedUsername} onBackButtonPress={() => navigation.goBack()} likes={birdData.likes} userPutLike={birdData.userPutLike} />
@@ -78,7 +101,12 @@ function BirdDetailPageWithAuthor(){
                     {
                         birdData.id === -1 ? null : (
                             <View style={styles.imageContainer}>
-                                <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
+                                <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                                    <Image
+                                    source={{ uri: globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }}
+                                    style={[styles.birdImage, imageSizeStyle]}
+                                    />
+                                </TouchableOpacity>
                             </View>
                         )
                     }
@@ -96,6 +124,7 @@ function BirdDetailPageWithAuthor(){
                     <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
                 </ScrollView>
             </View>
+            </>
         )
     }
 

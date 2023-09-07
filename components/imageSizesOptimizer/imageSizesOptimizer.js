@@ -33,6 +33,24 @@ export async function calculateOptimizedImageSize(imageUrl, decreaseScreenWidth,
     }
 }
 
+export async function calculateFullScreenImageSize(imageUrl, setBirdImageWidth, setBirdImageHeight){
+    try {
+        let { width: originalWidth, height: originalHeight } = await getBirdImageSize(imageUrl)
+    
+        const screenWidth = Dimensions.get('window').width
+        const imageWidth = originalWidth;
+        const imageHeight = originalHeight;
+        const imageAspectRatio = imageHeight / imageWidth;
+        const newImageHeight = screenWidth * imageAspectRatio;
+
+        setBirdImageHeight(newImageHeight)
+        setBirdImageWidth(screenWidth)
+        
+    } catch (error) {
+        console.error('Errore durante il calcolo delle dimensioni ottimizzate dell\'immagine:', error);
+    }
+}
+
 export async function calculateOptimizedLocalImageSize(imageUrl, decreaseScreenWidth, setBirdImageWidth, setBirdImageHeight){
     try {
         if(!imageUrl){

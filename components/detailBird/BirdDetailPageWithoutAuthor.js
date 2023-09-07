@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, BackHandler, Alert } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, BackHandler, Alert, TouchableOpacity } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
@@ -11,6 +11,8 @@ import { useRoute } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
 import { useIsFocused } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
+import FullScreenImageModal from "./FullScreenImageModal"
+import { calculateFullScreenImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -25,6 +27,9 @@ function BirdDetailPageWithoutAuthor(){
     const [isLoadingBirdData, setIsLoadingBirdData] = useState(true)
     const [birdImageWidth, setBirdImageWidth] = useState(0)
     const [birdImageHeight, setBirdImageHeight] = useState(0)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [fullScreenBirdImageHeight, setFullScreenBirdImageHeight] = useState(0)
+    const [fullScreenBirdImageWidth, setFullScreenBirdImageWidth] = useState(0)
 
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
@@ -47,6 +52,7 @@ function BirdDetailPageWithoutAuthor(){
     useEffect(() => {
         setIsLoadingBirdData(true)
         calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
+        calculateFullScreenImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, setFullScreenBirdImageWidth, setFullScreenBirdImageHeight)
         if(isFocused){
             fetchData()
         }
@@ -93,10 +99,25 @@ function BirdDetailPageWithoutAuthor(){
     function handleEditBirdPress(){
         navigation.navigate('EditBird', { loggedUsername: props.loggedUsername, birdData: birdData, })
     }
+
+    function closeFullScreenImageModal(){
+        setIsModalVisible(false)
+    }
       
     function getBirdDetails(){
         return(
             <>
+                {
+                    isModalVisible ?
+                    <FullScreenImageModal 
+                        image={globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10)} 
+                        width={fullScreenBirdImageWidth} 
+                        height={fullScreenBirdImageHeight}
+                        closeModal={closeFullScreenImageModal}
+                    />
+                    :
+                    null
+                }
                 <View style={[styles.pageContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                     <View style={styles.headerContainer}>
                     <DetailBirdHeaderBar 
@@ -112,7 +133,9 @@ function BirdDetailPageWithoutAuthor(){
                         {
                             birdData.id === -1 ? null : (
                                 <View style={styles.imageContainer}>
-                                    <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
+                                    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                                        <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10) }} style={[styles.birdImage, imageSizeStyle]} />
+                                    </TouchableOpacity>
                                 </View>
                             )
                         }
