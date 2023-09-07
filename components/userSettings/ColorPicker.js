@@ -18,7 +18,7 @@ function ColorPicker() {
                 <Pressable
                     style={({ pressed }) => [
                         styles.colorButtonPurple,
-                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                        pressed && { backgroundColor: '#929292' }
                     ]} 
                     onPress={() => pickColor('#b8bdff', '#deeeff', '#bcc9ff')}
                     >
@@ -26,7 +26,7 @@ function ColorPicker() {
                 <Pressable
                     style={({ pressed }) => [
                         styles.colorButtonGrey,
-                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                        pressed && { backgroundColor: '#929292' }
                     ]} 
                     onPress={() => pickColor('#f2f2f2', '#d1cfcf', '#f3f3f3')}
                     >
@@ -34,7 +34,7 @@ function ColorPicker() {
                 <Pressable
                     style={({ pressed }) => [
                         styles.colorButtonYellow,
-                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                        pressed && { backgroundColor: '#929292' }
                     ]} 
                     onPress={() => pickColor('#f2e28e', '#f1ebca', '#f5d4be')}
                     >
@@ -42,7 +42,7 @@ function ColorPicker() {
                 <Pressable
                     style={({ pressed }) => [
                         styles.colorButtonRed,
-                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                        pressed && { backgroundColor: '#929292' }
                     ]} 
                     onPress={() => pickColor('#ff9a98', '#fdd8d8', '#fcb6b6')}
                     >
@@ -50,7 +50,7 @@ function ColorPicker() {
                 <Pressable
                     style={({ pressed }) => [
                         styles.colorButtonGreen,
-                        pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                        pressed && { backgroundColor: '#929292' }
                     ]} 
                     onPress={() => pickColor('#85D2D0', '#e0f2f1', '#acb9f3')}
                     >

@@ -183,7 +183,7 @@ function AddNewBird(props){
                         <Pressable
                             style={({ pressed }) => [
                                 styles.imageButtonPicker,
-                                pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                                pressed && { backgroundColor: '#929292' }
                             ]} 
                             onPress={() => pickImage()}
                             >
@@ -228,7 +228,7 @@ function AddNewBird(props){
                     <Pressable
                         style={({ pressed }) => [
                             styles.uploadPressable,
-                            pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                            pressed && { backgroundColor: '#929292' }
                         ]}
                         onPress={() => controlInputData()}
                         >

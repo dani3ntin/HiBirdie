@@ -40,7 +40,7 @@ function IntroPage(props) {
       console.log(jsonData)
       return jsonData
     } catch (error) {
-      console.error('Followed page Error on getting the datas:', error)
+      console.error('Intro page Error on getting the datas:', error)
       return userdata
     }
   }

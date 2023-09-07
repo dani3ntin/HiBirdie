@@ -103,7 +103,7 @@ function UserDetailPage(){
           <Pressable 
             style={({ pressed }) => [
               styles.floatingButton,
-              pressed && { opacity: 0.8 }
+              pressed && { backgroundColor: '#d3d3d3' }
             ]}
             onPress={followAndUnfollowButtonHandler} 
           >

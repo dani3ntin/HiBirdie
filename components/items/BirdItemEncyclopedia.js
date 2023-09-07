@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
     },
     pressedItem: {
         opacity: 0.5,
+        backgroundColor: '#d3d3d3',
+        borderRadius: 10,
     },
     avatar: {
         width: 55,

@@ -113,6 +113,8 @@ function UserSettings(props){
         formData.append('state', state)
         formData.append('xPosition', latUser)
         formData.append('yPosition', lonUser)
+
+        console.log(latUser, lonUser)
         
         try {
             const response = await fetch(globalVariable.API_URL + 'edituser', {

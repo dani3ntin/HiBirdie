@@ -30,7 +30,7 @@ function ShowLikesPage(){
             setIsLoadingItems(false)
             
           } catch (error) {
-            console.error('Followed page Error on getting the datas:', error)
+            console.error('Show Followers page Error on getting the datas:', error)
             setIsLoadingItems(false)
           }
     }

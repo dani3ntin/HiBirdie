@@ -69,7 +69,7 @@ function ChangePasswordComponent(props) {
             <Pressable
                 style={({ pressed }) => [
                     styles.changePasswordButton,
-                    pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                    pressed && { backgroundColor: '#929292' }
                 ]} 
                 onPress={() => changePasswordButtonHandler()}
                 >
@@ -86,7 +86,7 @@ function ChangePasswordComponent(props) {
                     <Pressable
                         style={({ pressed }) => [
                             styles.changePasswordButton,
-                            pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                            pressed && { backgroundColor: '#929292' }
                         ]} 
                         onPress={() => props.setChanginPassword(false)}
                         >

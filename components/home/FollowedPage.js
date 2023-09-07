@@ -101,7 +101,7 @@ function FollowedPage(props) {
                 style={({ pressed }) => [
                     styles.floatingButton,
                     {backgroundColor: globalVariable.buttonColor},
-                    pressed && { opacity: 0.8, backgroundColor: '#929292' }
+                    pressed && { backgroundColor: '#929292' }
                 ]} 
                 onPress={() => openSearchUsersModal()} 
                 >
