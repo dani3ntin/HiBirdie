@@ -61,7 +61,7 @@ function UserUpperInfos(props){
             {
                 props.includeImage ?
                 <View style={styles.imageContainer}>
-                    <TouchableOpacity onPress={() => setIsModalVisible(true)}>                              
+                    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
                     {
                         getUserImage()
                     }

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, Alert, BackHandler, Button } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, TouchableOpacity, Alert, BackHandler } from "react-native"
 import { useEffect, useState } from "react"
 import UserSettingHeaderBar from "../headerBars/UserSettingHeaderBar"
 import MapInputComponent from "../addNewBird-editBird/MapInputComponent"
@@ -10,6 +10,8 @@ import ChangePasswordComponent from "./ChangePasswordComponent"
 import LogoutComponent from "./LogoutComponent"
 import SettingsForm from "./SettingsForm"
 import SettingsImageComponent from "./SettingsImageComponent"
+import { calculateFullScreenImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import FullScreenImageModal from "../detailBird/FullScreenImageModal"
 
 
 const windowWidth = Dimensions.get('window').width
@@ -17,6 +19,9 @@ const windowWidth = Dimensions.get('window').width
 function UserSettings(props){
     const navigation = useNavigation()
     const { globalVariable, setGlobalVariable } = useGlobalContext()
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [fullScreenUserImageHeight, setFullScreenUserImageHeight] = useState(0)
+    const [fullScreenUserImageWidth, setFullScreenUserImageWidth] = useState(0)
 
     const [name, setName] = useState(props.userData.name)
     const [state, setState] = useState(props.userData.state)
@@ -30,6 +35,10 @@ function UserSettings(props){
     const email = props.userData.email
     const likes = props.userData.likes
     const followers = props.userData.followers
+
+    useEffect(() => {
+        calculateFullScreenImageSize(globalVariable.API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username, setFullScreenUserImageWidth, setFullScreenUserImageHeight)
+    }, [])
 
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
@@ -149,9 +158,24 @@ function UserSettings(props){
         }
     }
 
+    function closeFullScreenImageModal(){
+        setIsModalVisible(false)
+    }
+
     function getUserSettings(){
         return(
             <>
+                {
+                    isModalVisible ?
+                    <FullScreenImageModal 
+                        image={globalVariable.API_URL + 'getuserbyusername/' + props.userData.username + '/' + props.userData.username + '?' + Math.random(10)} 
+                        width={fullScreenUserImageWidth} 
+                        height={fullScreenUserImageHeight}
+                        closeModal={closeFullScreenImageModal}
+                    />
+                    :
+                    null
+                }
                 <ScrollView style={{backgroundColor: globalVariable.backgroundColor}}>
                     <UserUpperInfos 
                         likes={likes} 
@@ -164,7 +188,9 @@ function UserSettings(props){
                         usernameFollowed={props.userData.username} 
                     />
                     <View style={styles.imageContainer}>
-                        <SettingsImageComponent username={props.userData.username} editButtonText={editButtonText} image={image} setImage={setImage}/>
+                        <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                            <SettingsImageComponent username={props.userData.username} editButtonText={editButtonText} image={image} setImage={setImage}/>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.ItemsContainer}>
                         <SettingsForm 
