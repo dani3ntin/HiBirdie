@@ -131,6 +131,10 @@ function UserSettings(props){
         } catch (error) {
             console.error(error);
         }
+        setGlobalVariable((prevState) => ({
+            ...prevState,
+            randomStringToUpdate: '?' + (Math.random() * 100)
+          }))
         setIsSaving(false)
     }
       

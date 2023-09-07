@@ -60,6 +60,7 @@ function controlInputData(){
     else if(name.length === 0) showAlert('Missing data', 'Please enter your name')
     else if(email.length === 0) showAlert('Missing data', 'Please enter your email')
     else if(password.length === 0) showAlert('Missing data', 'Please enter your password')
+    else if(password.length < 8) showAlert('Password too short', 'the password must be at least eight characters long')
     else if(confirmPassword.length === 0) showAlert('Missing data', 'Please enter your confirm password')
     else if(confirmPassword !== password) showAlert('Password or confirm password wrong', 'Password and confirm password are different, please enter the same password')
     else if(!chooseLocation) showAlert('Missing data', 'Please enter your default location in the map')

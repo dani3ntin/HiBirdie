@@ -19,14 +19,8 @@ function SettingsImageComponent(props) {
     }, [])
 
     useEffect(() => {
-        calculateOptimizedImageSize(globalVariable.API_URL + 'getuserbyusername/' + props.username + '/' + props.username, 80, setUserImageWidth, setUserImageHeight)
+        calculateOptimizedImageSize(globalVariable.API_URL + 'getuserbyusername/' + props.username + '/' + props.username + globalVariable.randomStringToUpdate, 80, setUserImageWidth, setUserImageHeight)
     }, [])
-
-    useEffect(() => {
-        if(props.image){
-            calculateOptimizedImageSize(props.image[0].uri, 80, setUserImageWidth, setUserImageHeight)
-        }
-    }, [props.image])
 
     const imageSizeStyle = {
         width: userImageWidth || 200,
