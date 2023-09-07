@@ -41,7 +41,7 @@ function SearchUsers(props) {
     <FollowedItem 
       username={item.username}
       name={item.name} 
-      profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.username + '/' + item.username }}
+      profilePic={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + item.username }}
       onFollowerPressed={() => onFollowerPressedHandler(item.username, item.name, item.state, item.likes, item.followers, item.isLoggedUserFollowing)}
     />
   )

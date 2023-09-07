@@ -144,7 +144,7 @@ function LatestSightingsPage(props) {
                                     <BirdItemLatestSightings 
                                         id={item.id} 
                                         name={item.name} 
-                                        image={{ uri: globalVariable.API_URL + 'getbird/' + item.id + '/' + props.username}} 
+                                        image={{ uri: globalVariable.API_URL + 'getbirdicon/' + item.id}} 
                                         sightingDate={item.sightingDate} 
                                         likes={item.likes} 
                                         distance={Math.round(item.distance)}

@@ -148,7 +148,7 @@ function UserDetailPage(){
             <DetailUserHeaderBar 
               username={props.usernameFollowed}
               name={props.nameFollowed} 
-              userAvatar={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed }} 
+              userAvatar={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + props.usernameFollowed }} 
               onBackButtonPress={() => navigation.goBack()}
             />
           </View>

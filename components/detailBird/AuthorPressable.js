@@ -49,7 +49,7 @@ function AuthorPressable(props) {
                 <View style={styles.friendItem}>
                         <View style={styles.itemContent}>
                             <Image
-                                source={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.authorUsername }}
+                                source={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + props.authorUsername }}
                                 style={styles.avatar}
                             />
                             <View>

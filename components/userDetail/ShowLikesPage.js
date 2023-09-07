@@ -74,7 +74,7 @@ function ShowLikesPage(){
                                         <FollowedItem 
                                             username={item.user}
                                             name={item.name} 
-                                            profilePic={{ uri: globalVariable.API_URL + 'getuserbyusername/' + item.user + '/' + item.user + globalVariable.randomStringToUpdate }} 
+                                            profilePic={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + item.user + globalVariable.randomStringToUpdate }} 
                                             state={'Number of likes placed: ' + item.nLikes}
                                             onFollowerPressed={() => onUserPressedHandler(item.user, item.name, item.state, item.likes, item.followers, item.isLoggedUserFollowing)}
                                         />

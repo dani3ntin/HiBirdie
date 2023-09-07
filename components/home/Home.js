@@ -43,7 +43,7 @@ const handleBackPress = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <HomeHeaderBar userName={props.userData ? props.userData.name : ''} userAvatar={{ uri: globalVariable.API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate}} />
+        <HomeHeaderBar userName={props.userData ? props.userData.name : ''} userAvatar={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate}} />
       </View>
       <Tab.Navigator
       activeColor='#0008ff'

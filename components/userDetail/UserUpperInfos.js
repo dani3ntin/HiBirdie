@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, Dimensions, Pressable } from "react-native"
+import { StyleSheet, View, Text, Image, Dimensions, Pressable, ActivityIndicator } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Feather } from '@expo/vector-icons'
 import { useGlobalContext } from "../globalContext/GlobalContext"
@@ -9,8 +9,8 @@ const windowWidth = Dimensions.get('window').width
 
 function UserUpperInfos(props){
     const { globalVariable, setGlobalVariable } = useGlobalContext()
-    const [userImageWidth, setUserImageWidth] = useState(110)
-    const [userImageHeight, setUserImageHeight] = useState(110)
+    const [userImageWidth, setUserImageWidth] = useState(0)
+    const [userImageHeight, setUserImageHeight] = useState(0)
 
     useEffect(() => {
         if(props.includeImage)
@@ -18,12 +18,14 @@ function UserUpperInfos(props){
     }, [])
 
     function getUserImage(){
+        if(imageSizeStyle.width === 0)
+            return <ActivityIndicator size="large"  color="#000000"/>
         return <Image source={{ uri: globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed + '?' + Math.random()}} style={[styles.userImage, imageSizeStyle]} />
     }
 
     const imageSizeStyle = {
-        width: userImageWidth || 200,
-        height: userImageHeight || 200,
+        width: userImageWidth || 0,
+        height: userImageHeight || 0,
     }
 
     function followersButtonPressedHandler(){

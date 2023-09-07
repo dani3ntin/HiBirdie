@@ -68,6 +68,9 @@ function EditBird(){
     }, [])
 
     function getBirdImage(){
+        if(imageSizeStyle.height === 0){
+            return <ActivityIndicator size="large" color="#000000"/>
+        }
         if(!image) return <Image source={{ uri: globalVariable.API_URL + 'getbird/' + props.birdData.id + '/' + props.loggedUsername + globalVariable.randomStringToUpdate}} style={[styles.birdImage, imageSizeStyle]} />
         return image && <Image source={{ uri: image[0].uri }} style={[styles.birdImage, imageSizeStyle]} />
     }
@@ -103,8 +106,8 @@ function EditBird(){
     }
 
     const imageSizeStyle = {
-        width: birdImageWidth || 200,
-        height: birdImageHeight || 200,
+        width: birdImageWidth || 0,
+        height: birdImageHeight || 0,
     }
 
     function showAlertError(missingData){

@@ -82,8 +82,6 @@ async function settingUsername(){
     setUsername(userData.username)
   }else{
     const storedUserData = await AsyncStorage.getItem('userData')
-    console.log('storedUserData')
-    console.log(JSON.parse(storedUserData))
     if (storedUserData) {
       const parsedUserData = JSON.parse(storedUserData)
       setUsername(parsedUserData.username)
