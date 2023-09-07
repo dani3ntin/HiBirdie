@@ -31,7 +31,7 @@ function FilterLatestSightingsPage(props) {
         <View style={styles.modalContent} onStartShouldSetResponder={handleModalPress}>
             <View style={styles.maximumSightingDays}>
                 <Text>Maximum sighting days:</Text>
-                <SelectList data={maximumDaysOptions} setSelected={setMaximumDaysSelected} defaultOption={getMaximumDaysOptionValueFromKey(props.maximumDaysDefault, 10)}/>
+                <SelectList data={maximumDaysOptions} setSelected={setMaximumDaysSelected} defaultOption={getMaximumDaysOptionValueFromKey(props.maximumDaysDefault, 10)} />
             </View>
             <View style={styles.maximumSightingDays}>
                 <Text>Maximum distance from your location (in kilometers):</Text>
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   maximumSightingDays: {
-    paddingBottom: 20
+    paddingBottom: 20,
   }
 });

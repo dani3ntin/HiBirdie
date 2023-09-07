@@ -30,6 +30,7 @@ function AddNewBird(props){
     const navigation = useNavigation()
 
     useEffect(() => {
+        console.log(props.coordinates)
         const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
         handleBackPress

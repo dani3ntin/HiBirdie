@@ -112,7 +112,7 @@ const shadowStyle = Platform.select({
 
 const styles = StyleSheet.create({
     bottomFiller: {
-        height: 70,
+        height: 90,
         backgroundColor: '#e9e7e7',
     },
     container: {
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         width: 200,
+        height: 70,
         borderWidth: 2,
         paddingVertical: 10,
         backgroundColor: 'white',

@@ -5,6 +5,7 @@ import { useGlobalContext } from "../globalContext/GlobalContext"
 function FullScreenImageModal(props) {
     const { globalVariable, setGlobalVariable } = useGlobalContext()
 
+
     return (
         <Modal
             visible={true}

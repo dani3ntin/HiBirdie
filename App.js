@@ -19,6 +19,7 @@ import RegisterPage from './components/introPage/RegisterPage'
 //import * as Sentry from '@sentry/react-native'
 import ShowFollowersPage from './components/userDetail/ShowFollowersPage'
 import ShowLikesPage from './components/userDetail/ShowLikesPage'
+import NoConnectionPage from './components/noConnection/NoConnectionPage'
 
 const Stack = createStackNavigator()
 
@@ -106,6 +107,7 @@ async function settingUsername(){
               <Stack.Screen name="ShowFollowersPage" options={{ headerShown: false }} component={ShowFollowersPage} />
               <Stack.Screen name="ShowLikesPage" options={{ headerShown: false }} component={ShowLikesPage} />
               <Stack.Screen name="UserSettings" options={{ headerShown: false }}>{() => <UserSettings userData={userData} setUserData={setUserData}/>}</Stack.Screen>
+              <Stack.Screen name="NoConnectionPage" options={{ headerShown: false }}>{() => <NoConnectionPage />}</Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
       </GlobalProvider>

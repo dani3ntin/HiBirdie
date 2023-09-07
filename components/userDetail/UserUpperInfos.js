@@ -1,9 +1,11 @@
-import { StyleSheet, View, Text, Image, Dimensions, Pressable, ActivityIndicator } from "react-native"
+import { StyleSheet, View, Text, Image, Dimensions, Pressable, ActivityIndicator, TouchableOpacity } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Feather } from '@expo/vector-icons'
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import { useState, useEffect } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import { calculateFullScreenImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import FullScreenImageModal from "../detailBird/FullScreenImageModal"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -11,10 +13,14 @@ function UserUpperInfos(props){
     const { globalVariable, setGlobalVariable } = useGlobalContext()
     const [userImageWidth, setUserImageWidth] = useState(0)
     const [userImageHeight, setUserImageHeight] = useState(0)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [fullScreenUserImageHeight, setFullScreenUserImageHeight] = useState(0)
+    const [fullScreenUserImageWidth, setFullScreenUserImageWidth] = useState(0)
 
     useEffect(() => {
         if(props.includeImage)
             calculateOptimizedImageSize(globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed + '?' + Math.random(), 80, setUserImageWidth, setUserImageHeight)
+            calculateFullScreenImageSize(globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed, setFullScreenUserImageWidth, setFullScreenUserImageHeight)
     }, [])
 
     function getUserImage(){
@@ -35,14 +41,31 @@ function UserUpperInfos(props){
         props.likesButtonPressed()
     }
 
+    function closeFullScreenImageModal(){
+        setIsModalVisible(false)
+    }
+
     return(
         <>
             {
+                isModalVisible ?
+                <FullScreenImageModal 
+                    image={globalVariable.API_URL + 'getuserbyusername/' + props.loggedUsername + '/' + props.usernameFollowed + '?' + Math.random(10)} 
+                    width={fullScreenUserImageWidth} 
+                    height={fullScreenUserImageHeight}
+                    closeModal={closeFullScreenImageModal}
+                />
+                :
+                null
+            }
+            {
                 props.includeImage ?
                 <View style={styles.imageContainer}>
-                {
-                    getUserImage()
-                }
+                    <TouchableOpacity onPress={() => setIsModalVisible(true)}>                              
+                    {
+                        getUserImage()
+                    }
+                    </TouchableOpacity>
                 </View>
                 : null
             }

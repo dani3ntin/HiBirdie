@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useGlobalContext } from '../globalContext/GlobalContext'
+import NetInfo from '@react-native-community/netinfo'
 
 let Tab
 if(Platform.OS == 'ios'){
@@ -22,23 +23,35 @@ export default function Home(props) {
   const { globalVariable, setGlobalVariable } = useGlobalContext()
   const navigation = useNavigation()
 
-useEffect(() => {
-  console.log(globalVariable.API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate)
-  console.log(props.userData)
-}, [])
+  useEffect(() => {
+    console.log(globalVariable.API_URL + 'getuserbyusername/' + (props.userData ? props.userData.username : '') + '/' + (props.userData ? props.userData.username : '') + globalVariable.randomStringToUpdate)
+    console.log(props.userData)
+  }, [])
 
-useEffect(() => {
-  const backHandler = BackHandler.addEventListener(
-  'hardwareBackPress',
-  handleBackPress
-  );
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    handleBackPress
+    );
 
-  return () => backHandler.remove()
-}, [])
+    return () => backHandler.remove()
+  }, [])
 
-const handleBackPress = () => {
-  return true
-}
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (!state.isConnected) {
+        navigation.navigate('NoConnectionPage')
+      }
+    })
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleBackPress = () => {
+    return true
+  }
 
   return (
     <View style={styles.container}>
