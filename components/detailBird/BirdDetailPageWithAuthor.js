@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, BackHandler, Modal, TouchableOpacity } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, BackHandler, Modal, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import { useIsFocused } from "@react-navigation/native"
 import FullScreenImageModal from "./FullScreenImageModal"
+import CommentSection from "./CommentSection"
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -96,7 +97,7 @@ function BirdDetailPageWithAuthor(){
             <View style={[styles.pageContainer, {backgroundColor: globalVariable.backgroundColor}]}>
                 <View style={styles.headerContainer}>
                 <DetailBirdHeaderBar id={birdData.id} birdName={birdData.name} loggedUsername={props.loggedUsername} onBackButtonPress={() => navigation.goBack()} likes={birdData.likes} userPutLike={birdData.userPutLike} />
-                </View>
+            </View>
                 <ScrollView>
                     {
                         birdData.id === -1 ? null : (
@@ -122,6 +123,10 @@ function BirdDetailPageWithAuthor(){
                         <TextInDetailBird sightingDate={changeDateFormatToDDMMYYYY(birdData.sightingDate)} personalNotes={birdData.personalNotes}/>
                     </View>
                     <MapViewInDetailBird xPosition={birdData.xPosition} yPosition={birdData.yPosition}/>
+                    <View style={styles.textContainer}>
+                        <Text style={[styles.boldText, {paddingBottom: 10}]}>Comments section:</Text>
+                        <CommentSection bird={props.id} loggedUsername={props.loggedUsername}/>
+                    </View>
                 </ScrollView>
             </View>
             </>

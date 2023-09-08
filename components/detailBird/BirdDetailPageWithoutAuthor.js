@@ -13,6 +13,7 @@ import { useIsFocused } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import FullScreenImageModal from "./FullScreenImageModal"
 import { calculateFullScreenImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"
+import CommentSection from "./CommentSection"
 
 const windowWidth = Dimensions.get('window').width
 
@@ -153,6 +154,10 @@ function BirdDetailPageWithoutAuthor(){
                             </View>
                             : null
                         }
+                        <View style={styles.textContainer}>
+                            <Text style={[styles.boldText, {paddingBottom: 10}]}>Comments section:</Text>
+                            <CommentSection bird={props.id} loggedUsername={props.loggedUsername}/>
+                        </View>
                     </ScrollView>
                 </View>
             </>

@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView, StatusBar, Button } from 'react-native'
+import { StyleSheet, View, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native'
 import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
 import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
@@ -93,23 +93,28 @@ async function settingUsername(){
   return (
     <SafeAreaView style={styles.SafeArea}>
       <GlobalProvider>
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName="IntroPage">
-              <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage setUserData={setUserData}/>}</Stack.Screen>
-              <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData} sendLocation={getLocationFromLogin}/>}</Stack.Screen>
-              <Stack.Screen name="RegisterPage" options={{ headerShown: false }}>{() => <RegisterPage setUserData={setUserData}/>}</Stack.Screen>
-              <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>
-              <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
-              <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
-              <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
-              <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
-              <Stack.Screen name="UserDetailPage" options={{ headerShown: false }} component={UserDetailPage} />
-              <Stack.Screen name="ShowFollowersPage" options={{ headerShown: false }} component={ShowFollowersPage} />
-              <Stack.Screen name="ShowLikesPage" options={{ headerShown: false }} component={ShowLikesPage} />
-              <Stack.Screen name="UserSettings" options={{ headerShown: false }}>{() => <UserSettings userData={userData} setUserData={setUserData}/>}</Stack.Screen>
-              <Stack.Screen name="NoConnectionPage" options={{ headerShown: false }}>{() => <NoConnectionPage />}</Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}
+        >
+          <NavigationContainer>
+              <Stack.Navigator initialRouteName="IntroPage">
+                <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage setUserData={setUserData}/>}</Stack.Screen>
+                <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData} sendLocation={getLocationFromLogin}/>}</Stack.Screen>
+                <Stack.Screen name="RegisterPage" options={{ headerShown: false }}>{() => <RegisterPage setUserData={setUserData}/>}</Stack.Screen>
+                <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>
+                <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
+                <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
+                <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />
+                <Stack.Screen name="BirdDetailPageWithAuthor" options={{ headerShown: false }} component={BirdDetailPageWithAuthor} />
+                <Stack.Screen name="UserDetailPage" options={{ headerShown: false }} component={UserDetailPage} />
+                <Stack.Screen name="ShowFollowersPage" options={{ headerShown: false }} component={ShowFollowersPage} />
+                <Stack.Screen name="ShowLikesPage" options={{ headerShown: false }} component={ShowLikesPage} />
+                <Stack.Screen name="UserSettings" options={{ headerShown: false }}>{() => <UserSettings userData={userData} setUserData={setUserData}/>}</Stack.Screen>
+                <Stack.Screen name="NoConnectionPage" options={{ headerShown: false }}>{() => <NoConnectionPage />}</Stack.Screen>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </KeyboardAvoidingView>
       </GlobalProvider>
     </SafeAreaView>
   );

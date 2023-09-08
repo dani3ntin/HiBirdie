@@ -18,11 +18,11 @@ function FollowedItem(props) {
                         source={props.profilePic}
                         style={styles.avatar}
                     />
-                    <View>
+                    <View style={styles.writingsContent}>
                         <Text style={styles.friendName}>{props.name}</Text>
                         {
                             props.state !== undefined ?
-                            <Text style={styles.friendState}>{props.state}</Text>
+                            <Text style={styles.friendState} numberOfLines={1} ellipsizeMode="tail">{props.state}</Text>
                             :
                             <Text style={styles.friendUsername}>@{props.username}</Text>
                         }
@@ -36,6 +36,10 @@ function FollowedItem(props) {
 export default FollowedItem
 
 const styles = StyleSheet.create({
+    writingsContent: {
+        flex: 1,
+        marginLeft: 1,
+    },
     friendItem: {
         margin: 5,
         borderRadius: 6,

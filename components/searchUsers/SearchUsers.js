@@ -1,4 +1,4 @@
-import { Modal, View, Text, Pressable, StyleSheet, TextInput, FlatList } from 'react-native'
+import { Modal, View, Text, Pressable, StyleSheet, TextInput, FlatList,KeyboardAvoidingView, Platform } from 'react-native'
 import { useState } from 'react'
 import FollowedItem from '../items/FollowedItem'
 import { useNavigation } from '@react-navigation/native'
@@ -61,23 +61,38 @@ function SearchUsers(props) {
           keyExtractor={item => item.username}
           inverted
         />
-        <View style={styles.modalContent} onStartShouldSetResponder={handleModalPress}>
-          <View style={styles.maximumSightingDays}>
-            <Text style={styles.text}>Search a user:</Text>
-            <View style={styles.rowContainer}>
-              <Text style={styles.at}>@</Text>
-                <TextInput
-                    placeholder='Insert username'
-                    errorStyle={{ color: 'red' }}
-                    label='User name'
-                    value={searchText}
-                    onChangeText={text => textChangedHandler(text)}
-                    maxLength={20}
-                    style={styles.searchTextInput}
-                />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.modalContent}
+        >
+          <View style={styles.modalContent} onStartShouldSetResponder={handleModalPress}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.text}>Search a user:</Text>
+              <View style={styles.rowContainer}>
+                <Text style={styles.at}>@</Text>
+                  <TextInput
+                      placeholder='Insert username'
+                      errorStyle={{ color: 'red' }}
+                      label='User name'
+                      value={searchText}
+                      onChangeText={text => textChangedHandler(text)}
+                      maxLength={20}
+                      style={styles.searchTextInput}
+                  />
+              </View>
             </View>
           </View>
-        </View>
+          <Pressable 
+            style={({ pressed }) => [
+                styles.closeButton,
+                {backgroundColor: globalVariable.buttonColor},
+                pressed && { backgroundColor: '#929292' }
+            ]}
+            onPress={closeModal}
+          >
+            <Text style={styles.text}>Close</Text>
+          </Pressable>
+        </KeyboardAvoidingView>
       </Pressable>
     </Modal>
   );
@@ -100,20 +115,12 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 22,
+    padding: 15,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  button: {
-    backgroundColor: 'lightblue',
-    padding: 12,
-    margin: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-  },
-  maximumSightingDays: {
-    paddingBottom: 20
+  inputContainer: {
+    paddingBottom: 20,
   },
   searchTextInput: {
     fontSize: 18,
@@ -123,6 +130,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingRight: 10,
     paddingLeft: 5,
+    width: '90%'
   },
   text: {
     fontSize: 18
@@ -134,5 +142,18 @@ const styles = StyleSheet.create({
   rowContainer: {
     paddingTop: 10,
     flexDirection: 'row',
-},
+  },
+  closeButton: {
+    bottom: 20,
+    width: 150,
+    height: 70,
+    borderWidth: 2,
+    paddingVertical: 10,
+    borderColor: 'black',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
 });

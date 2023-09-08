@@ -57,14 +57,14 @@ function FilterLatestSightingsPage(props) {
           </View>
           <Pressable 
             style={({ pressed }) => [
-                styles.floatingButton,
+                styles.closeButton,
                 {backgroundColor: globalVariable.buttonColor},
                 pressed && { backgroundColor: '#929292' }
             ]}
             onPress={closeModal}
           >
-          <Text style={styles.buttonText}>Close</Text>
-        </Pressable>
+            <Text style={styles.buttonText}>Close</Text>
+          </Pressable>
         </View>
       </Pressable>
     </Modal>
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-  floatingButton: {
+  closeButton: {
     bottom: 20,
     width: 150,
     height: 70,

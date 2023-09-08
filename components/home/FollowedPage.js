@@ -44,16 +44,6 @@ function FollowedPage(props) {
             nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: true, loggedUsername: props.username})
     }
 
-    function editState(state){
-        if(state !== null){
-            if(state.length > 35){
-                const truncatedState = state.slice(0, 30)
-                return truncatedState + "..."
-            }
-        }
-        return state
-    }
-
     function openSearchUsersModal(){
         setsearchUsersModalIsVisible(true)
     }
@@ -88,7 +78,7 @@ function FollowedPage(props) {
                                 username={item.usernameFollowed}
                                 name={item.name} 
                                 profilePic={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + item.usernameFollowed + globalVariable.randomStringToUpdate }} 
-                                state={editState(item.state)}
+                                state={item.state}
                                 onFollowerPressed={() => onFollowerPressedHandler(item.usernameFollowed, item.name, item.state, item.likes, item.followers)}
                             />
                         </View>
