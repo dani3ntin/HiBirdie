@@ -20,10 +20,11 @@ function EditBirdButton(props){
                     alignItems: 'center', 
                     borderWidth: 3,
                     borderColor: 'black',
+                    height: 70
                 },]}
             >
                 {({ pressed }) => (
-                <Text style={{ color: pressed ? 'black' : 'black', fontSize: 15 }}>
+                <Text style={{ color: pressed ? 'black' : 'black', fontSize: 18 }}>
                     Edit this bird
                 </Text>
                 )}

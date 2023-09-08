@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     locationContainer: {
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 10,
+        marginRight: 10,
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,

@@ -51,7 +51,7 @@ function BirdDetailPageWithoutAuthor(){
 
     useEffect(() => {
         setIsLoadingBirdData(true)
-        calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 50, setBirdImageWidth, setBirdImageHeight)
+        calculateOptimizedImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername + '?' + Math.random(10), 20, setBirdImageWidth, setBirdImageHeight)
         calculateFullScreenImageSize(globalVariable.API_URL + 'getbird/' + props.id + '/' + props.loggedUsername, setFullScreenBirdImageWidth, setFullScreenBirdImageHeight)
         if(isFocused){
             fetchData()
@@ -196,8 +196,8 @@ const styles = StyleSheet.create({
         height: '8%'
     },
     pressableAuthorContainer: {
-        marginLeft: 25,
-        marginRight: 25,
+        marginLeft: 10,
+        marginRight: 10,
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
@@ -218,7 +218,10 @@ const styles = StyleSheet.create({
         ...shadowStyle,
         backgroundColor:'black',
         borderRadius: 10,
-        margin: 25,
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 20,
     },
     loadingContainer: {
         flex: 1,
@@ -226,8 +229,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textContainer: {
-        marginLeft: 25,
-        marginRight: 25,
+        marginLeft: 10,
+        marginRight: 10,
         marginBottom: 20,
         backgroundColor: 'white',
         borderRadius: 13,
