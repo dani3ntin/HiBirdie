@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerContainer: {
-        height: '8%'
+        height: 70,
     },
     pressableAuthorContainer: {
         marginLeft: 10,

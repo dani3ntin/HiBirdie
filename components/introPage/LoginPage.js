@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#c0daf8'
       },
     headerContainer: {
-        height: '8%'
+        height: 70,
     },
     ItemsContainer: {
         marginLeft: 20,

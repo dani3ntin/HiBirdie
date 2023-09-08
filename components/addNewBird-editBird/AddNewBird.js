@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     headerContainer: {
-        height: '8%'
+        height: 70,
     },
     mapContainer: {
         paddingTop: 20,
