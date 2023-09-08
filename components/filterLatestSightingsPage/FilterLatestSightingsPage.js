@@ -3,15 +3,23 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import { useState } from 'react'
 import { maximumDaysOptions } from './MapKeyValueFilter'
 import { maximumDistanceOptions } from './MapKeyValueFilter'
+import { sortingOptions } from './MapKeyValueFilter'
+import { sortingCriterionOptions } from './MapKeyValueFilter'
 import { getMaximumDaysOptionValueFromKey } from './MapKeyValueFilter'
 import { getMaximumDistanceOptionValueFromKey } from './MapKeyValueFilter'
+import { getSortingOptionValueFromKey } from './MapKeyValueFilter'
+import { getSortingCriterionOptionValueFromKey } from './MapKeyValueFilter'
+import { useGlobalContext } from '../globalContext/GlobalContext'
 
 function FilterLatestSightingsPage(props) {
-    const [maximumDaysSelected, setMaximumDaysSelected] = useState('')
-    const [maximumDistanceSelected, setMaximumDistanceSelected] = useState('')
+    const { globalVariable, setGlobalVariable } = useGlobalContext()
+    const [selectedMaximumDays, setSelectedMaximumDays] = useState('')
+    const [selectedMaximumDistance, setSelectedMaximumDistance] = useState('')
+    const [sortingSelected, setSortingSelected] = useState('')
+    const [sortingSelectedCriterion, setSortingSelectedCriterion] = useState('')
 
     function closeModal() {
-        props.updateFilterData(maximumDaysSelected, maximumDistanceSelected)
+        props.updateFilterData(selectedMaximumDays, selectedMaximumDistance, sortingSelected, sortingSelectedCriterion)
         props.closeModal();
     }
 
@@ -29,14 +37,34 @@ function FilterLatestSightingsPage(props) {
       <Pressable style={styles.modalContainer} onPress={closeModal}>
         <View style={styles.overlay} />
         <View style={styles.modalContent} onStartShouldSetResponder={handleModalPress}>
-            <View style={styles.maximumSightingDays}>
-                <Text>Maximum sighting days:</Text>
-                <SelectList data={maximumDaysOptions} setSelected={setMaximumDaysSelected} defaultOption={getMaximumDaysOptionValueFromKey(props.maximumDaysDefault, 10)} />
-            </View>
-            <View style={styles.maximumSightingDays}>
-                <Text>Maximum distance from your location (in kilometers):</Text>
-                <SelectList data={maximumDistanceOptions} setSelected={setMaximumDistanceSelected} defaultOption={getMaximumDistanceOptionValueFromKey(props.maximumDistanceDefault, 10)}/>
-            </View>
+          <Text style={styles.title}>Sorting criteria:</Text>
+          <View style={styles.maximumSightingDays}>
+              <Text style={styles.titleFilter}>Order sighting by:</Text>
+              <SelectList data={sortingOptions} setSelected={setSortingSelected} defaultOption={getSortingOptionValueFromKey(props.sortingDefault)} />
+          </View>
+          <View style={styles.maximumSightingDays}>
+              <Text style={styles.titleFilter}>Criterion:</Text>
+              <SelectList data={sortingCriterionOptions} setSelected={setSortingSelectedCriterion} defaultOption={getSortingCriterionOptionValueFromKey(props.sortingCriterionDefault)} />
+          </View>
+          <Text style={styles.title}>Filters:</Text>
+          <View style={styles.maximumSightingDays}>
+              <Text style={styles.titleFilter}>Maximum sighting days:</Text>
+              <SelectList data={maximumDaysOptions} setSelected={setSelectedMaximumDays} defaultOption={getMaximumDaysOptionValueFromKey(props.maximumDaysDefault)} />
+          </View>
+          <View style={styles.maximumSightingDays}>
+              <Text style={styles.titleFilter}>Maximum distance from your location (in kilometers):</Text>
+              <SelectList data={maximumDistanceOptions} setSelected={setSelectedMaximumDistance} defaultOption={getMaximumDistanceOptionValueFromKey(props.maximumDistanceDefault)}/>
+          </View>
+          <Pressable 
+            style={({ pressed }) => [
+                styles.floatingButton,
+                {backgroundColor: globalVariable.buttonColor},
+                pressed && { backgroundColor: '#929292' }
+            ]}
+            onPress={closeModal}
+          >
+          <Text style={styles.buttonText}>Close</Text>
+        </Pressable>
         </View>
       </Pressable>
     </Modal>
@@ -74,5 +102,30 @@ const styles = StyleSheet.create({
   },
   maximumSightingDays: {
     paddingBottom: 20,
-  }
+  },
+  titleFilter: {
+    paddingBottom: 5,
+  },
+  title: {
+    paddingBottom: 15,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  floatingButton: {
+    bottom: 20,
+    width: 150,
+    height: 70,
+    borderWidth: 2,
+    paddingVertical: 10,
+    borderColor: 'black',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 18,
+  },
 });

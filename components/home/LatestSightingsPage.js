@@ -4,7 +4,7 @@ import BirdItemLatestSightings from "../items/BirdItemLatestSightings"
 import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatestSightingsPage"
-import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
+import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey, getSortingRealValueFromKey, getSortingCriterionRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import * as Sentry from '@sentry/react-native'
@@ -17,6 +17,8 @@ function LatestSightingsPage(props) {
     const [isLoadingItems, setIsLoadingItems] = useState(true)
     const [filterMaximumDays, setFilterMaximumDays] = useState(0)
     const [filterMaximumDistance, setFilterMaximumDistance] = useState(0)
+    const [filterSorting, setFilterSorting] = useState(0)
+    const [filterSortingCriterion, setFilterSortingCriterion] = useState(0)
     const [latUser, setLatUser] = useState(0)
     const [lonUser, setLonUser] = useState(0)
     const [defaultPosition, setDefaultPosition] = useState(false)
@@ -33,7 +35,7 @@ function LatestSightingsPage(props) {
             }
         }
         fetchDataWithCoordinates()
-    }, [isFocused , props.username, filterMaximumDays, filterMaximumDistance])
+    }, [isFocused , props.username, filterMaximumDays, filterMaximumDistance, filterSorting, filterSortingCriterion])
 
     async function settingUserCoordinates(){
         const storedCoordinatesUserData = await AsyncStorage.getItem('userCoordinates')
@@ -56,6 +58,8 @@ function LatestSightingsPage(props) {
           const parsedFilterData = JSON.parse(storedFilterData)
           setFilterMaximumDays(parsedFilterData.filterMaximumDays)
           setFilterMaximumDistance(parsedFilterData.filterMaximumDistance)
+          setFilterSorting(parsedFilterData.filterSorting)
+          setFilterSortingCriterion(parsedFilterData.filterSortingCriterion)
         }
     }
 
@@ -63,11 +67,27 @@ function LatestSightingsPage(props) {
     async function fetchData(localLat, localLon) {
         let data
         if(localLat !== undefined && localLon !== undefined)
-            data = { requestingUser: props.username, latUser: localLat, lonUser: localLon, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+            data = { 
+                requestingUser: props.username, 
+                latUser: localLat, 
+                lonUser: localLon, 
+                maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), 
+                maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance),
+                sorting: getSortingRealValueFromKey(filterSorting),
+                sortingCriterion : getSortingCriterionRealValueFromKey(filterSortingCriterion),
+            }
         else
-            data = { requestingUser: props.username, latUser: latUser, lonUser: lonUser, maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance)}
+            data = { 
+                requestingUser: props.username, 
+                latUser: latUser, 
+                lonUser: lonUser, 
+                maximumDays: getMaximumDaysRealValueFromKey(filterMaximumDays), 
+                maximumDistance: getMaximumDistanceRealValueFromKey(filterMaximumDistance),
+                sorting: getSortingRealValueFromKey(filterSorting),
+                sortingCriterion : getSortingCriterionRealValueFromKey(filterSortingCriterion),
+            }
         //console.log('getbirdswithfilterexceptyours:')
-        //console.log(data)
+        console.log(data)
         try {
             const response = await fetch(globalVariable.API_URL + 'getbirdswithfilterexceptyours', {
             method: 'POST',
@@ -106,11 +126,12 @@ function LatestSightingsPage(props) {
         setfilterModalIsVisible(false)
     }
 
-    async function updateFilterData(maximumDays, maximunDistance){
-        
+    async function updateFilterData(maximumDays, maximunDistance, sorting, sortingCriterion){
         setFilterMaximumDays(maximumDays)
         setFilterMaximumDistance(maximunDistance)
-        await AsyncStorage.setItem('filterData', JSON.stringify({filterMaximumDays: maximumDays, filterMaximumDistance: maximunDistance}))
+        setFilterSorting(sorting)
+        setFilterSortingCriterion(sortingCriterion)
+        await AsyncStorage.setItem('filterData', JSON.stringify({filterMaximumDays: maximumDays, filterMaximumDistance: maximunDistance, filterSorting: sorting, filterSortingCriterion: sortingCriterion}))
     }
 
     return (
@@ -128,6 +149,8 @@ function LatestSightingsPage(props) {
                     updateFilterData={updateFilterData}
                     maximumDaysDefault={filterMaximumDays}
                     maximumDistanceDefault={filterMaximumDistance}
+                    sortingDefault={filterSorting}
+                    sortingCriterionDefault={filterSortingCriterion}
                 />
                 <View style={[styles.container, {backgroundColor: globalVariable.backgroundColor}]}>
                     <ScrollView style={styles.scrollViewcontainer}>
@@ -167,7 +190,7 @@ function LatestSightingsPage(props) {
                         ]} 
                         onPress={openFilterModal} 
                     >
-                        <Text style={styles.buttonText}>Open Filters</Text>
+                        <Text style={styles.buttonText}>Filters and sorting</Text>
                         
                     </Pressable>
                 </View>

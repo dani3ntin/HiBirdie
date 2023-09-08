@@ -32,6 +32,17 @@ export const maximumDistanceOptions = [
     {key: '14', value: '10000'},
 ]
 
+export const sortingOptions = [
+    {key: '0', value: 'Sighting date'},
+    {key: '1', value: 'Distance'},
+    {key: '2', value: 'Likes'},
+]
+
+export const sortingCriterionOptions = [
+    {key: '0', value: 'Ascending order'},
+    {key: '1', value: 'Descending order'},
+]
+
 export function getMaximumDaysOptionValueFromKey(key){
     const n = parseInt(key, 10)
     const selectedObject = maximumDaysOptions.find(option => parseInt(option.key) === n)
@@ -52,7 +63,7 @@ export function getMaximumDaysRealValueFromKey(key){
     if(key == 10) return 182
     if(key == 11) return 279
     if(key == 12) return 365
-    return selectedObject || null
+    return null
 }
 
 export function getMaximumDistanceOptionValueFromKey(key){
@@ -67,4 +78,29 @@ export function getMaximumDistanceRealValueFromKey(key){
     const selectedObject = maximumDistanceOptions.find(option => parseInt(option.key) === n)
     if(selectedObject === undefined) return null
     return selectedObject.value
+}
+
+export function getSortingOptionValueFromKey(key){
+    const n = parseInt(key, 10)
+    const selectedObject = sortingOptions.find(option => parseInt(option.key) === n)
+    return selectedObject || null
+}
+
+export function getSortingRealValueFromKey(key){
+    if(key == 0) return 'sightingDate'
+    if(key == 1) return 'distance'
+    if(key == 2) return 'likes'
+    return null
+}
+
+export function getSortingCriterionOptionValueFromKey(key){
+    const n = parseInt(key, 10)
+    const selectedObject = sortingCriterionOptions.find(option => parseInt(option.key) === n)
+    return selectedObject || null
+}
+
+export function getSortingCriterionRealValueFromKey(key){
+    if(key == 0) return 'ASC'
+    if(key == 1) return 'DESC'
+    return null
 }
