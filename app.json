@@ -19,10 +19,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "buildNumber": "1.0.0",
       "config": {
         "googleMapsApiKey": "AIzaSyBp2od4FmzjDR-p6zvj_CVeg1hO0qx-7rs"
-      }
+      },
+      "bundleIdentifier": "com.dani3ntin.birdWatching"
     },
     "android": {
       "config": {
