@@ -64,6 +64,7 @@ function controlInputData(){
     else if(confirmPassword.length === 0) showAlert('Missing data', 'Please enter your confirm password')
     else if(confirmPassword !== password) showAlert('Password or confirm password wrong', 'Password and confirm password are different, please enter the same password')
     else if(!chooseLocation) showAlert('Missing data', 'Please enter your default location in the map')
+    else if(isUsernameAlreadyUsed) showAlert('Username already used', 'Please enter another userame')
     else{ 
         register()
         return true
@@ -131,6 +132,7 @@ function getTextCheckIfUsernameIsUsed(){
             <ScrollView>
                 <Text style={[platformFont, styles.welcomeText]}>Oh, a new face!</Text>
                 <Text style={styles.text}>Please insert your data to register</Text>
+                <Text style={styles.textWarning}>Note that the username and email cannot be changed in the future</Text>
                 <View style={styles.ItemsContainer}>
                     {
                         getTextCheckIfUsernameIsUsed()
@@ -143,7 +145,7 @@ function getTextCheckIfUsernameIsUsed(){
                             setUsername(text);
                             checkUsername(text)
                         }}
-                        maxLength={50}
+                        maxLength={20}
                         style={[styles.textInput]}
                     />
                     <TextInput
@@ -151,7 +153,7 @@ function getTextCheckIfUsernameIsUsed(){
                         label='input'
                         value={name}
                         onChangeText={text => setName(text)}
-                        maxLength={50}
+                        maxLength={30}
                         style={[styles.textInput]}
                     />
                     <TextInput
@@ -168,7 +170,7 @@ function getTextCheckIfUsernameIsUsed(){
                             label='password'
                             value={password}
                             onChangeText={text => setPassowrd(text)}
-                            maxLength={50}
+                            maxLength={30}
                             secureTextEntry={!showPassword}
                             style={[styles.passwordText]}
                         />
@@ -182,7 +184,7 @@ function getTextCheckIfUsernameIsUsed(){
                             label='Confirm password'
                             value={confirmPassword}
                             onChangeText={text => setConfirmPassowrd(text)}
-                            maxLength={50}
+                            maxLength={30}
                             secureTextEntry={!showPassword}
                             style={[styles.passwordText]}
                         />
@@ -280,6 +282,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         paddingTop: 2,
         alignSelf: 'center',
+    },
+    textWarning:{
+        fontSize: 18,
+        paddingTop: 2,
+        alignSelf: 'center',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 10,
     },
     textOk:{
         fontSize: 18,

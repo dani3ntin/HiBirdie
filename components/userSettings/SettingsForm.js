@@ -7,14 +7,18 @@ function SettingsForm(props) {
 
     return (
         <>
-            <Input
-                errorStyle={{ color: 'red' }}
-                label='Username'
-                multiline={true}
-                value={props.username}
-                maxLength={200}
-                disabled
-            />
+            {
+                props.editButtonText === 'Edit' ?
+                <Input
+                    errorStyle={{ color: 'red' }}
+                    label='Username (uneditable)'
+                    multiline={true}
+                    value={props.username}
+                    maxLength={200}
+                    disabled
+                />
+                : null
+            }
             <Input
                 placeholder='Insert your name'
                 errorStyle={{ color: 'red' }}
@@ -24,14 +28,18 @@ function SettingsForm(props) {
                 maxLength={30}
                 disabled={props.editButtonText === 'Edit' ? true : false}
             />
-            <Input
-                errorStyle={{ color: 'red' }}
-                label='Email'
-                multiline={true}
-                value={props.email}
-                maxLength={200}
-                disabled
-            />
+            {
+                props.editButtonText === 'Edit' ?
+                <Input
+                    errorStyle={{ color: 'red' }}
+                    label='Email (uneditable)'
+                    multiline={true}
+                    value={props.email}
+                    maxLength={200}
+                    disabled
+                />
+                : null
+            }
             <Input
                 placeholder='Insert your state'
                 errorStyle={{ color: 'red' }}
