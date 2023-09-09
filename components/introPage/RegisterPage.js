@@ -234,7 +234,7 @@ function getTextCheckIfEmailIsUsed(){
                             isSaving ? 
                             <ActivityIndicator size="large"  color="#0000ff"/>
                             :
-                            <Text style={styles.buttonText}>Register</Text>
+                            <Text style={styles.buttonText}>Signup</Text>
                         }
                     </TouchableOpacity>
                 </View>
