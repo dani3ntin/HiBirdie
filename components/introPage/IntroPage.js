@@ -54,7 +54,7 @@ function IntroPage(props) {
             style={[styles.button, styles.buttonMargin]}
             onPress={() => navigation.navigate('RegisterPage')}
         >
-            <Text style={styles.buttonText}>Register</Text>
+            <Text style={styles.buttonText}>Signup</Text>
         </TouchableOpacity>
         <TouchableOpacity
             style={[styles.button, styles.buttonMargin]}

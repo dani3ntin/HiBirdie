@@ -30,6 +30,7 @@ const [showPassword, setShowPassword] = useState(false)
 const [error, setError] = useState(null)
 const [isSaving, setIsSaving] = useState(false)
 const [isUsernameAlreadyUsed, setIsUsernameAlreadyUsed] = useState(false)
+const [isEmailAlreadyUsed, setIsEmailAlreadyUsed] = useState(false)
 const { globalVariable, setGlobalVariable } = useGlobalContext()
 
 
@@ -65,6 +66,7 @@ function controlInputData(){
     else if(confirmPassword !== password) showAlert('Password or confirm password wrong', 'Password and confirm password are different, please enter the same password')
     else if(!chooseLocation) showAlert('Missing data', 'Please enter your default location in the map')
     else if(isUsernameAlreadyUsed) showAlert('Username already used', 'Please enter another userame')
+    else if(isEmailAlreadyUsed) showAlert('Email already used', 'Please enter another email')
     else{ 
         register()
         return true
@@ -118,15 +120,34 @@ async function checkUsername(username){
     }
 }
 
+async function checkEmail(email){
+    if(email === '')
+        return
+    const response = await fetch(globalVariable.API_URL + 'isemailalreadyused/' + email)
+    const jsonData = await response.json()
+    if(jsonData.response === 1){
+        setIsEmailAlreadyUsed(true)
+    }else{
+        setIsEmailAlreadyUsed(false)
+    }
+}
+
 function getTextCheckIfUsernameIsUsed(){
     if(username === '') return null
     if(isUsernameAlreadyUsed) return <Text style={styles.textNotOk}>This username is not available</Text>
     if(!isUsernameAlreadyUsed) return <Text style={styles.textOk}>Username available</Text>
 }
+
+function getTextCheckIfEmailIsUsed(){
+    if(username === '') return null
+    if(isEmailAlreadyUsed) return <Text style={styles.textNotOk}>This email is not available</Text>
+    if(!isEmailAlreadyUsed) return <Text style={styles.textOk}>Email available</Text>
+}
+
   return (
     <>
         <View style={styles.headerContainer}>
-        <GeneralPurposeHeaderBar text={'Register'} onBackButtonPress={() => navigation.goBack()}/>
+        <GeneralPurposeHeaderBar text={'Signup'} onBackButtonPress={() => navigation.goBack()}/>
         </View>
         <View style={styles.container}>
             <ScrollView>
@@ -156,11 +177,17 @@ function getTextCheckIfUsernameIsUsed(){
                         maxLength={30}
                         style={[styles.textInput]}
                     />
+                    {
+                        getTextCheckIfEmailIsUsed()
+                    }
                     <TextInput
                         placeholder='Insert your email'
                         label='input'
                         value={email}
-                        onChangeText={text => setEmail(text)}
+                        onChangeText={text => {
+                            setEmail(text);
+                            checkEmail(text)
+                        }}
                         maxLength={50}
                         style={[styles.textInput]}
                     />
