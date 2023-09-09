@@ -139,7 +139,7 @@ function getTextCheckIfUsernameIsUsed(){
 }
 
 function getTextCheckIfEmailIsUsed(){
-    if(username === '') return null
+    if(email === '') return null
     if(isEmailAlreadyUsed) return <Text style={styles.textNotOk}>This email is not available</Text>
     if(!isEmailAlreadyUsed) return <Text style={styles.textOk}>Email available</Text>
 }
