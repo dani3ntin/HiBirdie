@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image, ActivityIndicator, TextInput, Pressable, KeyboardAvoidingView, Platform} from "react-native"
 import { useState, useEffect } from "react"
 import { useGlobalContext } from "../globalContext/GlobalContext"
+import { useNavigation } from "@react-navigation/native"
 
 
 function CommentSection(props) {
@@ -8,13 +9,14 @@ function CommentSection(props) {
     const [commentsData, setCommentsData] = useState([])
     const [isLoadingItems, setIsLoadingItems] = useState(true)
     const [commentText, setCommentText] = useState('')
+    const navigation = useNavigation()
 
     useEffect(() => {
         fetchCommentsData()
     }, [])
 
     async function fetchCommentsData(){
-        const responseComments = await fetch(globalVariable.API_URL + 'getcommentsbybird/' + props.bird)
+        const responseComments = await fetch(globalVariable.API_URL + 'getcommentsbybird/' + props.bird + '/' + props.loggedUsername)
         if (!responseComments.ok) {
             throw new Error('Network response was not ok')
         }
@@ -48,6 +50,11 @@ function CommentSection(props) {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    function onUserPressedHandler(usernameFollowed, nameFollowed, stateFollowed, likesFollowed, nOfFollowersFollowed, isLoggedUserFollowing){
+        navigation.navigate('UserDetailPage', {usernameFollowed: usernameFollowed, nameFollowed: nameFollowed, stateFollowed: stateFollowed, likesFollowed: likesFollowed,
+            nOfFollowersFollowed: nOfFollowersFollowed, isLoggedUserFollowing: isLoggedUserFollowing, loggedUsername: props.loggedUsername})
     }
 
     return (
@@ -91,14 +98,20 @@ function CommentSection(props) {
                         {commentsData.map((item) => (
                             <View key={item.id} style={styles.commentContainer}>
                                 <View style={styles.commentItem}>
-                                    <Pressable>
-                                    <Image
-                                        source={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + item.user }}
-                                        style={[styles.avatar, { alignSelf: 'flex-start' }]}
-                                    />
+                                    <Pressable
+                                        onPress={() => onUserPressedHandler(item.user, item.name, item.state, item.like, item.followers, item.isLoggedUserFollowing, props.loggedUsername)}
+                                    >
+                                        <Image
+                                            source={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + item.user }}
+                                            style={[styles.avatar, { alignSelf: 'flex-start' }]}
+                                        />
                                     </Pressable>
                                     <View style={styles.commentContent}>
-                                        <Text style={styles.commentName}>{item.name}</Text>
+                                        <Pressable
+                                            onPress={() => onUserPressedHandler(item.user, item.name, item.state, item.like, item.followers, item.isLoggedUserFollowing, props.loggedUsername)}
+                                        >
+                                            <Text style={styles.commentName}>{item.name}</Text>
+                                        </Pressable>
                                         <Text style={styles.commentState}>
                                             {item.commentText}
                                         </Text>
