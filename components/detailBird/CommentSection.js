@@ -83,7 +83,7 @@ function CommentSection(props) {
                 <>
                 {
                     commentsData.length === 0 ?
-                    <View style={styles.textContainer}>
+                    <View>
                         <Text style={styles.text}>There are no comments yet!</Text>
                     </View>
                     :
@@ -91,10 +91,12 @@ function CommentSection(props) {
                         {commentsData.map((item) => (
                             <View key={item.id} style={styles.commentContainer}>
                                 <View style={styles.commentItem}>
+                                    <Pressable>
                                     <Image
                                         source={{ uri: globalVariable.API_URL + 'getusericonbyusername/' + item.user }}
                                         style={[styles.avatar, { alignSelf: 'flex-start' }]}
                                     />
+                                    </Pressable>
                                     <View style={styles.commentContent}>
                                         <Text style={styles.commentName}>{item.name}</Text>
                                         <Text style={styles.commentState}>
