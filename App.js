@@ -16,7 +16,6 @@ import { GlobalProvider } from './components/globalContext/GlobalContext'
 import IntroPage from './components/introPage/IntroPage'
 import LoginPage from './components/introPage/LoginPage'
 import RegisterPage from './components/introPage/RegisterPage'
-//import * as Sentry from '@sentry/react-native'
 import ShowFollowersPage from './components/userDetail/ShowFollowersPage'
 import ShowLikesPage from './components/userDetail/ShowLikesPage'
 import NoConnectionPage from './components/noConnection/NoConnectionPage'
@@ -45,11 +44,6 @@ export default function App() {
     fetchLocation()
   }, [userData]);
 
-/*
-Sentry.init({ 
-  dsn: 'https://4e797a3d4a7c93316b5ed9a767f1ef17@o4505745355702272.ingest.sentry.io/4505745357012992', 
-});
-*/
 
 
 const getLocationCoordinates = async () => {

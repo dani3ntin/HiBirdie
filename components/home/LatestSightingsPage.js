@@ -7,7 +7,6 @@ import FilterLatestSightingsPage from "../filterLatestSightingsPage/FilterLatest
 import { getMaximumDaysRealValueFromKey, getMaximumDistanceRealValueFromKey, getSortingRealValueFromKey, getSortingCriterionRealValueFromKey } from "../filterLatestSightingsPage/MapKeyValueFilter"
 import { useNavigation } from "@react-navigation/native"
 import { useGlobalContext } from "../globalContext/GlobalContext"
-import * as Sentry from '@sentry/react-native'
 
 function LatestSightingsPage(props) {
     const { globalVariable, setGlobalVariable } = useGlobalContext()
