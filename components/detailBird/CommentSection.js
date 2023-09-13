@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, ActivityIndicator, TextInput, Pressable} from "react-native"
+import { View, Text, StyleSheet, Image, ActivityIndicator, TextInput, Pressable, Alert} from "react-native"
 import { useState, useEffect } from "react"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import { useNavigation } from "@react-navigation/native"
@@ -28,6 +28,15 @@ function CommentSection(props) {
     function checkCommentText(){
         if(commentText !== '')
             addComment()
+        else
+        Alert.alert(
+            'No text inserted',
+            'Please insert your comment in the text box',
+            [
+              { text: 'OK'}
+            ],
+            { cancelable: true }
+        )
     }
 
     async function addComment(){
@@ -61,7 +70,7 @@ function CommentSection(props) {
         <>
             <View style={styles.inputContainer}>
                 <TextInput
-                    placeholder='Inster comment'
+                    placeholder='Insert comment'
                     errorStyle={{ color: 'red' }}
                     value={commentText}
                     onChangeText={text => setCommentText(text)}
