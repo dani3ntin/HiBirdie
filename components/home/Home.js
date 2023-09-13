@@ -90,7 +90,7 @@ export default function Home(props) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    height: '8%'
+    height: 70,
   },
   container: {
     flex: 1,

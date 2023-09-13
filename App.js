@@ -1,5 +1,4 @@
 import { StyleSheet, View, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native'
-import HomeHeaderBar from './components/headerBars/HomeHeaderBar'
 import Home from './components/home/Home'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -96,7 +95,7 @@ async function settingUsername(){
                 <Stack.Screen name="IntroPage" options={{ headerShown: false }}>{() => <IntroPage setUserData={setUserData}/>}</Stack.Screen>
                 <Stack.Screen name="LoginPage" options={{ headerShown: false }}>{() => <LoginPage setUserData={setUserData} sendLocation={getLocationFromLogin}/>}</Stack.Screen>
                 <Stack.Screen name="RegisterPage" options={{ headerShown: false }}>{() => <RegisterPage setUserData={setUserData}/>}</Stack.Screen>
-                <Stack.Screen name="Home" options={{ headerShown: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>
+                <Stack.Screen name="Home" options={{ headerShown: false, gestureEnabled: false }}>{() => <Home userData={userData} username={userData.username}/>}</Stack.Screen>
                 <Stack.Screen name="AddBird" options={{ headerShown: false }}>{() => <AddNewBird loggedUsername={username} coordinates={coordinates}/>}</Stack.Screen>
                 <Stack.Screen name="EditBird" options={{ headerShown: false }} component={EditBird} />
                 <Stack.Screen name="BirdDetailPageWithoutAuthor" options={{ headerShown: false }} component={BirdDetailPageWithoutAuthor} />

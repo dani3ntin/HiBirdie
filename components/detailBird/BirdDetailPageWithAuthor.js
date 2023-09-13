@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, BackHandler, Modal, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native"
+import { View, StyleSheet, Text, Image, ScrollView, Dimensions, ActivityIndicator, Pressable, BackHandler, TouchableOpacity, Platform } from "react-native"
 import DetailBirdHeaderBar from "../headerBars/DetailBirdHeaderBar"
 import { useEffect, useState } from "react"
 import { calculateOptimizedImageSize } from "../imageSizesOptimizer/imageSizesOptimizer"

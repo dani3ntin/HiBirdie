@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, ActivityIndicator, TextInput, Pressable, KeyboardAvoidingView, Platform} from "react-native"
+import { View, Text, StyleSheet, Image, ActivityIndicator, TextInput, Pressable} from "react-native"
 import { useState, useEffect } from "react"
 import { useGlobalContext } from "../globalContext/GlobalContext"
 import { useNavigation } from "@react-navigation/native"
